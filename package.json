@@ -1,0 +1,24 @@
+{
+  "name": "roguelike",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "watch": "webpack --watch --mode development",
+    "start": "webpack-dev-server --open",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "html-webpack-plugin": "^5.5.0",
+    "jest": "^27.5.0",
+    "nodemon": "^2.0.15",
+    "webpack": "^5.67.0",
+    "webpack-cli": "^4.9.2",
+    "webpack-dev-server": "^4.13.2"
+  },
+  "dependencies": {
+    "phaser": "^3.55.2"
+  }
+}
