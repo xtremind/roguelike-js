@@ -1,0 +1,53 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "sans titre.tmx",
+    "expandedProjectPaths": [
+        "."
+    ],
+    "fileStates": {
+        "decorations.tsx": {
+            "scaleInDock": 4,
+            "scaleInEditor": 1
+        },
+        "sans titre.tmx": {
+            "scale": 2.4165625,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 125.17780938833569,
+                "y": 50.69184016552438
+            }
+        },
+        "sans titre.tmx#decorations": {
+            "scaleInDock": 4
+        }
+    },
+    "last.exportedFilePath": "/home/debian/Workspaces/roguelike-js-stage/src/assets/json",
+    "last.externalTilesetPath": "/home/debian/Workspaces/roguelike-js-stage/src/assets/json",
+    "last.imagePath": "/home/debian/Workspaces/roguelike-js-stage/src/assets/img",
+    "map.height": 15,
+    "map.lastUsedExportFilter": "Fichiers de carte JSON (*.tmj *.json)",
+    "map.lastUsedFormat": "tmx",
+    "map.renderOrder": null,
+    "map.tileHeight": 8,
+    "map.tileWidth": 8,
+    "map.width": 20,
+    "openFiles": [
+        "sans titre.tmx",
+        "decorations.tsx"
+    ],
+    "project": "map.tiled-project",
+    "property.type": "bool",
+    "recentFiles": [
+        "decorations.tsx",
+        "sans titre.tmx"
+    ],
+    "tileset.lastUsedFilter": "Fichiers de jeu de tuiles JSON (*.tsj *.json)",
+    "tileset.lastUsedFormat": "tsx",
+    "tileset.tileSize": {
+        "height": 8,
+        "width": 8
+    }
+}
