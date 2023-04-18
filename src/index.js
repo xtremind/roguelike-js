@@ -2,35 +2,27 @@
 import {Game} from 'phaser';
 
 // Scenes
-//import BootScene from 'scenes/boot';
-//import PreloadScene from 'scenes/preload';
-//import TitleScene from 'scenes/title';
-//import WaitingScene from 'scenes/waiting';
-//import GameScene from 'scenes/game';
-//import EndScene from 'scenes/end';
+import PreloadScene from 'scenes/preload';
+import GameScene from 'scenes/game';
 
 // Declare configuration
 const config = {
   type: Phaser.AUTO,
-  backgroundColor: '#22b34e',
+  backgroundColor: '#000000',
   scale: {
-    mode: Phaser.Scale.FIT,
+    //mode: Phaser.Scale.FIT,
     parent: 'phaser-example',
-    autoCenter: Phaser.Scale.CENTER_BOTH,
-    width: 1200,
-    height: 800,
+    //autoCenter: Phaser.Scale.CENTER_BOTH,
+    width: 320,
+    height: 240,
   },
   dom: {
       createContainer: true
   },
   pixelArt: true,
   scene: [
-    //BootScene,
-    //PreloadScene,
-    //TitleScene,
-    //WaitingScene,
-    //GameScene,
-    //EndScene
+    PreloadScene,
+    GameScene,
   ]
 };
 
