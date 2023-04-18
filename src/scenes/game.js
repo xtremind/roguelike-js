@@ -133,7 +133,12 @@ class GameScene extends Scene {
         }
 
         const nextPosTile = this.#map.getTileAt(this.#hero.x + dx, this.#hero.y + dy);
+
         if (nextPosTile.properties?.solid) {
+            if(nextPosTile.properties.interactive){
+                this.#interact(nextPosTile, this.#hero.x + dx, this.#hero.y + dy)
+            }
+
             //BUMP
             this.#hero.soffset_x = dx * 8;
             this.#hero.soffset_y = dy * 8;
@@ -203,6 +208,25 @@ class GameScene extends Scene {
             this.#hero.action = 'NONE'
         }
 
+    }
+
+    #interact(tle, dx, dy){
+        if(tle.index === 6){
+            //if tle is vase 6
+            this.#map.removeTileAt(dx, dy);
+            this.#map.putTileAt(2, dx, dy);
+        } else if(tle.index === 5){
+            // if tle is door 5
+            this.#map.removeTileAt(dx, dy);
+            this.#map.putTileAt(2, dx, dy);
+        } else if(tle.index === 8){
+            // if tle is chest 8=>9
+            this.#map.removeTileAt(dx, dy);
+            this.#map.putTileAt(9, dx, dy);
+        } else if(tle.index === 7){
+            //if tle is panel 7
+            
+        } 
     }
 
     #draw_game(){
