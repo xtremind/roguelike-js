@@ -1,6 +1,6 @@
 { "frames": [
    {
-    "filename": "wall",
+    "filename": "decorations 0.ase",
     "frame": { "x": 0, "y": 0, "w": 8, "h": 8 },
     "rotated": false,
     "trimmed": false,
@@ -9,7 +9,7 @@
     "duration": 100
    },
    {
-    "filename": "floor",
+    "filename": "decorations 1.ase",
     "frame": { "x": 8, "y": 0, "w": 8, "h": 8 },
     "rotated": false,
     "trimmed": false,
@@ -18,7 +18,7 @@
     "duration": 100
    },
    {
-    "filename": "end",
+    "filename": "decorations 2.ase",
     "frame": { "x": 16, "y": 0, "w": 8, "h": 8 },
     "rotated": false,
     "trimmed": false,
@@ -27,8 +27,53 @@
     "duration": 100
    },
    {
-    "filename": "start",
+    "filename": "decorations 3.ase",
     "frame": { "x": 24, "y": 0, "w": 8, "h": 8 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 8, "h": 8 },
+    "sourceSize": { "w": 8, "h": 8 },
+    "duration": 100
+   },
+   {
+    "filename": "decorations 4.ase",
+    "frame": { "x": 32, "y": 0, "w": 8, "h": 8 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 8, "h": 8 },
+    "sourceSize": { "w": 8, "h": 8 },
+    "duration": 100
+   },
+   {
+    "filename": "decorations 5.ase",
+    "frame": { "x": 40, "y": 0, "w": 8, "h": 8 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 8, "h": 8 },
+    "sourceSize": { "w": 8, "h": 8 },
+    "duration": 100
+   },
+   {
+    "filename": "decorations 6.ase",
+    "frame": { "x": 48, "y": 0, "w": 8, "h": 8 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 8, "h": 8 },
+    "sourceSize": { "w": 8, "h": 8 },
+    "duration": 100
+   },
+   {
+    "filename": "decorations 7.ase",
+    "frame": { "x": 56, "y": 0, "w": 8, "h": 8 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 8, "h": 8 },
+    "sourceSize": { "w": 8, "h": 8 },
+    "duration": 100
+   },
+   {
+    "filename": "decorations 8.ase",
+    "frame": { "x": 64, "y": 0, "w": 8, "h": 8 },
     "rotated": false,
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 8, "h": 8 },
@@ -37,16 +82,18 @@
    }
  ],
  "meta": {
-  "app": "https://github.com/LibreSprite/LibreSprite/",
-  "version": "1.0-dev",
-  "image": "/home/debian/Workspaces/roguelike-js-stage/src/assets/img/decorations.png",
+  "app": "https://www.aseprite.org/",
+  "version": "1.2.40-x64",
+  "image": "decorations.png",
   "format": "I8",
-  "size": { "w": 32, "h": 8 },
+  "size": { "w": 72, "h": 8 },
   "scale": "1",
   "frameTags": [
   ],
   "layers": [
    { "name": "Layer 1", "opacity": 255, "blendMode": "normal" }
+  ],
+  "slices": [
   ]
  }
 }
