@@ -4,7 +4,7 @@ const path = require("path");
 const webpack = require("webpack");
 
 const htmlPlugin = new HtmlWebPackPlugin({
-  title: "TMBER",
+  title: "RogueLike",
   template: "./public/index.html",
   filename: "./index.html",
 });
@@ -34,6 +34,7 @@ module.exports = {
       images: path.resolve(__dirname, './src/assets/img'),
       sounds: path.resolve(__dirname, './src/assets/snd'),
       jsons: path.resolve(__dirname, './src/assets/json'),
+      music: path.resolve(__dirname, './src/assets/msc'),
       scenes: path.resolve(__dirname, './src/scenes'),
       utils: path.resolve(__dirname, './src/utils'),
     }, 
