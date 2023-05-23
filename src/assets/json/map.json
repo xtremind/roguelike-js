@@ -1,9 +1,11 @@
-{ "compressionlevel":-1,
- "height":15,
- "infinite":false,
- "layers":[
-        {
-         "data":[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+{
+  "compressionlevel": -1,
+  "height": 15,
+  "infinite": false,
+  "layers": [
+    {
+      "data": 
+           [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
             1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 6, 6, 6, 1,
             1, 4, 2, 2, 7, 2, 5, 2, 2, 1, 1, 1, 1, 1, 2, 2, 2, 6, 6, 1,
             1, 2, 2, 2, 2, 2, 1, 2, 1, 2, 2, 2, 2, 1, 2, 2, 2, 2, 6, 1,
@@ -18,104 +20,112 @@
             1, 2, 2, 2, 2, 2, 1, 2, 2, 6, 6, 2, 2, 5, 2, 2, 2, 2, 6, 1,
             1, 6, 2, 2, 2, 2, 5, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 6, 6, 1,
             1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-         "height":15,
-         "id":1,
-         "name":"level1",
-         "opacity":1,
-         "type":"tilelayer",
-         "visible":true,
-         "width":20,
-         "x":0,
-         "y":0
-        }],
- "nextlayerid":2,
- "nextobjectid":1,
- "orientation":"orthogonal",
- "renderorder":"left-up",
- "tiledversion":"1.10.1",
- "tileheight":8,
- "tilesets":[
+      "height": 15,
+      "id": 1,
+      "name": "level1",
+      "opacity": 1,
+      "type": "tilelayer",
+      "visible": true,
+      "width": 20,
+      "x": 0,
+      "y": 0
+    }
+  ],
+  "nextlayerid": 2,
+  "nextobjectid": 1,
+  "orientation": "orthogonal",
+  "renderorder": "left-up",
+  "tiledversion": "1.10.1",
+  "tileheight": 8,
+  "tilesets": [
+    {
+      "columns": 9,
+      "firstgid": 1,
+      "image": "..\/img\/decorations.png",
+      "imageheight": 8,
+      "imagewidth": 72,
+      "margin": 0,
+      "name": "decorations",
+      "spacing": 0,
+      "tilecount": 9,
+      "tileheight": 8,
+      "tiles": [
         {
-         "columns":9,
-         "firstgid":1,
-         "image":"..\/img\/decorations.png",
-         "imageheight":8,
-         "imagewidth":72,
-         "margin":0,
-         "name":"decorations",
-         "spacing":0,
-         "tilecount":9,
-         "tileheight":8,
-         "tiles":[
-                {
-                 "id":0,
-                 "properties":[
-                        {
-                         "name":"solid",
-                         "type":"bool",
-                         "value":true
-                        }]
-                }, 
-                {
-                 "id":4,
-                 "properties":[
-                        {
-                         "name":"interactive",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"solid",
-                         "type":"bool",
-                         "value":true
-                        }]
-                }, 
-                {
-                 "id":5,
-                 "properties":[
-                        {
-                         "name":"interactive",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"solid",
-                         "type":"bool",
-                         "value":true
-                        }]
-                }, 
-                {
-                 "id":6,
-                 "properties":[
-                        {
-                         "name":"interactive",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"solid",
-                         "type":"bool",
-                         "value":true
-                        }]
-                }, 
-                {
-                 "id":7,
-                 "properties":[
-                        {
-                         "name":"interactive",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"solid",
-                         "type":"bool",
-                         "value":true
-                        }]
-                }],
-         "tilewidth":8
-        }],
- "tilewidth":8,
- "type":"map",
- "version":"1.10",
- "width":20
+          "id": 0,
+          "properties": [
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 4,
+          "properties": [
+            {
+              "name": "interactive",
+              "type": "bool",
+              "value": true
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 5,
+          "properties": [
+            {
+              "name": "interactive",
+              "type": "bool",
+              "value": true
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 6,
+          "properties": [
+            {
+              "name": "interactive",
+              "type": "bool",
+              "value": true
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": 7,
+          "properties": [
+            {
+              "name": "interactive",
+              "type": "bool",
+              "value": true
+            },
+            {
+              "name": "solid",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        }
+      ],
+      "tilewidth": 8
+    }
+  ],
+  "tilewidth": 8,
+  "type": "map",
+  "version": "1.10",
+  "width": 20
 }
