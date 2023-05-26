@@ -75,18 +75,20 @@
 
 ### Step 6 : Text Boxes
 
-- [ ] SOUND : create "walking" sound
-- [ ] SOUND : create "opening door" sound
-- [ ] SOUND : create "opening chest" sound
-- [ ] SOUND : create "bad things" sound
-- [ ] SOUND : create "breaking vase" sound
-- [ ] INTERACTION : add sound effect for each action
-- [ ] REFACTO : extract buffer button usage in a function
-- [ ] TEXTBOX : create a function that create a text do display
-- [ ] TEXTBOX : update previous function by adding the object in a list / array
-- [ ] TEXTBOX : create a function that draw a box with border
-- [ ] TEXTBOX : update previous function by displaying text
-- [ ] TEXTBOX : update previous function by multiple textbox (like multi-tab)
+=> https://sfxr.me/
+
+- [x] SOUND : create "walking" sound
+- [x] SOUND : create "opening door" sound
+- [x] SOUND : create "opening chest" sound
+- [x] SOUND : create "bad things" sound
+- [x] SOUND : create "breaking vase" sound
+- [x] INTERACTION : add sound effect for each action
+- [x] REFACTO : extract buffer button usage in a function
+- [x] TEXTBOX : create a function that create a text do display
+- [x] TEXTBOX : update previous function by adding the object in a list / array
+- [x] TEXTBOX : create a function that draw a box with border
+- [x] TEXTBOX : update previous function by displaying text
+- [x] TEXTBOX : update previous function by multiple textbox (like multi-tab)
 
 ### Step 7 : Messages System
 

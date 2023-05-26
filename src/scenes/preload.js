@@ -6,8 +6,13 @@ import heroAtlas from 'jsons/hero.json';
 import decorationsAtlas from 'jsons/decorations.json';
 import map from 'jsons/map.json';
 
-// import successSound from 'sounds/success.mp3'
-// import failedSound from 'sounds/failed.mp3'
+import breakVase from 'sounds/breakVase.mp3'
+import hit from 'sounds/hit.mp3'
+import hurt from 'sounds/hurt.mp3'
+import openChest from 'sounds/openChest.mp3'
+import openDoor from 'sounds/openDoor.mp3'
+import walk from 'sounds/walk.mp3'
+
 
 class PreloadScene extends Scene {
     constructor() {
@@ -66,11 +71,14 @@ class PreloadScene extends Scene {
       this.load.atlas('decorations', decorationsSprites, decorationsAtlas);
 
       this.load.tilemapTiledJSON("map", map);  
-
-
-    //   this.load.audio('success', successSound);
-    //   this.load.audio('failed', failedSound);
       
+      this.load.audio('breakVase', breakVase)
+      this.load.audio('hit', hit)
+      this.load.audio('hurt', hurt)
+      this.load.audio('openChest', openChest)
+      this.load.audio('openDoor', openDoor)
+      this.load.audio('walk', walk)
+     
     }
   }
   

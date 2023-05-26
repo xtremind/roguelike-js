@@ -13,19 +13,29 @@ const Tiles = Object.freeze({
 });
 
 class GameScene extends Scene {
+    //datas
     #click = 0;
     #hero = {};
     #map = {};
+    #wind = [];
     
-
+    //direction helpers
     #cursors;
     #DIR_X = [0, 0, -1, 1]
     #DIR_Y = [-1, 1, 0, 0]
     #button_buffer = -1;
 
+    //generic functions
     #update;
     #draw;
 
+    //sound
+    #breakVaseSound;
+    #hitSound;
+    #hurtSound;
+    #openChestSound;
+    #openDoorSound;
+    #walkSound;
 
     constructor() {
       super({
@@ -39,6 +49,12 @@ class GameScene extends Scene {
   
     preload() { 
         console.log("GameScene.preload");
+        this.#breakVaseSound = this.sound.add('breakVase', { loop: false });
+        this.#hitSound = this.sound.add('hit', { loop: false });
+        this.#hurtSound = this.sound.add('hurt', { loop: false });
+        this.#openChestSound = this.sound.add('openChest', { loop: false });
+        this.#openDoorSound = this.sound.add('openDoor', { loop: false });
+        this.#walkSound = this.sound.add('walk', { loop: false });
     }
 
     create() {
@@ -68,6 +84,8 @@ class GameScene extends Scene {
         this.#update = this.#update_interact;
         this.#draw = this.#draw_game;
 
+        this.#addWind(64,64,24,64,["hello world","this is line 2"])
+
         console.log("GameScene.create");
     }
 
@@ -75,6 +93,7 @@ class GameScene extends Scene {
         //console.log("GameScene.update");
         this.#update();
         this.#draw();
+        this.#drawWind();
         //update turn 
         this.#click = (this.#click+1) % 64;
     }
@@ -138,25 +157,30 @@ class GameScene extends Scene {
             this.#hero.time = 0;
             this.#hero.action = 'WALK'
             this.#update = this.#update_pturn;
+            
+            this.#walkSound.play();
         }
     }
 
     #interactWith(tile){
-      console.log(tile);
+      //console.log(tile);
       if(tile.index == Tiles.DOOR){
         this.#map.putTileAt(Tiles.FLOOR, tile.x, tile.y);
         tile.destroy();
+        this.#openDoorSound.play();
       } else if(tile.index == Tiles.VASE){
         this.#map.putTileAt(Tiles.FLOOR, tile.x, tile.y);
         tile.destroy();
+        this.#breakVaseSound.play();
         //loot
       } else if(tile.index == Tiles.PANEL){
         //display message
       } else if(tile.index == Tiles.CLOSED_CHEST){
         this.#map.putTileAt(Tiles.OPENED_CHEST, tile.x, tile.y);
         tile.destroy();
+        this.#openChestSound.play();
         //loot
-      } 
+      }
 
     }
 
@@ -196,6 +220,43 @@ class GameScene extends Scene {
             this.#hero.sprite.scaleX = 1
         }
         //draw floor => managed by phaser
+    }
+
+    #addWind(x, y, h, w, txt){
+      this.#wind.push({x: x, y: y, h: h, w: w, txt: txt});
+    }
+
+    #drawWind(){
+      this.#wind.forEach(wind => {
+        //à voir si c'est pas mieux de destroy puis reconstruire à chaque fois
+        if(!wind.sprite){
+          //create display
+          wind.sprite = this.add.container(wind.x, wind.y);
+
+          let r3 = this.add.rectangle(0, 0, wind.w+4, wind.h+4, 0x000000);
+          wind.sprite.add(r3);
+          
+          r3 = this.add.rectangle(0, 0, wind.w+2, wind.h+2, 0xffffff);
+          wind.sprite.add(r3);
+
+          r3 = this.add.rectangle(0, 0, wind.w, wind.h, 0x000000);
+          wind.sprite.add(r3);
+
+          //text display only in container
+          let pos = 0;
+          wind.txt.forEach(t=>{
+            const text = this.add.text(0, pos-6, t);
+            text.setFont('Arial Sans Serif');
+            text.setFontSize(10);
+            text.setOrigin(0.5, 0.5);
+            wind.sprite.add(text);
+            pos+=11;
+          });
+          wind.sprite.setDepth(10)
+        } else {
+          //update display
+        }
+      });
     }
 }
 
