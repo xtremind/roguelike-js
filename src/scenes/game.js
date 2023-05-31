@@ -84,7 +84,7 @@ class GameScene extends Scene {
         this.#update = this.#update_interact;
         this.#draw = this.#draw_game;
 
-        this.#addWind(64,64,24,64,["hello world","this is line 2"])
+        this.#showMsg(["hello world qqsdsd","this is line 2", "ezrf"], 20);
 
         console.log("GameScene.create");
     }
@@ -175,6 +175,7 @@ class GameScene extends Scene {
         //loot
       } else if(tile.index == Tiles.PANEL){
         //display message
+        this.#showMsg(["hello world"]);
       } else if(tile.index == Tiles.CLOSED_CHEST){
         this.#map.putTileAt(Tiles.OPENED_CHEST, tile.x, tile.y);
         tile.destroy();
@@ -222,8 +223,17 @@ class GameScene extends Scene {
         //draw floor => managed by phaser
     }
 
+    #showMsg(txt, duration){
+      let width = Math.max(...txt.map(str => str.length))*6;
+      let height = (txt.length+1)*5 + (txt.length)*4;
+      let wind = this.#addWind(135 - width/2, 80 - (height/2), height, width+6, txt);
+      wind.duration = duration;
+    }
+
     #addWind(x, y, h, w, txt){
-      this.#wind.push({x: x, y: y, h: h, w: w, txt: txt});
+      let wind = {x: x, y: y, h: h, w: w, txt: txt};
+      this.#wind.push(wind);
+      return wind;
     }
 
     #drawWind(){
@@ -232,27 +242,20 @@ class GameScene extends Scene {
         if(!wind.sprite){
           //create display
           wind.sprite = this.add.container(wind.x, wind.y);
+          //text.setOrigin(0.5, 1);
 
-          let r3 = this.add.rectangle(0, 0, wind.w+4, wind.h+4, 0x000000);
-          wind.sprite.add(r3);
-          
-          r3 = this.add.rectangle(0, 0, wind.w+2, wind.h+2, 0xffffff);
-          wind.sprite.add(r3);
+          let r1 = this.add.rectangle(0, 0, wind.w+4, wind.h+4, 0x000000);
+          wind.sprite.add(r1);
+          wind.sprite.add(this.add.rectangle(0, 0, wind.w+2, wind.h+2, 0xffffff));
+          wind.sprite.add(this.add.rectangle(0, 0, wind.w, wind.h, 0x000000));
 
-          r3 = this.add.rectangle(0, 0, wind.w, wind.h, 0x000000);
-          wind.sprite.add(r3);
-
-          //text display only in container
-          let pos = 0;
-          wind.txt.forEach(t=>{
-            const text = this.add.text(0, pos-6, t);
-            text.setFont('Arial Sans Serif');
-            text.setFontSize(10);
-            text.setOrigin(0.5, 0.5);
-            wind.sprite.add(text);
-            pos+=11;
-          });
-          wind.sprite.setDepth(10)
+          const text = this.add.text(0, 0, wind.txt.join('\n'), { align: 'center' });
+          text.setFont('Courier');
+          text.setFontSize(10);
+          text.setOrigin(0);
+          Phaser.Display.Align.In.Center(text, r1);
+          wind.sprite.add(text);
+          wind.sprite.setDepth(10);
         } else {
           //update display
         }
