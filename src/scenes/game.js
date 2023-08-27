@@ -84,7 +84,7 @@ class GameScene extends Scene {
         this.#update = this.#update_interact;
         this.#draw = this.#draw_game;
 
-        this.#showMsg(["hello world qqsdsd","this is line 2", "ezrf"], 20);
+        this.#showMsg(["hello world qqsdsd"], 20);
 
         console.log("GameScene.create");
     }
@@ -248,14 +248,12 @@ class GameScene extends Scene {
     }
 
     #showMsg(txt, duration){
-      let width = Math.max(...txt.map(str => str.length))*6;
-      let height = (txt.length+1)*5 + (txt.length)*4;
-      let wind = this.#addWind(135 - width/2, 80 - (height/2), height, width+6, txt);
+      let wind = this.#addWind(txt);
       wind.duration = duration;
     }
 
-    #addWind(x, y, h, w, txt){
-      let wind = {x: x, y: y, h: h, w: w, txt: txt};
+    #addWind(txt){
+      let wind = {txt: txt};
       this.#wind.push(wind);
       return wind;
     }
@@ -265,18 +263,18 @@ class GameScene extends Scene {
         //à voir si c'est pas mieux de destroy puis reconstruire à chaque fois
         if(!wind.sprite){
           //create display
-          wind.sprite = this.add.container(wind.x, wind.y);
-          //text.setOrigin(0.5, 1);
-
-          let r1 = this.add.rectangle(0, 0, wind.w+4, wind.h+4, 0x000000);
-          wind.sprite.add(r1);
-          wind.sprite.add(this.add.rectangle(0, 0, wind.w+2, wind.h+2, 0xffffff));
-          wind.sprite.add(this.add.rectangle(0, 0, wind.w, wind.h, 0x000000));
+          wind.sprite = this.add.container(this.cameras.main.worldView.x + this.cameras.main.width / (2 * this.cameras.main.zoom), this.cameras.main.worldView.y + this.cameras.main.height / (2 * this.cameras.main.zoom));
 
           const text = this.add.text(0, 0, wind.txt.join('\n'), { align: 'center' });
           text.setFont('Courier');
           text.setFontSize(10);
           text.setOrigin(0);
+          
+          let r1 = this.add.rectangle(0, 0, text.width+4, text.height+4, 0x000000);
+          wind.sprite.add(r1);
+          wind.sprite.add(this.add.rectangle(0, 0, text.width+3, text.height+3, 0xffffff));
+          wind.sprite.add(this.add.rectangle(0, 0, text.width+1, text.height+1, 0x000000));
+
           Phaser.Display.Align.In.Center(text, r1);
           wind.sprite.add(text);
           wind.sprite.setDepth(10);
