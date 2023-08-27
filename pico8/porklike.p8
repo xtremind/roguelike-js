@@ -3,18 +3,17 @@ version 16
 __lua__
 function _init()
  t=0
- 
+
  dpal={0,1,1,2,1,13,6,4,4,9,3,13,1,13,14}
- p_ani={240,241,242,243}
- 
+
  dirx={-1,1,0,0,1,1,-1,-1}
  diry={0,0,-1,1,-1,1,1,-1}
- 
+
  mob_ani={240,192}
  mob_atk={1,1}
  mob_hp ={5,2}
  mob_los={4,4}
- 
+
  debug={}
  startgame()
 end
@@ -30,7 +29,7 @@ function _draw()
  _drw()
  drawind()
  checkfade()
- 
+
  --★
  cursor(4,4)
  color(8)
@@ -42,11 +41,11 @@ end
 function startgame()
  fadeperc=1
  buttbuff=-1
- 
+
  mob={}
  dmob={}
  p_mob=addmob(1,1,1)
- 
+
  for x=0,15 do
   for y=0,15 do
    if mget(x,y)==192 then
@@ -55,16 +54,16 @@ function startgame()
    end
   end
  end
- 
+
  p_t=0
- 
+
  wind={}
  float={}
  fog=blankmap(1)
  talkwind=nil
- 
+
  hpwind=addwind(5,5,28,13,{})
- 
+
  _upd=update_game
  _drw=draw_game
  unfog()
@@ -88,8 +87,8 @@ function update_pturn()
  dobuttbuff()
  p_t=min(p_t+0.125,1)
 
- p_mob.mov(p_mob,p_t)
- 
+ p_mob:mov()
+
  if p_t==1 then
   _upd=update_game
   if checkend() then
@@ -103,7 +102,7 @@ function update_aiturn()
  p_t=min(p_t+0.125,1)
  for m in all(mob) do
   if m!=p_mob and m.mov then
-   m.mov(m,p_t)
+   m:mov()
   end
  end
  if p_t==1 then
@@ -157,13 +156,10 @@ function draw_game()
   end
  end
 
- for m in all(mob) do
-  if m!=p_mob then
-   drawmob(m)
-  end
+ for i=#mob,1,-1 do
+  drawmob(mob[i])
  end
- drawmob(p_mob)
- 
+
  for x=0,15 do
   for y=0,15 do
    if fog[x][y]==1 then
@@ -171,7 +167,7 @@ function draw_game()
    end
   end
  end
- 
+
  for f in all(float) do
   oprint8(f.txt,f.x,f.y,f.c,0)
  end
@@ -189,7 +185,7 @@ end
 function draw_gover()
  cls(2)
  print("y ded",50,50,7)
- 
+
 end
 -->8
 --tools
@@ -202,7 +198,7 @@ function drawspr(_spr,_x,_y,_c,_flip)
  palt(0,false)
  pal(6,_c)
  spr(_spr,_x,_y,1,1,_flip)
- pal() 
+ pal()
 end
 
 function rectfill2(_x,_y,_w,_h,_c)
@@ -213,7 +209,7 @@ end
 function oprint8(_t,_x,_y,_c,_c2)
  for i=1,8 do
   print(_t,_x+dirx[i],_y+diry[i],_c2)
- end 
+ end
  print(_t,_x,_y,_c)
 end
 
@@ -226,7 +222,7 @@ function dofade()
  local p,kmax,col,k=flr(mid(0,fadeperc,1)*100)
  for j=1,15 do
   col = j
-  kmax=flr((p+(j*1.46))/22)
+  kmax=flr((p+j*1.46)/22)
   for k=1,kmax do
    col=dpal[col]
   end
@@ -260,9 +256,9 @@ function fadeout(spd,_wait)
 end
 
 function blankmap(_dflt)
- local ret={} 
+ local ret={}
  if (_dflt==nil) _dflt=0
- 
+
  for x=0,15 do
   ret[x]={}
   for y=0,15 do
@@ -277,7 +273,7 @@ end
 function moveplayer(dx,dy)
  local destx,desty=p_mob.x+dx,p_mob.y+dy
  local tle=mget(destx,desty)
-  
+
  if iswalkable(destx,desty,"checkmobs") then
   sfx(63)
   mobwalk(p_mob,dx,dy)
@@ -288,15 +284,15 @@ function moveplayer(dx,dy)
   mobbump(p_mob,dx,dy)
   p_t=0
   _upd=update_pturn
-  
+
   local mob=getmob(destx,desty)
-  if mob==false then
+  if mob then
+   sfx(58)
+   hitmob(p_mob,mob)
+  else
    if fget(tle,1) then
     trig_bump(tle,destx,desty)
    end
-  else
-   sfx(58)
-   hitmob(p_mob,mob)
   end
  end
  unfog()
@@ -338,16 +334,17 @@ function getmob(x,y)
 end
 
 function iswalkable(x,y,mode)
- if mode== nil then mode="" end
+ local mode = mode or "test"
+
  --sight
  if inbounds(x,y) then
   local tle=mget(x,y)
   if mode=="sight" then
    return not fget(tle,2)
   else
-   if fget(tle,0)==false then
+   if not fget(tle,0) then
     if mode=="checkmobs" then
-     return getmob(x,y)==false
+     return not getmob(x,y)
     end
     return true
    end
@@ -364,9 +361,9 @@ function hitmob(atkm,defm)
  local dmg=atkm.atk
  defm.hp-=dmg
  defm.flash=10
- 
+
  addfloat("-"..dmg,defm.x*8,defm.y*8,9)
- 
+
  if defm.hp<=0 then
   add(dmob,defm)
   del(mob,defm)
@@ -391,42 +388,38 @@ function los(x1,y1,x2,y2)
  --★
  if dist(x1,y1,x2,y2)==1 then return true end
  if x1<x2 then
-  sx=1
-  dx=x2-x1
+  sx,dx=1,x2-x1
  else
-  sx=-1
-  dx=x1-x2
+  sx,dx=-1,x1-x2
  end
  if y1<y2 then
-  sy=1
-  dy=y2-y1
+  sy,dy=1,y2-y1
  else
-  sy=-1
-  dy=y1-y2
+  sy,dy=-1,y1-y2
  end
- local err, e2 = dx-dy, nil
- 
+ local err,e2=dx-dy
+
  while not(x1==x2 and y1==y2) do
   if not frst and iswalkable(x1,y1,"sight")==false then return false end
-  frst=false
-  e2=err+err
+  e2,frst=err+err,false
   if e2>-dy then
-   err=err-dy
+   err-=dy
    x1=x1+sx
   end
   if e2<dx then
-   err=err+dx
+   err+=dx
    y1=y1+sy
   end
  end
- return true 
+ return true
 end
 
 function unfog()
  local px,py=p_mob.x,p_mob.y
  for x=0,15 do
-  for y=0,15 do 
-   if dist(px,py,x,y)<=p_mob.los and los(px,py,x,y) then
+  for y=0,15 do
+   --★
+   if fog[x][y]==1 and dist(px,py,x,y)<=p_mob.los and los(px,py,x,y) then
     unfogtile(x,y)
    end
   end
@@ -441,7 +434,7 @@ function unfogtile(x,y)
    if inbounds(tx,ty) and not iswalkable(tx,ty,"sight") then
     fog[tx][ty]=0
    end
-  end  
+  end
  end
 end
 -->8
@@ -471,8 +464,8 @@ function drawind()
    wy+=6
   end
   clip()
- 
-  if w.dur!=nil then
+
+  if w.dur then
    w.dur-=1
    if w.dur<=0 then
     local dif=w.h/4
@@ -566,27 +559,22 @@ function mobbump(mb,dx,dy)
 end
 
 function mobflip(mb,dx)
- if dx<0 then
-  mb.flp=true
- elseif dx>0 then
-  mb.flp=false   
- end
+ mb.flp = dx==0 and mb.flp or dx<0
+
 end
 
 
-function mov_walk(mob,at)
- mob.ox=mob.sox*(1-at)
- mob.oy=mob.soy*(1-at)
+function mov_walk(self)
+ local tme=1-p_t
+ self.ox=self.sox*tme
+ self.oy=self.soy*tme
 end
 
-function mov_bump(mob,at)
+function mov_bump(self)
  --★
- local tme=at 
- if at>0.5 then
-  tme=1-at
- end
- mob.ox=mob.sox*tme
- mob.oy=mob.soy*tme
+ local tme= p_t>0.5 and 1-p_t or p_t
+ self.ox=self.sox*tme
+ self.oy=self.soy*tme
 end
 
 function doai()
@@ -614,12 +602,12 @@ function ai_wait(m)
  return false
 end
 
-function ai_attac(m)  
+function ai_attac(m)
  if dist(m.x,m.y,p_mob.x,p_mob.y)==1 then
   --attack player
   local dx,dy=p_mob.x-m.x,p_mob.y-m.y
   mobbump(m,dx,dy)
-  hitmob(m,p_mob)  
+  hitmob(m,p_mob)
   sfx(57)
   return true
  else
@@ -627,12 +615,12 @@ function ai_attac(m)
   if cansee(m,p_mob) then
    m.tx,m.ty=p_mob.x,p_mob.y
   end
-  
+
   if m.x==m.tx and m.y==m.ty then
    --de aggro
    m.task=ai_wait
    addfloat("?",m.x*8+2,m.y*8,10)
-  else 
+  else
    local bdst,bx,by=999,0,0
    for i=1,4 do
     local dx,dy=dirx[i],diry[i]
