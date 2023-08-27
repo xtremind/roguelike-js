@@ -84,7 +84,7 @@ class GameScene extends Scene {
         this.#update = this.#update_interact;
         this.#draw = this.#draw_game;
 
-        this.#showMsg(["hello world qqsdsd"], 20);
+        this.#showMsg(["hello world qqsdsd"], 100);
 
         console.log("GameScene.create");
     }
@@ -280,7 +280,17 @@ class GameScene extends Scene {
           wind.sprite.setDepth(10);
         } else {
           //update display
+          if (wind.duration){
+            wind.duration--;
+            if(wind.duration <=0 ){
+              wind.sprite?.destroy();
+              wind.sprite = null;
+            }
+          }
         }
+
+        this.#wind = this.#wind.filter(wind => wind.sprite)
+
       });
     }
 }
