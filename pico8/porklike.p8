@@ -3,17 +3,17 @@ version 16
 __lua__
 function _init()
  t=0
-
+ 
  dpal={0,1,1,2,1,13,6,4,4,9,3,13,1,13,14}
-
+ 
  dirx={-1,1,0,0,1,1,-1,-1}
  diry={0,0,-1,1,-1,1,1,-1}
-
+ 
  mob_ani={240,192}
  mob_atk={1,1}
  mob_hp ={5,2}
  mob_los={4,4}
-
+ 
  debug={}
  startgame()
 end
@@ -29,7 +29,7 @@ function _draw()
  _drw()
  drawind()
  checkfade()
-
+ 
  --★
  cursor(4,4)
  color(8)
@@ -41,11 +41,11 @@ end
 function startgame()
  fadeperc=1
  buttbuff=-1
-
+ 
  mob={}
  dmob={}
  p_mob=addmob(1,1,1)
-
+ 
  for x=0,15 do
   for y=0,15 do
    if mget(x,y)==192 then
@@ -54,19 +54,20 @@ function startgame()
    end
   end
  end
-
+ 
  p_t=0
-
+ 
  wind={}
  float={}
- fog=blankmap(1)
+ fog=blankmap(0)
  talkwind=nil
-
+ 
  hpwind=addwind(5,5,28,13,{})
-
+ 
  _upd=update_game
  _drw=draw_game
  unfog()
+ 
 end
 -->8
 --updates
@@ -88,12 +89,13 @@ function update_pturn()
  p_t=min(p_t+0.125,1)
 
  p_mob:mov()
-
+ 
  if p_t==1 then
   _upd=update_game
   if checkend() then
    doai()
   end
+  calcdist(p_mob.x,p_mob.y)
  end
 end
 
@@ -155,11 +157,11 @@ function draw_game()
    del(dmob,m)
   end
  end
-
+ 
  for i=#mob,1,-1 do
   drawmob(mob[i])
  end
-
+ 
  for x=0,15 do
   for y=0,15 do
    if fog[x][y]==1 then
@@ -167,7 +169,7 @@ function draw_game()
    end
   end
  end
-
+ 
  for f in all(float) do
   oprint8(f.txt,f.x,f.y,f.c,0)
  end
@@ -185,7 +187,7 @@ end
 function draw_gover()
  cls(2)
  print("y ded",50,50,7)
-
+ 
 end
 -->8
 --tools
@@ -209,7 +211,7 @@ end
 function oprint8(_t,_x,_y,_c,_c2)
  for i=1,8 do
   print(_t,_x+dirx[i],_y+diry[i],_c2)
- end
+ end 
  print(_t,_x,_y,_c)
 end
 
@@ -256,9 +258,9 @@ function fadeout(spd,_wait)
 end
 
 function blankmap(_dflt)
- local ret={}
+ local ret={} 
  if (_dflt==nil) _dflt=0
-
+ 
  for x=0,15 do
   ret[x]={}
   for y=0,15 do
@@ -273,7 +275,7 @@ end
 function moveplayer(dx,dy)
  local destx,desty=p_mob.x+dx,p_mob.y+dy
  local tle=mget(destx,desty)
-
+  
  if iswalkable(destx,desty,"checkmobs") then
   sfx(63)
   mobwalk(p_mob,dx,dy)
@@ -284,7 +286,7 @@ function moveplayer(dx,dy)
   mobbump(p_mob,dx,dy)
   p_t=0
   _upd=update_pturn
-
+  
   local mob=getmob(destx,desty)
   if mob then
    sfx(58)
@@ -335,7 +337,7 @@ end
 
 function iswalkable(x,y,mode)
  local mode = mode or "test"
-
+ 
  --sight
  if inbounds(x,y) then
   local tle=mget(x,y)
@@ -361,9 +363,9 @@ function hitmob(atkm,defm)
  local dmg=atkm.atk
  defm.hp-=dmg
  defm.flash=10
-
+ 
  addfloat("-"..dmg,defm.x*8,defm.y*8,9)
-
+ 
  if defm.hp<=0 then
   add(dmob,defm)
   del(mob,defm)
@@ -398,7 +400,7 @@ function los(x1,y1,x2,y2)
   sy,dy=-1,y1-y2
  end
  local err,e2=dx-dy
-
+ 
  while not(x1==x2 and y1==y2) do
   if not frst and iswalkable(x1,y1,"sight")==false then return false end
   e2,frst=err+err,false
@@ -406,18 +408,18 @@ function los(x1,y1,x2,y2)
    err-=dy
    x1=x1+sx
   end
-  if e2<dx then
+  if e2<dx then 
    err+=dx
    y1=y1+sy
   end
  end
- return true
+ return true 
 end
 
 function unfog()
  local px,py=p_mob.x,p_mob.y
  for x=0,15 do
-  for y=0,15 do
+  for y=0,15 do 
    --★
    if fog[x][y]==1 and dist(px,py,x,y)<=p_mob.los and los(px,py,x,y) then
     unfogtile(x,y)
@@ -434,8 +436,32 @@ function unfogtile(x,y)
    if inbounds(tx,ty) and not iswalkable(tx,ty,"sight") then
     fog[tx][ty]=0
    end
-  end
+  end  
  end
+end
+
+function calcdist(tx,ty)
+ local cand,step={},0
+ distmap=blankmap(-1)
+ add(cand,{x=tx,y=ty})
+ distmap[tx][ty]=0
+ repeat
+  step+=1
+  candnew={} 
+  for c in all(cand) do
+   for d=1,4 do
+    local dx=c.x+dirx[d]
+    local dy=c.y+diry[d]
+    if inbounds(dx,dy) and distmap[dx][dy]==-1 then
+     distmap[dx][dy]=step
+     if iswalkable(dx,dy) then
+      add(candnew,{x=dx,y=dy})
+     end
+    end
+   end
+  end
+  cand=candnew
+ until #cand==0
 end
 -->8
 --ui
@@ -464,7 +490,7 @@ function drawind()
    wy+=6
   end
   clip()
-
+ 
   if w.dur then
    w.dur-=1
    if w.dur<=0 then
@@ -565,13 +591,13 @@ end
 
 
 function mov_walk(self)
- local tme=1-p_t
+ local tme=1-p_t 
  self.ox=self.sox*tme
  self.oy=self.soy*tme
 end
 
 function mov_bump(self)
- --★
+ --★ 
  local tme= p_t>0.5 and 1-p_t or p_t
  self.ox=self.sox*tme
  self.oy=self.soy*tme
@@ -602,12 +628,12 @@ function ai_wait(m)
  return false
 end
 
-function ai_attac(m)
+function ai_attac(m)  
  if dist(m.x,m.y,p_mob.x,p_mob.y)==1 then
   --attack player
   local dx,dy=p_mob.x-m.x,p_mob.y-m.y
   mobbump(m,dx,dy)
-  hitmob(m,p_mob)
+  hitmob(m,p_mob)  
   sfx(57)
   return true
  else
@@ -615,18 +641,19 @@ function ai_attac(m)
   if cansee(m,p_mob) then
    m.tx,m.ty=p_mob.x,p_mob.y
   end
-
+  
   if m.x==m.tx and m.y==m.ty then
    --de aggro
    m.task=ai_wait
    addfloat("?",m.x*8+2,m.y*8,10)
-  else
+  else 
    local bdst,bx,by=999,0,0
+   calcdist(m.tx,m.ty)
    for i=1,4 do
     local dx,dy=dirx[i],diry[i]
     local tx,ty=m.x+dx,m.y+dy
     if iswalkable(tx,ty,"checkmobs") then
-     local dst=dist(tx,ty,m.tx,m.ty)
+     local dst=distmap[tx][ty]
      if dst<bdst then
       bdst,bx,by=dst,dx,dy
      end
@@ -781,7 +808,7 @@ __map__
 0201010101020202020102010202020200000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 0201010101020101010102010101010200000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 020101010102c001010102020202010200000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-02010101010202020202020202020d0200000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+02010101010102020202020202020d0200000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 0201010101010101010101010101010200000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 02020d0202020202020202020102020200000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 010101010d010102010101020d02020200000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
