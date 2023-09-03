@@ -84,7 +84,8 @@ class GameScene extends Scene {
         this.#update = this.#update_interact;
         this.#draw = this.#draw_game;
 
-        this.#showMsg(["hello world qqsdsd"], 100);
+        //this.#showMsg(["hello world qqsdsd"], 100);
+        //this.#showMsg(["second message", "with two lines"], 100);
 
         console.log("GameScene.create");
     }
@@ -180,7 +181,7 @@ class GameScene extends Scene {
         //loot
       } else if(tile.index == Tiles.PANEL){
         //display message
-        this.#showMsg(["hello world"]);
+        this.#showMsg(["hello world"], 100);
       } else if(tile.index == Tiles.CLOSED_CHEST){
         this.#map.putTileAt(Tiles.OPENED_CHEST, tile.x, tile.y);
         tile.destroy();
@@ -259,16 +260,17 @@ class GameScene extends Scene {
     }
 
     #drawWind(){
-      this.#wind.forEach(wind => {
+      if (this.#wind.length > 0){
+        let wind = this.#wind[0];
         //à voir si c'est pas mieux de destroy puis reconstruire à chaque fois
         if(!wind.sprite){
-          //create display
+          //create display 
           wind.sprite = this.add.container(this.cameras.main.worldView.x + this.cameras.main.width / (2 * this.cameras.main.zoom), this.cameras.main.worldView.y + this.cameras.main.height / (2 * this.cameras.main.zoom));
 
           const text = this.add.text(0, 0, wind.txt.join('\n'), { align: 'center' });
           text.setFont('Courier');
           text.setFontSize(10);
-          text.setOrigin(0);
+          text.setOrigin(0); 
           
           let r1 = this.add.rectangle(0, 0, text.width+4, text.height+4, 0x000000);
           wind.sprite.add(r1);
@@ -284,14 +286,13 @@ class GameScene extends Scene {
             wind.duration--;
             if(wind.duration <=0 ){
               wind.sprite?.destroy();
-              wind.sprite = null;
+              this.#wind.shift();
             }
           }
         }
 
-        this.#wind = this.#wind.filter(wind => wind.sprite)
 
-      });
+      };
     }
 }
 
