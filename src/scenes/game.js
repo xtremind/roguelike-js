@@ -86,6 +86,7 @@ class GameScene extends Scene {
 
         this.#showMsg(["hello world qqsdsd"], 100);
         this.#showMsg(["second message", "with two lines"], 100);
+        this.#showTalk(["third message"]);
 
         console.log("GameScene.create");
     }
@@ -101,7 +102,14 @@ class GameScene extends Scene {
 
     #update_interact(){
         this.#button_buffer = this.#getButton();
-        this.#execute(this.#button_buffer);
+        if(this.#wind.length > 0){
+          if(this.#wind[0].interact && this.#button_buffer == 4 ){
+            this.#wind[0].duration = 0;
+            this.#wind[0].interact = false;
+          }
+        } else {
+          this.#execute(this.#button_buffer);
+        }
         this.#button_buffer = -1;
     }
 
@@ -109,7 +117,7 @@ class GameScene extends Scene {
       //[ "up", "down", "left", "right", "space", "shift" ]
       let result = -1;
       Object.keys(this.#cursors).forEach((dir, ind) => {
-        if (ind >= 0 && ind < 4 && this.#cursors[dir].isDown){
+        if (ind >= 0 && ind < 5 && this.#cursors[dir].isDown){
           result = ind;
         }
       });
@@ -126,7 +134,6 @@ class GameScene extends Scene {
     }
 
     #moveHero(dx, dy) {
-
         if (dx > 0) {
             this.#hero.flip = false;
         } else if (dx < 0) {
@@ -251,6 +258,11 @@ class GameScene extends Scene {
     #showMsg(txt, duration){
       let wind = this.#addWind(txt);
       wind.duration = duration;
+    }
+
+    #showTalk(txt){
+      let talk = this.#addWind(txt);
+      talk.interact = true;
     }
 
     #addWind(txt){

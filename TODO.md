@@ -98,11 +98,11 @@
 - [x] TEXTBOX : add space after/before message in textbox
 - [x] TEXTBOX : displayed message disappear after a certain amount of time
 - [x] TEXTBOX : add animation when message disappear (like parchment is opened)
-- [ ] TALK : message without duration, but disappear after button pressed
+- [x] TALK : message without duration, but disappear after button pressed
 - [ ] TALK : display button to push to close the textbox on the  bottom right
 - [ ] TALK : displayed button move up and down
-- [ ] TALK : don't move until talk disappear
-- [ ] PANEL : add multiple panel, with different text in it
+- [x] TALK : don't move until talk disappear
+- [x] PANEL : add multiple panel, with different text in it
 
 ### Step 8 : Monsters
 
