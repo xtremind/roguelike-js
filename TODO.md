@@ -97,7 +97,7 @@
 - [x] TEXTBOX : centering the textbox
 - [x] TEXTBOX : add space after/before message in textbox
 - [x] TEXTBOX : displayed message disappear after a certain amount of time
-- [ ] TEXTBOX : add animation when message disappear (like parchment is opened)
+- [x] TEXTBOX : add animation when message disappear (like parchment is opened)
 - [ ] TALK : message without duration, but disappear after button pressed
 - [ ] TALK : display button to push to close the textbox on the  bottom right
 - [ ] TALK : displayed button move up and down

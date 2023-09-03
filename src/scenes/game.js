@@ -84,8 +84,8 @@ class GameScene extends Scene {
         this.#update = this.#update_interact;
         this.#draw = this.#draw_game;
 
-        //this.#showMsg(["hello world qqsdsd"], 100);
-        //this.#showMsg(["second message", "with two lines"], 100);
+        this.#showMsg(["hello world qqsdsd"], 100);
+        this.#showMsg(["second message", "with two lines"], 100);
 
         console.log("GameScene.create");
     }
@@ -94,7 +94,7 @@ class GameScene extends Scene {
         //console.log("GameScene.update");
         this.#update();
         this.#draw();
-        this.#drawWind();
+        this.#draw_wind();
         //update turn 
         this.#click = (this.#click+1) % 64;
     }
@@ -259,40 +259,51 @@ class GameScene extends Scene {
       return wind;
     }
 
-    #drawWind(){
+    #draw_wind(){
       if (this.#wind.length > 0){
         let wind = this.#wind[0];
-        //à voir si c'est pas mieux de destroy puis reconstruire à chaque fois
         if(!wind.sprite){
-          //create display 
-          wind.sprite = this.add.container(this.cameras.main.worldView.x + this.cameras.main.width / (2 * this.cameras.main.zoom), this.cameras.main.worldView.y + this.cameras.main.height / (2 * this.cameras.main.zoom));
-
-          const text = this.add.text(0, 0, wind.txt.join('\n'), { align: 'center' });
-          text.setFont('Courier');
-          text.setFontSize(10);
-          text.setOrigin(0); 
-          
-          let r1 = this.add.rectangle(0, 0, text.width+4, text.height+4, 0x000000);
-          wind.sprite.add(r1);
-          wind.sprite.add(this.add.rectangle(0, 0, text.width+3, text.height+3, 0xffffff));
-          wind.sprite.add(this.add.rectangle(0, 0, text.width+1, text.height+1, 0x000000));
-
-          Phaser.Display.Align.In.Center(text, r1);
-          wind.sprite.add(text);
-          wind.sprite.setDepth(10);
+          this.#drawWind(wind);
         } else {
-          //update display
           if (wind.duration){
             wind.duration--;
-            if(wind.duration <=0 ){
+          }
+
+          if(wind.duration <=0 ){
+            wind.height -= wind.height / 4;
+            wind.sprite?.destroy();
+            this.#drawWind(wind)
+            if(wind.height <= 1){
               wind.sprite?.destroy();
               this.#wind.shift();
             }
           }
         }
-
-
       };
+    }
+
+    #drawWind(wind){
+      wind.sprite = this.add.container(this.cameras.main.worldView.x + this.cameras.main.width / (2 * this.cameras.main.zoom), this.cameras.main.worldView.y + this.cameras.main.height / (2 * this.cameras.main.zoom));
+      
+      const text = this.add.text(0, 0, wind.txt.join('\n'), { align: 'center' });
+      text.setFont('Courier');
+      text.setFontSize(10);
+      text.setOrigin(0.5);
+      
+      wind.width = wind.width ? wind.width : text.width;
+      wind.height = wind.height ? wind.height : text.height;
+      
+      text.setDisplaySize(wind.width, wind.height);
+      
+      wind.sprite.add(this.add.rectangle(0, 0, wind.width+4, wind.height+4, 0x000000));
+      wind.sprite.add(this.add.rectangle(0, 0, wind.width+3, wind.height+3, 0xffffff));
+      let r1 = this.add.rectangle(0, 0, wind.width+1, wind.height+1, 0x000000);
+      wind.sprite.add(r1);
+      
+      Phaser.Display.Align.In.Center(text, r1);
+      wind.sprite.add(text);
+
+      wind.sprite.setDepth(10);
     }
 }
 
