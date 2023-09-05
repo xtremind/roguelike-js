@@ -1,8 +1,11 @@
 import {Scene} from 'phaser';
+
 import heroSprites from 'images/hero.png';
+import mobsSprites from 'images/mobs.png';
 import decorationsSprites from 'images/decorations.png';
 
 import heroAtlas from 'jsons/hero.json';
+import mobsAtlas from 'jsons/mobs.json';
 import decorationsAtlas from 'jsons/decorations.json';
 import map from 'jsons/map.json';
 
@@ -67,6 +70,8 @@ class PreloadScene extends Scene {
       //Load all assets
       this.load.image('heroSprites', heroSprites);
       this.load.atlas('hero', heroSprites, heroAtlas);
+      this.load.image('mobsSprites', mobsSprites);
+      this.load.atlas('mobs', mobsSprites, mobsAtlas);
       this.load.image('decorationsSprites', decorationsSprites);
       this.load.atlas('decorations', decorationsSprites, decorationsAtlas);
 
