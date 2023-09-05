@@ -99,8 +99,8 @@
 - [x] TEXTBOX : displayed message disappear after a certain amount of time
 - [x] TEXTBOX : add animation when message disappear (like parchment is opened)
 - [x] TALK : message without duration, but disappear after button pressed
-- [ ] TALK : display button to push to close the textbox on the  bottom right
-- [ ] TALK : displayed button move up and down
+- [O] TALK : display button to push to close the textbox on the  bottom right
+- [O] TALK : displayed button move up and down
 - [x] TALK : don't move until talk disappear
 - [x] PANEL : add multiple panel, with different text in it
 

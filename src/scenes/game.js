@@ -315,7 +315,7 @@ class GameScene extends Scene {
     Phaser.Display.Align.In.Center(text, r1);
     wind.sprite.add(text);
 
-    if(wind.interact){
+    /*if(wind.interact){
       //draw button spc
       wind.sprite.add(this.add.graphics().fillRoundedRect(0, 0, 13, 13, 3));
       const g = this.add.graphics().strokeRoundedRect(1, 1, 11, 11, 3)
@@ -331,7 +331,7 @@ class GameScene extends Scene {
 
       //Math.floor((this.#click / 16)) % 4
 
-    }
+    }*/
 
     wind.sprite.setDepth(10);
   }
