@@ -164,8 +164,8 @@ class GameScene extends Scene {
 
     const nextPosTile = this.#map.getTileAt(this.#hero.x + dx, this.#hero.y + dy);
 
-    if (nextPosTile.properties?.solid) {
-      if (nextPosTile.properties.interactive) {
+    if (!nextPosTile || nextPosTile.properties?.solid) {
+      if (nextPosTile?.properties?.interactive) {
         this.#interact(nextPosTile, this.#hero.x + dx, this.#hero.y + dy)
       }
 
@@ -178,7 +178,7 @@ class GameScene extends Scene {
       this.#hero.action = 'BUMP'
       this.#update = this.#update_pturn;
 
-      if (nextPosTile.properties?.interactive) {
+      if (nextPosTile?.properties?.interactive) {
         this.#interactWith(nextPosTile);
       }
     } else {
