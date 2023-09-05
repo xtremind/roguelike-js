@@ -16,7 +16,8 @@ class GameScene extends Scene {
   //datas
   #click = 0;
   #hero = {};
-  #mob = {};
+  #mobs = []
+  //#mob = {};
   #map = {};
   #wind = [];
 
@@ -78,14 +79,11 @@ class GameScene extends Scene {
     this.#hero.flip = false;
     this.#hero.action = 'NONE'
     this.#hero.time = 1;
+    this.#hero.type = 'hero';
 
-    this.#mob.x = 3
-    this.#mob.y = 9
-    this.#mob.offset_x = 0;
-    this.#mob.offset_y = 0;
-    this.#mob.soffset_x = 0;
-    this.#mob.soffset_y = 0;
-    this.#mob.flip = false;
+    this.#mobs.push(this.#hero);
+    this.#createMob(3, 9, 'slime')
+    //this.#createMob(4, 9, 'ghost');
 
     //initiate interaction for player
     this.#cursors = this.input.keyboard.createCursorKeys();
@@ -98,6 +96,21 @@ class GameScene extends Scene {
     //this.#showTalk(["third message"]);
 
     console.log("GameScene.create");
+  }
+
+  #createMob(x, y, type){
+    const mob = {}
+    mob.x = x
+    mob.y = y
+    mob.offset_x = 0;
+    mob.offset_y = 0;
+    mob.soffset_x = 0;
+    mob.soffset_y = 0;
+    mob.flip = false;
+    mob.type = type;
+    mob.action = 'NONE'
+
+    this.#mobs.push(mob);
   }
 
   update() {
@@ -245,35 +258,31 @@ class GameScene extends Scene {
   #draw_game() {
     //console.log("GameScene.render");
     //clear scene
-    this.#hero.sprite?.destroy();
-    //draw hero
-    this.#hero.sprite = this.add.image(this.#hero.x * 8 + this.#hero.offset_x, this.#hero.y * 8 + this.#hero.offset_y, 'hero', Math.floor((this.#click / 16)) % 4)
-    //this.#hero.sprite.setTint(0xff0000); // pour changer la couleur du sprite
-    //gauche
-    if (this.#hero.flip) {
-      this.#hero.sprite.setOrigin(1, 0)
-      this.#hero.sprite.scaleX = -1
-    } else {
-      this.#hero.sprite.setOrigin(0, 0)
-      this.#hero.sprite.scaleX = 1
-    }
-
-    //clear scene
-    this.#mob.sprite?.destroy();
-    //draw hero
-    this.#mob.sprite = this.add.image(this.#mob.x * 8 + this.#mob.offset_x, this.#mob.y * 8 + this.#mob.offset_y, 'mobs', "mobs (slime) "+Math.floor((this.#click / 16)) % 4 +".ase")
-    //this.#hero.sprite.setTint(0xff0000); // pour changer la couleur du sprite
-    //gauche
-    if (this.#mob.flip) {
-      this.#mob.sprite.setOrigin(1, 0)
-      this.#mob.sprite.scaleX = -1
-    } else {
-      this.#mob.sprite.setOrigin(0, 0)
-      this.#mob.sprite.scaleX = 1
-    }
-
+    this.#drawMobs();
     //draw floor => managed by phaser
   }
+
+   #drawMobs(){
+    this.#drawMob(this.#hero, 'hero', Math.floor((this.#click / 16)) % 4)
+
+    this.#mobs.filter(mob => mob.type !== 'hero').forEach(mob => {
+      this.#drawMob(mob, 'mobs', "mobs ("+mob.type+") "+Math.floor((this.#click / 16)) % 4 +".ase")
+    })
+   }
+
+   #drawMob(mob, type, sprite){
+    mob.sprite?.destroy();
+    mob.sprite = this.add.image(mob.x * 8 + mob.offset_x, mob.y * 8 + mob.offset_y, type, sprite)
+    //mob.sprite.setTint(0xff0000); // pour changer la couleur du sprite
+    //gauche
+    if (mob.flip) {
+      mob.sprite.setOrigin(1, 0)
+      mob.sprite.scaleX = -1
+    } else {
+      mob.sprite.setOrigin(0, 0)
+      mob.sprite.scaleX = 1
+    }
+   }
 
   #showMsg(txt, duration) {
     let wind = this.#addWind(txt);

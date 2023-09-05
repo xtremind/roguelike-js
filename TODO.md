@@ -108,15 +108,15 @@
 
 - [x] TILES : draw a monster : slime (4 frames to animate, with up/down head animation)
 - [x] DRAW GAME : display slime
-- [ ] MOB : create a list than contain mobs
-- [ ] MOB : create a function to add a mob
-- [ ] DRAW GAME : draw mob from list
+- [x] MOB : create a list than contain mobs
+- [x] MOB : create a function to add a mob
+- [x] DRAW GAME : draw mob from list
 
 ### Step 9 : Mob System
 
-- [ ] CHARACTER : use it to define a mob
-- [ ] MOB : create multiple mob
-- [ ] MOB : create a function to create a mob on a certain position
+- [x] CHARACTER : use it to define a mob
+- [x] MOB : create multiple mob
+- [x] MOB : create a function to create a mob on a certain position
 - [ ] INTERACTION : create a function to determine if a position is walkable
 - [ ] INTERACTION : create a function to determine if a position is in bound
 - [ ] INTERACTION : create a function to retrieve a mob from a position if existing
