@@ -16,6 +16,7 @@ class GameScene extends Scene {
   //datas
   #click = 0;
   #hero = {};
+  #mob = {};
   #map = {};
   #wind = [];
 
@@ -78,6 +79,14 @@ class GameScene extends Scene {
     this.#hero.action = 'NONE'
     this.#hero.time = 1;
 
+    this.#mob.x = 3
+    this.#mob.y = 9
+    this.#mob.offset_x = 0;
+    this.#mob.offset_y = 0;
+    this.#mob.soffset_x = 0;
+    this.#mob.soffset_y = 0;
+    this.#mob.flip = false;
+
     //initiate interaction for player
     this.#cursors = this.input.keyboard.createCursorKeys();
 
@@ -86,7 +95,7 @@ class GameScene extends Scene {
 
     //this.#showMsg(["hello world qqsdsd"], 100);
     //this.#showMsg(["second message", "with two lines"], 100);
-    this.#showTalk(["third message"]);
+    //this.#showTalk(["third message"]);
 
     console.log("GameScene.create");
   }
@@ -219,20 +228,16 @@ class GameScene extends Scene {
   }
 
   #interact(tle, dx, dy) {
-    if (tle.index === 6) {
-      //if tle is vase 6
+    if (tle.index === Tiles.VASE) {
       this.#map.removeTileAt(dx, dy);
-      this.#map.putTileAt(2, dx, dy);
-    } else if (tle.index === 5) {
-      // if tle is door 5
+      this.#map.putTileAt(Tiles.FLOOR, dx, dy);
+    } else if (tle.index === Tiles.DOOR) {
       this.#map.removeTileAt(dx, dy);
-      this.#map.putTileAt(2, dx, dy);
-    } else if (tle.index === 8) {
-      // if tle is chest 8=>9
+      this.#map.putTileAt(Tiles.FLOOR, dx, dy);
+    } else if (tle.index === Tiles.CLOSED_CHEST) {
       this.#map.removeTileAt(dx, dy);
-      this.#map.putTileAt(9, dx, dy);
-    } else if (tle.index === 7) {
-      //if tle is panel 7
+      this.#map.putTileAt(Tiles.OPENED_CHEST, dx, dy);
+    } else if (tle.index === Tiles.PANEL) {
 
     }
   }
@@ -252,6 +257,21 @@ class GameScene extends Scene {
       this.#hero.sprite.setOrigin(0, 0)
       this.#hero.sprite.scaleX = 1
     }
+
+    //clear scene
+    this.#mob.sprite?.destroy();
+    //draw hero
+    this.#mob.sprite = this.add.image(this.#mob.x * 8 + this.#mob.offset_x, this.#mob.y * 8 + this.#mob.offset_y, 'mobs', "mobs (slime) "+Math.floor((this.#click / 16)) % 4 +".ase")
+    //this.#hero.sprite.setTint(0xff0000); // pour changer la couleur du sprite
+    //gauche
+    if (this.#mob.flip) {
+      this.#mob.sprite.setOrigin(1, 0)
+      this.#mob.sprite.scaleX = -1
+    } else {
+      this.#mob.sprite.setOrigin(0, 0)
+      this.#mob.sprite.scaleX = 1
+    }
+
     //draw floor => managed by phaser
   }
 

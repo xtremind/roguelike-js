@@ -107,7 +107,7 @@
 ### Step 8 : Monsters
 
 - [x] TILES : draw a monster : slime (4 frames to animate, with up/down head animation)
-- [ ] DRAW GAME : display slime
+- [x] DRAW GAME : display slime
 - [ ] MOB : create a list than contain mobs
 - [ ] MOB : create a function to add a mob
 - [ ] DRAW GAME : draw mob from list
