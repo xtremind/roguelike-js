@@ -1,5 +1,6 @@
 import { Scene } from 'phaser';
 import { drawWind } from '../utils/graphics'
+import { prepareWalk, walk, prepareBump, bump } from '../utils/movements';
 
 const Tiles = Object.freeze({
   WALL: 1,
@@ -16,6 +17,7 @@ const Tiles = Object.freeze({
 class GameScene extends Scene {
   //datas
   #click = 0;
+  #tick = 1;
   #hero = {};
   #mobs = []
   //#mob = {};
@@ -79,7 +81,7 @@ class GameScene extends Scene {
     this.#hero.soffset_y = 0;
     this.#hero.flip = false;
     this.#hero.action = 'NONE'
-    this.#hero.time = 1;
+    this.#tick = 1;
     this.#hero.type = 'hero';
 
     this.#mobs.push(this.#hero);
@@ -170,28 +172,16 @@ class GameScene extends Scene {
         this.#interact(nextPosTile, this.#hero.x + dx, this.#hero.y + dy)
       }
 
-      //BUMP
-      this.#hero.soffset_x = dx * 8;
-      this.#hero.soffset_y = dy * 8;
-      this.#hero.offset_x = 0;
-      this.#hero.offset_y = 0;
-      this.#hero.time = 0;
-      this.#hero.action = 'BUMP'
+      prepareBump(this.#hero, dx, dy);
+      this.#tick = 0;
       this.#update = this.#update_pturn;
 
       if (nextPosTile.properties?.interactive) {
         this.#interactWith(nextPosTile);
       }
     } else {
-      //WALK
-      this.#hero.x += dx;
-      this.#hero.y += dy;
-      this.#hero.soffset_x = -dx * 8;
-      this.#hero.soffset_y = -dy * 8;
-      this.#hero.offset_x = this.#hero.soffset_x;
-      this.#hero.offset_y = this.#hero.soffset_y;
-      this.#hero.time = 0;
-      this.#hero.action = 'WALK'
+      prepareWalk(this.#hero, dx, dy);
+      this.#tick = 0;
       this.#update = this.#update_pturn;
 
       this.#walkSound.play();
@@ -218,23 +208,19 @@ class GameScene extends Scene {
       this.#openChestSound.play();
       //loot
     }
-
   }
 
   #update_pturn() {
-    this.#hero.time = Math.min(this.#hero.time + 0.125, 1);
+    this.#tick = Math.min(this.#tick + 0.125, 1);
 
     //player move
     if (this.#hero.action == 'WALK') {
-      this.#hero.offset_x = this.#hero.soffset_x * (1 - this.#hero.time);
-      this.#hero.offset_y = this.#hero.soffset_y * (1 - this.#hero.time);
+      walk(this.#hero, this.#tick)
     } else if (this.#hero.action == 'BUMP') {
-      const tme = this.#hero.time >= 0.5 ? 1 - this.#hero.time : this.#hero.time;
-      this.#hero.offset_x = this.#hero.soffset_x * (tme);
-      this.#hero.offset_y = this.#hero.soffset_y * (tme);
+      bump(this.#hero, this.#tick)
     }
 
-    if (this.#hero.time === 1) {
+    if (this.#tick === 1) {
       this.#update = this.#update_interact;
       this.#hero.action = 'NONE'
     }

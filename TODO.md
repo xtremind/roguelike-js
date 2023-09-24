@@ -122,7 +122,7 @@
 - [x] INTERACTION : create a function to retrieve a mob from a position if existing
 - [ ] INTERACTION : do bump when hitting a mob
 - [x] INTERACTION : create an empty function to that will attack a mob
-- [ ] GLOBAL : make p_timer a global variable
+- [x] GLOBAL : make p_timer a global variable
 
 ### Step 10 : Combat
 
