@@ -166,6 +166,7 @@ class GameScene extends Scene {
     }
 
     const nextPosTile = this.#map.getTileAt(this.#hero.x + dx, this.#hero.y + dy);
+    const mob = this.#getMob(this.#hero.x + dx, this.#hero.y + dy);
 
     if (nextPosTile.properties?.solid) {
       if (nextPosTile.properties.interactive) {
@@ -179,7 +180,11 @@ class GameScene extends Scene {
       if (nextPosTile.properties?.interactive) {
         this.#interactWith(nextPosTile);
       }
-    } else {
+    } else if(mob){
+      prepareBump(this.#hero, dx, dy);
+      this.#tick = 0;
+      this.#update = this.#update_pturn;
+    }else {
       prepareWalk(this.#hero, dx, dy);
       this.#tick = 0;
       this.#update = this.#update_pturn;
@@ -256,11 +261,10 @@ class GameScene extends Scene {
   }
 
    #drawMobs(){
-    this.#drawMob(this.#hero, 'hero', Math.floor((this.#click / 16)) % 4)
-
     this.#mobs.filter(mob => mob.type !== 'hero').forEach(mob => {
       this.#drawMob(mob, 'mobs', "mobs ("+mob.type+") "+Math.floor((this.#click / 16)) % 4 +".ase")
     })
+    this.#drawMob(this.#hero, 'hero', Math.floor((this.#click / 16)) % 4)
    }
 
    #drawMob(mob, type, sprite){
