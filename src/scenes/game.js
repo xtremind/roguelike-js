@@ -256,6 +256,12 @@ class GameScene extends Scene {
     }
   }
 
+  #getMob(x, y) {
+    return this.#mobs.filter(m => m.x === x && m.y === y)[0];
+  }
+  
+  #hitMob(){}
+
   #draw_game() {
     //console.log("GameScene.render");
     //clear scene
