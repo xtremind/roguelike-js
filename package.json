@@ -6,19 +6,28 @@
   "scripts": {
     "watch": "webpack --watch --mode development",
     "start": "webpack-dev-server --open",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "format": "npx prettier . --write",
+    "format:check": "npx prettier . --check",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepare": "husky install"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "html-webpack-plugin": "^5.5.0",
+    "husky": "^8.0.3",
     "jest": "^27.5.0",
+    "lint-staged": "^14.0.1",
     "nodemon": "^2.0.15",
+    "prettier": "3.0.3",
     "webpack": "^5.67.0",
     "webpack-cli": "^4.9.2",
     "webpack-dev-server": "^4.13.2"
   },
   "dependencies": {
     "phaser": "^3.55.2"
+  },
+  "lint-staged": {
+    "**/*": "prettier --write --ignore-unknown"
   }
 }
