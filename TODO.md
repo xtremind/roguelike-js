@@ -119,10 +119,10 @@
 - [x] MOB : create a function to create a mob on a certain position
 - [ ] INTERACTION : create a function to determine if a position is walkable
 - [ ] INTERACTION : create a function to determine if a position is in bound
-- [ ] INTERACTION : create a function to retrieve a mob from a position if existing
+- [x] INTERACTION : create a function to retrieve a mob from a position if existing
 - [ ] INTERACTION : do bump when hitting a mob
-- [ ] INTERACTION : create an empty function to that will attack a mob
-- [ ] GLOBAL : make p_timer a global variable
+- [x] INTERACTION : create an empty function to that will attack a mob
+- [x] GLOBAL : make p_timer a global variable
 
 ### Step 10 : Combat
 

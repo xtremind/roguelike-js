@@ -1,4 +1,6 @@
 import { Scene } from 'phaser';
+import { drawWind } from '../utils/graphics'
+import { prepareWalk, walk, prepareBump, bump } from '../utils/movements';
 
 const Tiles = Object.freeze({
   WALL: 1,
@@ -15,6 +17,7 @@ const Tiles = Object.freeze({
 class GameScene extends Scene {
   //datas
   #click = 0;
+  #tick = 1;
   #hero = {};
   #mobs = []
   //#mob = {};
@@ -78,7 +81,7 @@ class GameScene extends Scene {
     this.#hero.soffset_y = 0;
     this.#hero.flip = false;
     this.#hero.action = 'NONE'
-    this.#hero.time = 1;
+    this.#tick = 1;
     this.#hero.type = 'hero';
 
     this.#mobs.push(this.#hero);
@@ -163,34 +166,27 @@ class GameScene extends Scene {
     }
 
     const nextPosTile = this.#map.getTileAt(this.#hero.x + dx, this.#hero.y + dy);
+    const mob = this.#getMob(this.#hero.x + dx, this.#hero.y + dy);
 
     if (!nextPosTile || nextPosTile.properties?.solid) {
       if (nextPosTile?.properties?.interactive) {
         this.#interact(nextPosTile, this.#hero.x + dx, this.#hero.y + dy)
       }
 
-      //BUMP
-      this.#hero.soffset_x = dx * 8;
-      this.#hero.soffset_y = dy * 8;
-      this.#hero.offset_x = 0;
-      this.#hero.offset_y = 0;
-      this.#hero.time = 0;
-      this.#hero.action = 'BUMP'
+      prepareBump(this.#hero, dx, dy);
+      this.#tick = 0;
       this.#update = this.#update_pturn;
 
       if (nextPosTile?.properties?.interactive) {
         this.#interactWith(nextPosTile);
       }
-    } else {
-      //WALK
-      this.#hero.x += dx;
-      this.#hero.y += dy;
-      this.#hero.soffset_x = -dx * 8;
-      this.#hero.soffset_y = -dy * 8;
-      this.#hero.offset_x = this.#hero.soffset_x;
-      this.#hero.offset_y = this.#hero.soffset_y;
-      this.#hero.time = 0;
-      this.#hero.action = 'WALK'
+    } else if(mob){
+      prepareBump(this.#hero, dx, dy);
+      this.#tick = 0;
+      this.#update = this.#update_pturn;
+    }else {
+      prepareWalk(this.#hero, dx, dy);
+      this.#tick = 0;
       this.#update = this.#update_pturn;
 
       this.#walkSound.play();
@@ -217,23 +213,19 @@ class GameScene extends Scene {
       this.#openChestSound.play();
       //loot
     }
-
   }
 
   #update_pturn() {
-    this.#hero.time = Math.min(this.#hero.time + 0.125, 1);
+    this.#tick = Math.min(this.#tick + 0.125, 1);
 
     //player move
     if (this.#hero.action == 'WALK') {
-      this.#hero.offset_x = this.#hero.soffset_x * (1 - this.#hero.time);
-      this.#hero.offset_y = this.#hero.soffset_y * (1 - this.#hero.time);
+      walk(this.#hero, this.#tick)
     } else if (this.#hero.action == 'BUMP') {
-      const tme = this.#hero.time >= 0.5 ? 1 - this.#hero.time : this.#hero.time;
-      this.#hero.offset_x = this.#hero.soffset_x * (tme);
-      this.#hero.offset_y = this.#hero.soffset_y * (tme);
+      bump(this.#hero, this.#tick)
     }
 
-    if (this.#hero.time === 1) {
+    if (this.#tick === 1) {
       this.#update = this.#update_interact;
       this.#hero.action = 'NONE'
     }
@@ -255,6 +247,12 @@ class GameScene extends Scene {
     }
   }
 
+  #getMob(x, y) {
+    return this.#mobs.filter(m => m.x === x && m.y === y)[0];
+  }
+  
+  #hitMob(){}
+
   #draw_game() {
     //console.log("GameScene.render");
     //clear scene
@@ -263,11 +261,10 @@ class GameScene extends Scene {
   }
 
    #drawMobs(){
-    this.#drawMob(this.#hero, 'hero', Math.floor((this.#click / 16)) % 4)
-
     this.#mobs.filter(mob => mob.type !== 'hero').forEach(mob => {
       this.#drawMob(mob, 'mobs', "mobs ("+mob.type+") "+Math.floor((this.#click / 16)) % 4 +".ase")
     })
+    this.#drawMob(this.#hero, 'hero', Math.floor((this.#click / 16)) % 4)
    }
 
    #drawMob(mob, type, sprite){
@@ -304,7 +301,7 @@ class GameScene extends Scene {
     if (this.#wind.length > 0) {
       let wind = this.#wind[0];
       if (!wind.sprite) {
-        this.#drawWind(wind);
+        drawWind(this, wind);
       } else {
         if (wind.duration) {
           wind.duration--;
@@ -313,7 +310,7 @@ class GameScene extends Scene {
         if (wind.duration <= 0) {
           wind.height -= wind.height / 4;
           wind.sprite?.destroy();
-          this.#drawWind(wind)
+          drawWind(this, wind)
           if (wind.height <= 1) {
             wind.sprite?.destroy();
             this.#wind.shift();
@@ -323,47 +320,6 @@ class GameScene extends Scene {
     };
   }
 
-  #drawWind(wind) {
-    wind.sprite = this.add.container(this.cameras.main.worldView.x + this.cameras.main.width / (2 * this.cameras.main.zoom), this.cameras.main.worldView.y + this.cameras.main.height / (2 * this.cameras.main.zoom));
-
-    const text = this.add.text(0, 0, wind.txt.join('\n'), { align: 'center' });
-    text.setFont('Courier');
-    text.setFontSize(10);
-    text.setOrigin(0.5);
-
-    wind.width = wind.width ? wind.width : text.width;
-    wind.height = wind.height ? wind.height : text.height;
-
-    text.setDisplaySize(wind.width, wind.height);
-
-    wind.sprite.add(this.add.rectangle(0, 0, wind.width + 4, wind.height + 4, 0x000000));
-    wind.sprite.add(this.add.rectangle(0, 0, wind.width + 3, wind.height + 3, 0xffffff));
-    let r1 = this.add.rectangle(0, 0, wind.width + 1, wind.height + 1, 0x000000);
-    wind.sprite.add(r1);
-
-    Phaser.Display.Align.In.Center(text, r1);
-    wind.sprite.add(text);
-
-    /*if(wind.interact){
-      //draw button spc
-      wind.sprite.add(this.add.graphics().fillRoundedRect(0, 0, 13, 13, 3));
-      const g = this.add.graphics().strokeRoundedRect(1, 1, 11, 11, 3)
-      g.lineStyle(1, 0xffffff, 1);
-      wind.sprite.add(g);
-      const intText = this.add.text(0, 0, "spc", { align: 'center' });
-      intText.setFont('Courier');
-      intText.setFontSize(5);
-      intText.setOrigin(0.5);
-      intText.setColor('#ffffff')
-      Phaser.Display.Align.In.Center(intText, g);
-      wind.sprite.add(intText);
-
-      //Math.floor((this.#click / 16)) % 4
-
-    }*/
-
-    wind.sprite.setDepth(10);
-  }
 }
 
 
