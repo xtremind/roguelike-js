@@ -1,18 +1,7 @@
 import { Scene } from 'phaser';
 import { drawWind } from '../utils/graphics'
 import { prepareWalk, walk, prepareBump, bump } from '../utils/movements';
-
-const Tiles = Object.freeze({
-  WALL: 1,
-  FLOOR: 2,
-  UP_STAIR: 3,
-  DOWN_STAIR: 4,
-  DOOR: 5,
-  VASE: 6,
-  PANEL: 7,
-  CLOSED_CHEST: 8,
-  OPENED_CHEST: 9
-});
+import { Tiles, Mobs } from '../utils/constants';
 
 class GameScene extends Scene {
   //datas
@@ -73,19 +62,10 @@ class GameScene extends Scene {
     const platforms = this.#map.createLayer('level1', tileset, 0, 0);
 
     //initiate hero position
-    this.#hero.x = 5;
-    this.#hero.y = 7;
-    this.#hero.offset_x = 0;
-    this.#hero.offset_y = 0;
-    this.#hero.soffset_x = 0;
-    this.#hero.soffset_y = 0;
-    this.#hero.flip = false;
-    this.#hero.action = 'NONE'
     this.#tick = 1;
-    this.#hero.type = 'hero';
 
-    this.#mobs.push(this.#hero);
-    this.#createMob(3, 9, 'slime')
+    this.#hero = this.#createMob(5, 7, Mobs.HERO)
+    this.#createMob(3, 9, Mobs.SLIME)
     //this.#createMob(4, 9, 'ghost');
 
     //initiate interaction for player
@@ -114,6 +94,7 @@ class GameScene extends Scene {
     mob.action = 'NONE'
 
     this.#mobs.push(mob);
+    return mob;
   }
 
   update() {
