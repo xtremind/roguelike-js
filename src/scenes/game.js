@@ -1,7 +1,8 @@
 import { Scene } from 'phaser';
-import { drawWind } from '../utils/graphics'
-import { prepareWalk, walk, prepareBump, bump } from '../utils/movements';
-import { Tiles, Mobs } from '../utils/constants';
+
+import { drawWind } from 'utils/graphics'
+import { prepareWalk, walk, prepareBump, bump } from 'utils/movements';
+import { Tiles, Mobs } from 'utils/constants';
 
 class GameScene extends Scene {
   //datas

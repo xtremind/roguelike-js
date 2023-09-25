@@ -1,4 +1,3 @@
-
 exports.drawWind = function (scene, wind) {
   wind.sprite = scene.add.container(scene.cameras.main.worldView.x + scene.cameras.main.width / (2 * scene.cameras.main.zoom), scene.cameras.main.worldView.y + scene.cameras.main.height / (2 * scene.cameras.main.zoom));
 
