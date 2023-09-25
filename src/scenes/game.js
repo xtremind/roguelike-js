@@ -1,23 +1,23 @@
-import { Scene } from 'phaser';
+import { Scene } from "phaser";
 
-import { drawWind } from 'utils/graphics'
-import { prepareWalk, walk, prepareBump, bump } from 'utils/movements';
-import { Tiles, Mobs } from 'utils/constants';
+import { drawWind } from "utils/graphics";
+import { prepareWalk, walk, prepareBump, bump } from "utils/movements";
+import { Tiles, Mobs } from "utils/constants";
 
 class GameScene extends Scene {
   //datas
   #click = 0;
   #tick = 1;
   #hero = {};
-  #mobs = []
+  #mobs = [];
   //#mob = {};
   #map = {};
   #wind = [];
 
   //direction helpers
   #cursors;
-  #DIR_X = [0, 0, -1, 1]
-  #DIR_Y = [-1, 1, 0, 0]
+  #DIR_X = [0, 0, -1, 1];
+  #DIR_Y = [-1, 1, 0, 0];
   #button_buffer = -1;
 
   //generic functions
@@ -34,7 +34,7 @@ class GameScene extends Scene {
 
   constructor() {
     super({
-      key: 'GameScene'
+      key: "GameScene",
     });
   }
 
@@ -44,12 +44,12 @@ class GameScene extends Scene {
 
   preload() {
     console.log("GameScene.preload");
-    this.#breakVaseSound = this.sound.add('breakVase', { loop: false });
-    this.#hitSound = this.sound.add('hit', { loop: false });
-    this.#hurtSound = this.sound.add('hurt', { loop: false });
-    this.#openChestSound = this.sound.add('openChest', { loop: false });
-    this.#openDoorSound = this.sound.add('openDoor', { loop: false });
-    this.#walkSound = this.sound.add('walk', { loop: false });
+    this.#breakVaseSound = this.sound.add("breakVase", { loop: false });
+    this.#hitSound = this.sound.add("hit", { loop: false });
+    this.#hurtSound = this.sound.add("hurt", { loop: false });
+    this.#openChestSound = this.sound.add("openChest", { loop: false });
+    this.#openDoorSound = this.sound.add("openDoor", { loop: false });
+    this.#walkSound = this.sound.add("walk", { loop: false });
   }
 
   create() {
@@ -58,15 +58,15 @@ class GameScene extends Scene {
     this.cameras.main.centerOn(80, 60);
 
     //initiate map
-    this.#map = this.add.tilemap('map');
-    const tileset = this.#map.addTilesetImage('decorations');
-    const platforms = this.#map.createLayer('level1', tileset, 0, 0);
+    this.#map = this.add.tilemap("map");
+    const tileset = this.#map.addTilesetImage("decorations");
+    const platforms = this.#map.createLayer("level1", tileset, 0, 0);
 
     //initiate hero position
     this.#tick = 1;
 
-    this.#hero = this.#createMob(5, 7, Mobs.HERO)
-    this.#createMob(3, 9, Mobs.SLIME)
+    this.#hero = this.#createMob(5, 7, Mobs.HERO);
+    this.#createMob(3, 9, Mobs.SLIME);
     //this.#createMob(4, 9, 'ghost');
 
     //initiate interaction for player
@@ -82,17 +82,30 @@ class GameScene extends Scene {
     console.log("GameScene.create");
   }
 
-  #createMob(x, y, type){
-    const mob = {}
-    mob.x = x
-    mob.y = y
+  #createMob(x, y, type) {
+    const mob = {};
+    mob.x = x;
+    mob.y = y;
     mob.offset_x = 0;
     mob.offset_y = 0;
     mob.soffset_x = 0;
     mob.soffset_y = 0;
     mob.flip = false;
     mob.type = type;
-    mob.action = 'NONE'
+    mob.action = "NONE";
+
+    switch (type) {
+      case Mobs.HERO:
+        mob.atk = 1;
+        mob.health = 5;
+        mob.maxHealth = 5;
+        break;
+      case Mobs.SLIME:
+        mob.atk = 1;
+        mob.health = 1;
+        mob.maxHealth = 1;
+        break;
+    }
 
     this.#mobs.push(mob);
     return mob;
@@ -103,7 +116,7 @@ class GameScene extends Scene {
     this.#update();
     this.#draw();
     this.#draw_wind();
-    //update turn 
+    //update turn
     this.#click = (this.#click + 1) % 64;
   }
 
@@ -147,26 +160,24 @@ class GameScene extends Scene {
       this.#hero.flip = true;
     }
 
-    const nextPosTile = this.#map.getTileAt(this.#hero.x + dx, this.#hero.y + dy);
+    const nextPosTile = this.#map.getTileAt(
+      this.#hero.x + dx,
+      this.#hero.y + dy
+    );
     const mob = this.#getMob(this.#hero.x + dx, this.#hero.y + dy);
 
     if (!nextPosTile || nextPosTile.properties?.solid) {
       if (nextPosTile?.properties?.interactive) {
-        this.#interact(nextPosTile, this.#hero.x + dx, this.#hero.y + dy)
-      }
-
-      prepareBump(this.#hero, dx, dy);
-      this.#tick = 0;
-      this.#update = this.#update_pturn;
-
-      if (nextPosTile?.properties?.interactive) {
         this.#interactWith(nextPosTile);
       }
-    } else if(mob){
       prepareBump(this.#hero, dx, dy);
       this.#tick = 0;
       this.#update = this.#update_pturn;
-    }else {
+    } else if (mob) {
+      prepareBump(this.#hero, dx, dy);
+      this.#tick = 0;
+      this.#update = this.#update_pturn;
+    } else {
       prepareWalk(this.#hero, dx, dy);
       this.#tick = 0;
       this.#update = this.#update_pturn;
@@ -201,39 +212,29 @@ class GameScene extends Scene {
     this.#tick = Math.min(this.#tick + 0.125, 1);
 
     //player move
-    if (this.#hero.action == 'WALK') {
-      walk(this.#hero, this.#tick)
-    } else if (this.#hero.action == 'BUMP') {
-      bump(this.#hero, this.#tick)
+    if (this.#hero.action == "WALK") {
+      walk(this.#hero, this.#tick);
+    } else if (this.#hero.action == "BUMP") {
+      bump(this.#hero, this.#tick);
     }
 
     if (this.#tick === 1) {
       this.#update = this.#update_interact;
-      this.#hero.action = 'NONE'
-    }
-
-  }
-
-  #interact(tle, dx, dy) {
-    if (tle.index === Tiles.VASE) {
-      this.#map.removeTileAt(dx, dy);
-      this.#map.putTileAt(Tiles.FLOOR, dx, dy);
-    } else if (tle.index === Tiles.DOOR) {
-      this.#map.removeTileAt(dx, dy);
-      this.#map.putTileAt(Tiles.FLOOR, dx, dy);
-    } else if (tle.index === Tiles.CLOSED_CHEST) {
-      this.#map.removeTileAt(dx, dy);
-      this.#map.putTileAt(Tiles.OPENED_CHEST, dx, dy);
-    } else if (tle.index === Tiles.PANEL) {
-
+      this.#hero.action = "NONE";
     }
   }
 
   #getMob(x, y) {
-    return this.#mobs.filter(m => m.x === x && m.y === y)[0];
+    return this.#mobs.filter((m) => m.x === x && m.y === y)[0];
   }
-  
-  #hitMob(){}
+
+  #hitMob(attacker, defender) {
+    defender.health -= attacker.atk;
+  }
+
+  #isDead(mob) {
+    return mob.health <= 0;
+  }
 
   #draw_game() {
     //console.log("GameScene.render");
@@ -242,26 +243,41 @@ class GameScene extends Scene {
     //draw floor => managed by phaser
   }
 
-   #drawMobs(){
-    this.#mobs.filter(mob => mob.type !== 'hero').forEach(mob => {
-      this.#drawMob(mob, 'mobs', "mobs ("+mob.type+") "+Math.floor((this.#click / 16)) % 4 +".ase")
-    })
-    this.#drawMob(this.#hero, 'hero', Math.floor((this.#click / 16)) % 4)
-   }
+  #drawMobs() {
+    this.#mobs
+      .filter((mob) => mob.type !== "hero")
+      .forEach((mob) => {
+        this.#drawMob(
+          mob,
+          "mobs",
+          "mobs (" +
+            mob.type +
+            ") " +
+            (Math.floor(this.#click / 16) % 4) +
+            ".ase"
+        );
+      });
+    this.#drawMob(this.#hero, "hero", Math.floor(this.#click / 16) % 4);
+  }
 
-   #drawMob(mob, type, sprite){
+  #drawMob(mob, type, sprite) {
     mob.sprite?.destroy();
-    mob.sprite = this.add.image(mob.x * 8 + mob.offset_x, mob.y * 8 + mob.offset_y, type, sprite)
+    mob.sprite = this.add.image(
+      mob.x * 8 + mob.offset_x,
+      mob.y * 8 + mob.offset_y,
+      type,
+      sprite
+    );
     //mob.sprite.setTint(0xff0000); // pour changer la couleur du sprite
     //gauche
     if (mob.flip) {
-      mob.sprite.setOrigin(1, 0)
-      mob.sprite.scaleX = -1
+      mob.sprite.setOrigin(1, 0);
+      mob.sprite.scaleX = -1;
     } else {
-      mob.sprite.setOrigin(0, 0)
-      mob.sprite.scaleX = 1
+      mob.sprite.setOrigin(0, 0);
+      mob.sprite.scaleX = 1;
     }
-   }
+  }
 
   #showMsg(txt, duration) {
     let wind = this.#addWind(txt);
@@ -292,17 +308,15 @@ class GameScene extends Scene {
         if (wind.duration <= 0) {
           wind.height -= wind.height / 4;
           wind.sprite?.destroy();
-          drawWind(this, wind)
+          drawWind(this, wind);
           if (wind.height <= 1) {
             wind.sprite?.destroy();
             this.#wind.shift();
           }
         }
       }
-    };
+    }
   }
-
 }
-
 
 export default GameScene;

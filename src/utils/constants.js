@@ -7,16 +7,16 @@ exports.Tiles = Object.freeze({
   VASE: 6,
   PANEL: 7,
   CLOSED_CHEST: 8,
-  OPENED_CHEST: 9
+  OPENED_CHEST: 9,
 });
 
 exports.Mobs = Object.freeze({
-  HERO: 'hero',
-  SLIME: 'slime',
-  BAT: 'bat',
-  SHOGGOTH: 'shoggoth',
-  GHOST: 'ghost',
-  SCORPION: 'scorpion',
-  GOLEM: 'golem',
-  DEMON: 'demon'
+  HERO: "hero",
+  SLIME: "slime",
+  BAT: "bat",
+  SHOGGOTH: "shoggoth",
+  GHOST: "ghost",
+  SCORPION: "scorpion",
+  GOLEM: "golem",
+  DEMON: "demon",
 });

@@ -15,29 +15,26 @@ module.exports = {
   output: {
     path: path.join(__dirname, "dist/"),
     filename: "bundle.js",
-    publicPath: '/'
+    publicPath: "/",
   },
-  plugins: [
-    htmlPlugin, 
-    new webpack.HotModuleReplacementPlugin()
-  ],
+  plugins: [htmlPlugin, new webpack.HotModuleReplacementPlugin()],
   module: {
     rules: [
       {
         test: /\.(png|jpg|jpeg|gif|svg|mp3)$/,
-        type: 'asset/resource',
-      }
-    ]
+        type: "asset/resource",
+      },
+    ],
   },
-  resolve: { 
+  resolve: {
     alias: {
-      images: path.resolve(__dirname, './src/assets/img'),
-      sounds: path.resolve(__dirname, './src/assets/snd'),
-      jsons: path.resolve(__dirname, './src/assets/json'),
-      music: path.resolve(__dirname, './src/assets/msc'),
-      scenes: path.resolve(__dirname, './src/scenes'),
-      utils: path.resolve(__dirname, './src/utils'),
-    }, 
-    extensions: ["*", ".js", ".jsx"] 
-  }
+      images: path.resolve(__dirname, "./src/assets/img"),
+      sounds: path.resolve(__dirname, "./src/assets/snd"),
+      jsons: path.resolve(__dirname, "./src/assets/json"),
+      music: path.resolve(__dirname, "./src/assets/msc"),
+      scenes: path.resolve(__dirname, "./src/scenes"),
+      utils: path.resolve(__dirname, "./src/utils"),
+    },
+    extensions: ["*", ".js", ".jsx"],
+  },
 };

@@ -63,15 +63,15 @@
 - [x] TILES : draw up jar tile
 - [x] TILES : draw up panel tile
 - [x] INTERACTION : update solid tiles with new tiles
-- [X] INTERACTION : define which tiles are interactive
-- [X] LEVEL DESIGN : update first level with all new tiles
+- [x] INTERACTION : define which tiles are interactive
+- [x] LEVEL DESIGN : update first level with all new tiles
 - [x] INTERACTION : when detect bumping, check if expected destination is interactive tiles
 - [x] INTERACTION : when detect bumping into a jar, destroy it
 - [x] INTERACTION : when detect bumping into a closed chest, open it
 - [x] INTERACTION : when detect bumping into a door, destroy it
 - [x] INTERACTION : when detect bumping into a panel, ...
 - [x] UPDATE GAME : add a button buffer, that will contain all pressed buttons (only one more button is enough, since it's a roguelike)
-- [x] UPDATE GAME : from button buffer, move player 
+- [x] UPDATE GAME : from button buffer, move player
 
 ### Step 6 : Text Boxes
 
@@ -99,7 +99,7 @@
 - [x] TEXTBOX : displayed message disappear after a certain amount of time
 - [x] TEXTBOX : add animation when message disappear (like parchment is opened)
 - [x] TALK : message without duration, but disappear after button pressed
-- [O] TALK : display button to push to close the textbox on the  bottom right
+- [O] TALK : display button to push to close the textbox on the bottom right
 - [O] TALK : displayed button move up and down
 - [x] TALK : don't move until talk disappear
 - [x] PANEL : add multiple panel, with different text in it
@@ -120,15 +120,15 @@
 - [ ] INTERACTION : create a function to determine if a position is walkable
 - [ ] INTERACTION : create a function to determine if a position is in bound
 - [x] INTERACTION : create a function to retrieve a mob from a position if existing
-- [ ] INTERACTION : do bump when hitting a mob
+- [x] INTERACTION : do bump when hitting a mob
 - [x] INTERACTION : create an empty function to that will attack a mob
 - [x] GLOBAL : make p_timer a global variable
 
 ### Step 10 : Combat
 
-- [ ] CHARACTER : add attack / current energy / max energy depending on type
-- [ ] INTERACTION : create a function that will reduce the energy from the mob depending on the atteck
-- [ ] CHARACTER : create a function that will determine if it's dead (HP <= 0)
+- [x] CHARACTER : add attack / current energy / max energy depending on type
+- [x] INTERACTION : create a function that will reduce the energy from the mob depending on the attack
+- [x] CHARACTER : create a function that will determine if it's dead (HP <= 0)
 - [ ] INTERACTION : create a function that delete a mob if killed
 - [ ] INTERACTION : create a function that will change the color of the attacked mob if attacked to white
 - [ ] SOUND : create "attack a mob" sound
@@ -144,7 +144,7 @@
 - [ ] UPDATE : create a function that will loop on all mobs
 - [ ] UPDATE : find the lower distance from mob to hero after moving
 - [ ] UPDATE : move mob depending on lowest distance
-- [ ] UPDATE : create an update mob turn function 
+- [ ] UPDATE : create an update mob turn function
 - [ ] UPDATE : call the new function on update mob turn
 - [ ] UPDATE : go update mob turn once update player turn is done
 - [ ] UPDATE : go update player turn once update mob turn is done
@@ -202,7 +202,7 @@
 - [ ] TILES : define which tiles blocked the sight
 - [ ] INTERACTION : add a flag on lineofsight, to define if we need to check walkable or blocking view tiles
 - [ ] UPDATE : if a tile is unfogged, check also if the neighboored tiles are blocking view
-- [ ] CHARACTER : add a sight range 
+- [ ] CHARACTER : add a sight range
 - [ ] INTERACTION : mob detect hero once in mob sight range
 - [ ] UPDATE : unfog tile once in hero sight range
 
@@ -232,7 +232,6 @@
 - [ ] UTILS : create a function walkable (not outside and not solid)
 - [ ] UTILS : add option to dijkstra map so that it stopped once origin is found (optional)
 
-
 ### Step 20 : Inventory UI
 
 - [ ] CACHE : create an array to list up to 6 inventory elements
@@ -247,7 +246,7 @@
 - [ ] UTILS : display element from inventory
 - [ ] UTILS : display dots if empty slot in inventory
 - [ ] UTILS : display separator between equipment and inventory
-- [ ] UTILS : save/edit cursor position 
+- [ ] UTILS : save/edit cursor position
 - [ ] UTILS : display text a bit on the right
 - [ ] UTILS : draw cursor position left of the text
 - [ ] UPDATE : move the cursor between lines
@@ -268,7 +267,7 @@
 
 - [ ] UTILS : change int into Button
 - [ ] MENU : cycle when top/bottom when moving in menu
-- [ ] DRAW : draw mocked 'use menu' on over and right of 'inventory' 
+- [ ] DRAW : draw mocked 'use menu' on over and right of 'inventory'
 - [ ] UPDATE : when pussing 'button A' in 'inventory', display 'use menu'
 - [ ] UPDATE : when pussing 'button A' in 'inventory' on empty slot, don't display 'use menu'
 - [ ] UPDATE : when pussing 'button B' in 'use menu', display 'inventory'
@@ -302,7 +301,7 @@
 - [ ] FLOAT : display dynamic value from last attack
 - [ ] UPDATE STATS : change hero armor depending of equipment from stat1
 - [ ] ATTACK MOB : compute with max(0, new attack value - random(0, armor.max))
-- [ ] REFACTO : use String in place of char*
+- [ ] REFACTO : use String in place of char\*
 
 ####
 
@@ -398,7 +397,6 @@
 - [ ] FLOOR : create a function to verify if a tile can be carve (inbound and one binary comparison match)
 - [ ] MAZE : use binary comparison to check signature
 
-
 | BINARY    | MAP                          |
 | --------- | ---------------------------- |
 | 1111 1111 | <pre>FFF<br>FFF<br>FFF</pre> |
@@ -428,7 +426,7 @@
 - [ ] PLACE FLAG : create number current flag
 - [ ] PLACE FLAG : for all tiles, if walkable and current position is 0, pu in position value current flag
 - [ ] PLACE FLAG : increment flag
-- [ ] PLACE FLAG : create function to compute flag from a position if not 
+- [ ] PLACE FLAG : create function to compute flag from a position if not
 - [ ] GROW FLAG : use the same logic as dijshra, but where all positions from the same room have the same step value
 - [ ] FLOOR : create a function carve door
 - [ ] CARVE DOORS : for all the tiles, if position is not walkable, get signature from tile
@@ -472,7 +470,7 @@
 - [ ] CREATE ENTRY POINT : randomly pick a position that is walkable
 - [ ] CREATE ENTRY POINT : put downstair at that position
 - [ ] CREATE ENTRY POINT : compute distance map from that position
-- [ ] CREATE ENTRY POINT : UPDATE - put downstair on farthest walkable position 
+- [ ] CREATE ENTRY POINT : UPDATE - put downstair on farthest walkable position
 - [ ] CREATE ENTRY POINT : compute distance map from starting position
 - [ ] CREATE ENTRY POINT : put upstair on farthest walkable position which is a wall
 - [ ] CREATE ENTRY POINT : put downstair in corner of room ???
@@ -631,7 +629,7 @@
 - [ ] LOOT : food and throwable or sometime mob (slime ?) are loot from jar given a certain floor
 - [ ] LOOT : on one floor, only one weapon or armor can be loot
 - [ ] INTERACT : don't destroy chest / jar if inventory is full
-  
+
 ### Step 45 : Random Food
 
 - [ ] DECORATE : first room should contain jar
@@ -649,7 +647,7 @@
 
 ### Step 46 : Curses
 
-- [ ] CHARACTER : if character is curse, hit * 2
+- [ ] CHARACTER : if character is curse, hit \* 2
 - [ ] CHARACTER : if character is blessed, hit / 2
 - [ ] UPDATE : curse remove blessed effect, and bless remove curse effect
 - [ ] EAT : display float "CURSE" OR "BLESSED"
@@ -658,9 +656,9 @@
 - [ ] CHARACTER : add int to represent how many time a mob can use an effect
 - [ ] MOB : if stunning monster, its attack will stunned the hero only once
 - [ ] MOB : do charge don't do attack
-- [ ] MOB : define a mob that is slow : 
+- [ ] MOB : define a mob that is slow :
   - [ ] can move only each 2 turn
-- [ ] MOB : define a mob that is ghost : 
+- [ ] MOB : define a mob that is ghost :
   - [ ] can curse the player after hitting player
   - [ ] can be defeated by blessing
   - [ ] OPTIONAL : disappear once has seen the player, until near player
@@ -677,7 +675,7 @@
 - [ ] DRAW : show descriptif below the logo
 - [ ] UPDATE : once started, show logo until a button is pressed
 - [ ] DRAW END : merge game over / win function
-- [ ] DRAW END : show stats 
+- [ ] DRAW END : show stats
   - [ ] WIN : steps, kills, meals
   - [ ] DEAD : killer, floor, steps, kills, meals
 - [ ] DRAW END : show a blinking message to restart
@@ -692,20 +690,20 @@
 - [ ] GENERATE ROOM : first room should be really big
 - [ ] PUT START : compute best position depending on signature below, if tile is in room, if tile is carvable, ...
 
-| BINARY    | MAP                          |
-| --------- | ---------------------------- |
-| 0000 ?000 | <pre>..?<br>.X.<br>...</pre> |
-| 0000 0?00 | <pre>...<br>.X.<br>..?</pre> |
-| 0000 00?0 | <pre>...<br>.X.<br>?..</pre> |
-| 0000 000? | <pre>?..<br>.X.<br>...</pre> |
-| 1000 0??0 | <pre>...<br>.X.<br>?F?</pre> |
-| 0100 00?? | <pre>?..<br>FX.<br>?..</pre> |
+| BINARY    | MAP                           |
+| --------- | ----------------------------- |
+| 0000 ?000 | <pre>..?<br>.X.<br>...</pre>  |
+| 0000 0?00 | <pre>...<br>.X.<br>..?</pre>  |
+| 0000 00?0 | <pre>...<br>.X.<br>?..</pre>  |
+| 0000 000? | <pre>?..<br>.X.<br>...</pre>  |
+| 1000 0??0 | <pre>...<br>.X.<br>?F?</pre>  |
+| 0100 00?? | <pre>?..<br>FX.<br>?..</pre>  |
 | 0010 ??00 | <pre>..?<br>.XF<br>...?</pre> |
-| 0001 ?00? | <pre>?F?<br>.X.<br>...</pre> |
-| 1100 0?1? | <pre>?..<br>FX.<br>FF?</pre> |
-| 0101 ?0?1 | <pre>FF?<br>FX.<br>?..</pre> |
-| 0011 1?0? | <pre>?FF<br>.XF<br>..?</pre> |
-| 1010 ?10? | <pre>..?<br>.XF<br>?FF</pre> |
+| 0001 ?00? | <pre>?F?<br>.X.<br>...</pre>  |
+| 1100 0?1? | <pre>?..<br>FX.<br>FF?</pre>  |
+| 0101 ?0?1 | <pre>FF?<br>FX.<br>?..</pre>  |
+| 0011 1?0? | <pre>?FF<br>.XF<br>..?</pre>  |
+| 1010 ?10? | <pre>..?<br>.XF<br>?FF</pre>  |
 
 ### Step 49 : BugFixing
 
@@ -722,17 +720,17 @@
 ### Step 50 : What Now
 
 - [ ] STUN : 2 turn stun, not 1 so that we cna see the effect
-- [ ] 
+- [ ]
 
 ### Step 51 : Daily Challenge
 
-- [ ] 
-- [ ] 
+- [ ]
+- [ ]
 
 ### Step 52 : Game Launched
 
-- [ ] 
-- [ ] 
+- [ ]
+- [ ]
 
 ### Step 53 : Improvements
 
