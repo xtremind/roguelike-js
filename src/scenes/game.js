@@ -66,8 +66,20 @@ class GameScene extends Scene {
     this.#tick = 1;
 
     this.#hero = this.#createMob(5, 7, Mobs.HERO);
-    this.#createMob(3, 9, Mobs.SLIME);
-    //this.#createMob(4, 9, 'ghost');
+      
+      //generate from mps
+      for (let i = 0; i < 20; i++){
+          for (let j = 0; j < 15; j++){
+       
+    												const tile = this.#map.getTileAt(i, j);
+    												if (tile .index == Tiles.SLIME){
+              this.#createMob(tile.x, tile.y, Mobs.SLIME);
+    												    	this.#map.putTileAt(Tiles.FLOOR, tile.x, tile.y);
+      																		tile.destroy();
+    												}
+              
+          }
+      }//this.#createMob(4, 9, 'ghost');
 
     //initiate interaction for player
     this.#cursors = this.input.keyboard.createCursorKeys();

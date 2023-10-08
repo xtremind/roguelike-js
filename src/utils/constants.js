@@ -8,6 +8,7 @@ exports.Tiles = Object.freeze({
   PANEL: 7,
   CLOSED_CHEST: 8,
   OPENED_CHEST: 9,
+    SLIME: 10
 });
 
 exports.Mobs = Object.freeze({
