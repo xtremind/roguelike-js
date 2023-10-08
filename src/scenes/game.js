@@ -236,6 +236,14 @@ class GameScene extends Scene {
     return mob.health <= 0;
   }
 
+  #removeDeadMobs(){
+      this.#mobs = this.mobs.filter(mob => !this.#isDead(mob));
+  }
+    
+    #attack(attacker, defender){
+        defender.health -= attacker.power;
+    }
+    
   #draw_game() {
     //console.log("GameScene.render");
     //clear scene

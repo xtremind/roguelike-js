@@ -129,11 +129,11 @@
 - [x] CHARACTER : add attack / current energy / max energy depending on type
 - [x] INTERACTION : create a function that will reduce the energy from the mob depending on the attack
 - [x] CHARACTER : create a function that will determine if it's dead (HP <= 0)
-- [ ] INTERACTION : create a function that delete a mob if killed
+- [x] INTERACTION : create a function that delete a mob if killed
 - [ ] INTERACTION : create a function that will change the color of the attacked mob if attacked to white
 - [ ] SOUND : create "attack a mob" sound
 - [ ] SOUND : create "been hit" sound
-- [ ] INTERACTION : create a function that show the reduce of life upper the mob
+- [x] INTERACTION : create a function that show the reduce of life upper the mob
 
 ### Step 11 : Simple Path Finding
 
