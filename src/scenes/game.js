@@ -66,20 +66,8 @@ class GameScene extends Scene {
     this.#tick = 1;
 
     this.#hero = this.#createMob(5, 7, Mobs.HERO);
-      
-      //generate from mps
-      for (let i = 0; i < 20; i++){
-          for (let j = 0; j < 15; j++){
-       
-    												const tile = this.#map.getTileAt(i, j);
-    												if (tile .index == Tiles.SLIME){
-              this.#createMob(tile.x, tile.y, Mobs.SLIME);
-    												    	this.#map.putTileAt(Tiles.FLOOR, tile.x, tile.y);
-      																		tile.destroy();
-    												}
-              
-          }
-      }//this.#createMob(4, 9, 'ghost');
+
+    this.#createMob(5, 9, Mobs.SLIME);
 
     //initiate interaction for player
     this.#cursors = this.input.keyboard.createCursorKeys();
@@ -165,6 +153,39 @@ class GameScene extends Scene {
     }
   }
 
+  #aiMobs(){
+    this.#mobs
+      .filter((mob) => mob.type !== "hero")
+      .forEach((mob) => {
+        if(this.#distance(mob.x, mob.y, this.#hero.x, this.#hero.y) === 1){
+          //attack
+          prepareBump(mob, this.#hero.x - mob.x, this.#hero.y - mob.y);
+          this.#hitMob(mob, this.#hero)
+
+        } else {
+          //go to hero
+          let dx, dy, dist, best_dir, best_dist = 999;
+          for(let dir = 0; dir < 4; dir++){
+            dx = mob.x + this.#DIR_X[dir];
+            dy = mob.y + this.#DIR_Y[dir];
+            dist = this.#distance(dx, dy, this.#hero.x, this.#hero.y);
+
+    let nextPosTile = this.#map.getTileAt(dx, dy);
+            if(dist < best_dist && !(!nextPosTile || nextPosTile.properties?.solid)){
+              best_dist = dist;
+              best_dir = dir;
+            }
+          }
+          prepareWalk(mob, this.#DIR_X[best_dir], this.#DIR_Y[best_dir]);
+        }
+      })
+
+    //move mob
+    this.#tick = 0;
+    this.#update = this.#update_mturn;
+
+  }
+
   #moveHero(dx, dy) {
     if (dx > 0) {
       this.#hero.flip = false;
@@ -187,6 +208,7 @@ class GameScene extends Scene {
       this.#update = this.#update_pturn;
     } else if (mob) {
       prepareBump(this.#hero, dx, dy);
+      this.#hitMob(this.#hero, mob)
       this.#tick = 0;
       this.#update = this.#update_pturn;
     } else {
@@ -233,8 +255,31 @@ class GameScene extends Scene {
     if (this.#tick === 1) {
       this.#update = this.#update_interact;
       this.#hero.action = "NONE";
+
+      this.#aiMobs();
     }
   }
+
+  #update_mturn() {
+    this.#tick = Math.min(this.#tick + 0.125, 1);
+
+    //player move
+    this.#mobs
+      .filter((mob) => mob.type !== "hero")
+      .forEach((mob) => {
+        if (mob.action == "WALK") {
+          walk(mob, this.#tick);
+        } else if (mob.action == "BUMP") {
+          bump(mob, this.#tick);
+        }
+
+        if (this.#tick === 1) {
+          this.#update = this.#update_interact;
+          mob.action = "NONE";
+        }
+      })
+  }
+
 
   #getMob(x, y) {
     return this.#mobs.filter((m) => m.x === x && m.y === y)[0];
@@ -242,20 +287,26 @@ class GameScene extends Scene {
 
   #hitMob(attacker, defender) {
     defender.health -= attacker.atk;
+    console.log(defender.health);
   }
 
   #isDead(mob) {
     return mob.health <= 0;
   }
 
-  #removeDeadMobs(){
-      this.#mobs = this.mobs.filter(mob => !this.#isDead(mob));
+  #removeDeadMobs() {
+    this.#mobs = this.mobs.filter(mob => !this.#isDead(mob));
   }
-    
-    #attack(attacker, defender){
-        defender.health -= attacker.power;
-    }
-    
+
+  #attack(attacker, defender) {
+    defender.health -= attacker.power;
+  }
+
+  #distance(x1, y1, x2, y2) {
+    const dx = x1 - x2, dy = y1 - y2;
+    return Math.sqrt(dx * dx + dy * dy);
+  }
+
   #draw_game() {
     //console.log("GameScene.render");
     //clear scene
@@ -271,10 +322,10 @@ class GameScene extends Scene {
           mob,
           "mobs",
           "mobs (" +
-            mob.type +
-            ") " +
-            (Math.floor(this.#click / 16) % 4) +
-            ".ase"
+          mob.type +
+          ") " +
+          (Math.floor(this.#click / 16) % 4) +
+          ".ase"
         );
       });
     this.#drawMob(this.#hero, "hero", Math.floor(this.#click / 16) % 4);

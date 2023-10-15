@@ -137,19 +137,19 @@
 
 ### Step 11 : Simple Path Finding
 
-- [ ] MAP : put monster sprite
-- [ ] LEVEL : use monster sprite as a mob character generator at the starting game
-- [ ] LEVEL : change monster sprite by floor once generated
-- [ ] UTILS : create a function that compute distance between 2 points
-- [ ] UPDATE : create a function that will loop on all mobs
-- [ ] UPDATE : find the lower distance from mob to hero after moving
-- [ ] UPDATE : move mob depending on lowest distance
-- [ ] UPDATE : create an update mob turn function
-- [ ] UPDATE : call the new function on update mob turn
-- [ ] UPDATE : go update mob turn once update player turn is done
-- [ ] UPDATE : go update player turn once update mob turn is done
-- [ ] UPDATE : verify that the lower distance is walkable
-- [ ] UPDATE : if the distance between mob and player is 1, attack player (BUMP + ATTACK), else move to player
+- [o] MAP : put monster sprite
+- [o] LEVEL : use monster sprite as a mob character generator at the starting game
+- [o] LEVEL : change monster sprite by floor once generated
+- [x] UTILS : create a function that compute distance between 2 points
+- [x] UPDATE : create a function that will loop on all mobs
+- [x] UPDATE : find the lower distance from mob to hero after moving
+- [x] UPDATE : move mob depending on lowest distance
+- [x] UPDATE : create an update mob turn function
+- [x] UPDATE : call the new function on update mob turn
+- [x] UPDATE : go update mob turn once update player turn is done
+- [x] UPDATE : go update player turn once update mob turn is done
+- [x] UPDATE : verify that the lower distance is walkable
+- [x] UPDATE : if the distance between mob and player is 1, attack player (BUMP + ATTACK), else move to player
 - [ ] UPDATE : add sound when been attacked
 - [ ] SPRITE : add flashed player sprite
 
