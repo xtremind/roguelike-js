@@ -133,6 +133,10 @@ class GameScene extends Scene {
     this.#button_buffer = -1;
   }
 
+  #update_game_over(){
+
+  }
+
   #getButton() {
     //[ "up", "down", "left", "right", "space", "shift" ]
     let result = -1;
@@ -170,7 +174,7 @@ class GameScene extends Scene {
             dy = mob.y + this.#DIR_Y[dir];
             dist = this.#distance(dx, dy, this.#hero.x, this.#hero.y);
 
-    let nextPosTile = this.#map.getTileAt(dx, dy);
+            let nextPosTile = this.#map.getTileAt(dx, dy);
             if(dist < best_dist && !(!nextPosTile || nextPosTile.properties?.solid)){
               best_dist = dist;
               best_dir = dir;
@@ -255,7 +259,10 @@ class GameScene extends Scene {
     if (this.#tick === 1) {
       this.#update = this.#update_interact;
       this.#hero.action = "NONE";
-
+      if(this.#isDead(this.#hero)){
+        this.scene.start("GameOverScene");
+        //reinitiate scene
+      }
       this.#aiMobs();
     }
   }
@@ -274,10 +281,18 @@ class GameScene extends Scene {
         }
 
         if (this.#tick === 1) {
-          this.#update = this.#update_interact;
           mob.action = "NONE";
         }
       })
+
+      if (this.#tick === 1) {
+        this.#update = this.#update_interact;
+        if(this.#isDead(this.#hero)){
+          this.scene.start("GameOverScene");
+          //reinitiate scene
+        }
+      }
+      
   }
 
 
@@ -312,6 +327,11 @@ class GameScene extends Scene {
     //clear scene
     this.#drawMobs();
     //draw floor => managed by phaser
+  }
+
+
+  #draw_game_over(){
+    
   }
 
   #drawMobs() {

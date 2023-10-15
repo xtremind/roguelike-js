@@ -4,6 +4,7 @@ import { Game } from "phaser";
 // Scenes
 import PreloadScene from "scenes/preload";
 import GameScene from "scenes/game";
+import GameOverScene from "scenes/gameover";
 
 // Declare configuration
 const config = {
@@ -20,7 +21,7 @@ const config = {
     createContainer: true,
   },
   pixelArt: true,
-  scene: [PreloadScene, GameScene],
+  scene: [PreloadScene, GameScene, GameOverScene],
 };
 
 var game = new Game(config);

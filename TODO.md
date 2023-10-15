@@ -155,11 +155,11 @@
 
 ### Step 12 : Death
 
-- [ ] UPDATE : create a function to check death of player
-- [ ] UPDATE : if player is dead, change upd and drw to gameover function
-- [ ] UPDATE : once player has played and before AI turn, check player death
-- [ ] DRAW : on GameOver, display a new screen
-- [ ] UPDATE : on GameOver screen, restart game once pushing a button
+- [x] UPDATE : create a function to check death of player
+- [x] UPDATE : if player is dead, change upd and drw to gameover function
+- [x] UPDATE : once player has played and before AI turn, check player death
+- [x] DRAW : on GameOver, display a new screen
+- [x] UPDATE : on GameOver screen, restart game once pushing a button
 - [ ] UPDATE : create a function to initiate game
 - [ ] DRAW : show floor on mob position
 - [ ] INIT : don't override mob by floor
