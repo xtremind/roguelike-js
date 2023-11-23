@@ -57,17 +57,7 @@ class GameScene extends Scene {
     this.cameras.main.setZoom(2);
     this.cameras.main.centerOn(80, 60);
 
-    //initiate map
-    this.#map = this.add.tilemap("map");
-    const tileset = this.#map.addTilesetImage("decorations");
-    const platforms = this.#map.createLayer("level1", tileset, 0, 0);
-
-    //initiate hero position
-    this.#tick = 1;
-
-    this.#hero = this.#createMob(5, 7, Mobs.HERO);
-
-    this.#createMob(5, 9, Mobs.SLIME);
+    this.#loadLevel();
 
     //initiate interaction for player
     this.#cursors = this.input.keyboard.createCursorKeys();
@@ -80,6 +70,19 @@ class GameScene extends Scene {
     //this.#showTalk(["third message"]);
 
     console.log("GameScene.create");
+  }
+
+  #loadLevel() {
+    //initiate map
+    this.#map = this.add.tilemap("map");
+    const tileset = this.#map.addTilesetImage("decorations");
+    const platforms = this.#map.createLayer("level1", tileset, 0, 0);
+
+    //initiate hero position
+    this.#tick = 1;
+
+    this.#hero = this.#createMob(5, 7, Mobs.HERO);
+    this.#createMob(5, 9, Mobs.SLIME);
   }
 
   #createMob(x, y, type) {
@@ -133,9 +136,7 @@ class GameScene extends Scene {
     this.#button_buffer = -1;
   }
 
-  #update_game_over(){
-
-  }
+  #update_game_over() {}
 
   #getButton() {
     //[ "up", "down", "left", "right", "space", "shift" ]
@@ -157,37 +158,42 @@ class GameScene extends Scene {
     }
   }
 
-  #aiMobs(){
+  #aiMobs() {
     this.#mobs
       .filter((mob) => mob.type !== "hero")
       .forEach((mob) => {
-        if(this.#distance(mob.x, mob.y, this.#hero.x, this.#hero.y) === 1){
+        if (this.#distance(mob.x, mob.y, this.#hero.x, this.#hero.y) === 1) {
           //attack
           prepareBump(mob, this.#hero.x - mob.x, this.#hero.y - mob.y);
-          this.#hitMob(mob, this.#hero)
-
+          this.#hitMob(mob, this.#hero);
         } else {
           //go to hero
-          let dx, dy, dist, best_dir, best_dist = 999;
-          for(let dir = 0; dir < 4; dir++){
+          let dx,
+            dy,
+            dist,
+            best_dir,
+            best_dist = 999;
+          for (let dir = 0; dir < 4; dir++) {
             dx = mob.x + this.#DIR_X[dir];
             dy = mob.y + this.#DIR_Y[dir];
             dist = this.#distance(dx, dy, this.#hero.x, this.#hero.y);
 
             let nextPosTile = this.#map.getTileAt(dx, dy);
-            if(dist < best_dist && !(!nextPosTile || nextPosTile.properties?.solid)){
+            if (
+              dist < best_dist &&
+              !(!nextPosTile || nextPosTile.properties?.solid)
+            ) {
               best_dist = dist;
               best_dir = dir;
             }
           }
           prepareWalk(mob, this.#DIR_X[best_dir], this.#DIR_Y[best_dir]);
         }
-      })
+      });
 
     //move mob
     this.#tick = 0;
     this.#update = this.#update_mturn;
-
   }
 
   #moveHero(dx, dy) {
@@ -199,7 +205,7 @@ class GameScene extends Scene {
 
     const nextPosTile = this.#map.getTileAt(
       this.#hero.x + dx,
-      this.#hero.y + dy
+      this.#hero.y + dy,
     );
     const mob = this.#getMob(this.#hero.x + dx, this.#hero.y + dy);
 
@@ -212,7 +218,7 @@ class GameScene extends Scene {
       this.#update = this.#update_pturn;
     } else if (mob) {
       prepareBump(this.#hero, dx, dy);
-      this.#hitMob(this.#hero, mob)
+      this.#hitMob(this.#hero, mob);
       this.#tick = 0;
       this.#update = this.#update_pturn;
     } else {
@@ -259,7 +265,7 @@ class GameScene extends Scene {
     if (this.#tick === 1) {
       this.#update = this.#update_interact;
       this.#hero.action = "NONE";
-      if(this.#isDead(this.#hero)){
+      if (this.#isDead(this.#hero)) {
         this.scene.start("GameOverScene");
         //reinitiate scene
       }
@@ -283,18 +289,18 @@ class GameScene extends Scene {
         if (this.#tick === 1) {
           mob.action = "NONE";
         }
-      })
+      });
 
-      if (this.#tick === 1) {
-        this.#update = this.#update_interact;
-        if(this.#isDead(this.#hero)){
-          this.scene.start("GameOverScene");
-          //reinitiate scene
-        }
+    if (this.#tick === 1) {
+      this.#update = this.#update_interact;
+      if (this.#isDead(this.#hero)) {
+        this.#hero = {};
+        this.#mobs = [];
+        this.scene.start("GameOverScene");
+        //reinitiate scene
       }
-      
+    }
   }
-
 
   #getMob(x, y) {
     return this.#mobs.filter((m) => m.x === x && m.y === y)[0];
@@ -302,7 +308,7 @@ class GameScene extends Scene {
 
   #hitMob(attacker, defender) {
     defender.health -= attacker.atk;
-    console.log(defender.health);
+    //console.log(defender.health);
   }
 
   #isDead(mob) {
@@ -310,7 +316,7 @@ class GameScene extends Scene {
   }
 
   #removeDeadMobs() {
-    this.#mobs = this.mobs.filter(mob => !this.#isDead(mob));
+    this.#mobs = this.mobs.filter((mob) => !this.#isDead(mob));
   }
 
   #attack(attacker, defender) {
@@ -318,7 +324,8 @@ class GameScene extends Scene {
   }
 
   #distance(x1, y1, x2, y2) {
-    const dx = x1 - x2, dy = y1 - y2;
+    const dx = x1 - x2,
+      dy = y1 - y2;
     return Math.sqrt(dx * dx + dy * dy);
   }
 
@@ -329,10 +336,7 @@ class GameScene extends Scene {
     //draw floor => managed by phaser
   }
 
-
-  #draw_game_over(){
-    
-  }
+  #draw_game_over() {}
 
   #drawMobs() {
     this.#mobs
@@ -342,10 +346,10 @@ class GameScene extends Scene {
           mob,
           "mobs",
           "mobs (" +
-          mob.type +
-          ") " +
-          (Math.floor(this.#click / 16) % 4) +
-          ".ase"
+            mob.type +
+            ") " +
+            (Math.floor(this.#click / 16) % 4) +
+            ".ase",
         );
       });
     this.#drawMob(this.#hero, "hero", Math.floor(this.#click / 16) % 4);
@@ -357,7 +361,7 @@ class GameScene extends Scene {
       mob.x * 8 + mob.offset_x,
       mob.y * 8 + mob.offset_y,
       type,
-      sprite
+      sprite,
     );
     //mob.sprite.setTint(0xff0000); // pour changer la couleur du sprite
     //gauche
