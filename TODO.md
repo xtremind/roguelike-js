@@ -151,7 +151,7 @@
 - [x] UPDATE : verify that the lower distance is walkable
 - [x] UPDATE : if the distance between mob and player is 1, attack player (BUMP + ATTACK), else move to player
 - [x] UPDATE : add sound when been attacked
-- [ ] SPRITE : add flashed player sprite
+- [x] SPRITE : add flashed player sprite
 
 ### Step 12 : Death
 
@@ -161,8 +161,8 @@
 - [x] DRAW : on GameOver, display a new screen
 - [x] UPDATE : on GameOver screen, restart game once pushing a button
 - [x] UPDATE : create a function to initiate game
-- [ ] DRAW : show floor on mob position
-- [ ] INIT : don't override mob by floor
+- [x] DRAW : show floor on mob position
+- [x] INIT : don't override mob by floor
 - [ ] UPDATE : mob can move only if alive
 - [ ] UPDATE : once player has played and before AI turn, check mob death
 - [ ] DRAW : blink mob if dead, and before removing it

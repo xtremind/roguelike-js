@@ -94,6 +94,7 @@ class GameScene extends Scene {
     mob.soffset_x = 0;
     mob.soffset_y = 0;
     mob.flip = false;
+    mob.flash = 0;
     mob.type = type;
     mob.action = "NONE";
 
@@ -310,19 +311,16 @@ class GameScene extends Scene {
 
   #hitMob(attacker, defender) {
     defender.health -= attacker.atk;
+    defender.flash = 16;
     //console.log(defender.health);
+    if (this.#isDead(defender)) {
+      defender.sprite?.destroy();
+      this.#mobs.splice(this.#mobs.indexOf(defender), 1);
+    }
   }
 
   #isDead(mob) {
     return mob.health <= 0;
-  }
-
-  #removeDeadMobs() {
-    this.#mobs = this.mobs.filter((mob) => !this.#isDead(mob));
-  }
-
-  #attack(attacker, defender) {
-    defender.health -= attacker.power;
   }
 
   #distance(x1, y1, x2, y2) {
@@ -365,12 +363,19 @@ class GameScene extends Scene {
       type,
       sprite,
     );
-    //mob.sprite.setTint(0xff0000); // pour changer la couleur du sprite
-    //gauche
+
+    if (mob.flash > 0) {
+      // pour changer la couleur du sprite
+      mob.sprite.setTintFill(0xffffff);
+      mob.flash -= 1;
+    }
+
     if (mob.flip) {
+      //gauche
       mob.sprite.setOrigin(1, 0);
       mob.sprite.scaleX = -1;
     } else {
+      //droite
       mob.sprite.setOrigin(0, 0);
       mob.sprite.scaleX = 1;
     }
