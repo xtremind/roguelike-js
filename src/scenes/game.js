@@ -166,6 +166,7 @@ class GameScene extends Scene {
           //attack
           prepareBump(mob, this.#hero.x - mob.x, this.#hero.y - mob.y);
           this.#hitMob(mob, this.#hero);
+          this.#hurtSound.play();
         } else {
           //go to hero
           let dx,
@@ -219,6 +220,7 @@ class GameScene extends Scene {
     } else if (mob) {
       prepareBump(this.#hero, dx, dy);
       this.#hitMob(this.#hero, mob);
+      this.#hitSound.play();
       this.#tick = 0;
       this.#update = this.#update_pturn;
     } else {
