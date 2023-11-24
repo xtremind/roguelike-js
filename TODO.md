@@ -163,10 +163,10 @@
 - [x] UPDATE : create a function to initiate game
 - [x] DRAW : show floor on mob position
 - [x] INIT : don't override mob by floor
-- [ ] UPDATE : mob can move only if alive
-- [ ] UPDATE : once player has played and before AI turn, check mob death
+- [x] UPDATE : mob can move only if alive
+- [x] UPDATE : once player has played and before AI turn, check mob death
 - [ ] DRAW : blink mob if dead, and before removing it
-- [ ] DRAW : Draw player on top of all mobs
+- [x] DRAW : Draw player on top of all mobs
 
 ### Step 13 : HP Display
 
