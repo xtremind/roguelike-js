@@ -176,8 +176,8 @@
 - [x] DRAW : fading in once game start
 - [x] DRAW : fading out once hero die
 - [x] DRAW : update fadeout function by adding wait between each draw
-- [ ] DRAW : create function that will display hero's current health
-- [ ] DRAW : update function that will display hero's max health
+- [x] DRAW : create function that will display hero's current health
+- [x] DRAW : update function that will display hero's max health
 - [ ] DRAW : update function that will display a heart sprite
 - [ ] DRAW : heart sprite blink faster on lower health
 

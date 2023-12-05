@@ -14,6 +14,8 @@ class GameScene extends Scene {
   #map = {};
   #wind = [];
 
+  #ui = {};
+
   //direction helpers
   #cursors;
   #DIR_X = [0, 0, -1, 1];
@@ -56,7 +58,7 @@ class GameScene extends Scene {
     //camera zoom
     this.cameras.main.fadeIn(1000, 0, 0, 0);
     this.cameras.main.setZoom(2);
-    this.cameras.main.centerOn(80, 60);
+    this.cameras.main.centerOn(85, 60);
 
     this.#loadLevel();
 
@@ -350,10 +352,51 @@ class GameScene extends Scene {
     //console.log("GameScene.render");
     //clear scene
     this.#drawMobs();
+    this.#drawUi();
     //draw floor => managed by phaser
   }
 
   #draw_game_over() {}
+
+  #drawUi() {
+    //this.#hero;
+    this.#ui.health?.destroy();
+    this.#ui.separator?.destroy();
+    this.#ui.maxHealth?.destroy();
+
+    this.#ui.health = this.add
+      .bitmapText(
+        this.cameras.main.worldView.x + this.cameras.main.width / 2 - 5,
+        5,
+        "arcade",
+        this.#hero.health,
+      )
+      .setOrigin(0.5)
+      .setScale(0.2)
+      .setTintFill(0xff0000);
+
+    this.#ui.separator = this.add
+      .bitmapText(
+        this.cameras.main.worldView.x + this.cameras.main.width / 2 - 5,
+        10,
+        "arcade",
+        "-",
+      )
+      .setOrigin(0.5)
+      .setScale(0.2)
+      .setTintFill(0xff0000);
+
+    this.#ui.maxHealth = this.add
+      .bitmapText(
+        this.cameras.main.worldView.x + this.cameras.main.width / 2 - 5,
+        15,
+        "arcade",
+        this.#hero.maxHealth,
+      )
+      .setOrigin(0.5)
+      .setScale(0.2)
+      .setTintFill(0xff0000);
+  }
 
   #drawMobs() {
     this.#mobs

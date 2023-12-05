@@ -14,7 +14,7 @@ const config = {
     //mode: Phaser.Scale.FIT,
     parent: "phaser-example",
     //autoCenter: Phaser.Scale.CENTER_BOTH,
-    width: 320,
+    width: 340,
     height: 240,
   },
   dom: {
