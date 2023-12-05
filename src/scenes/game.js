@@ -69,6 +69,9 @@ class GameScene extends Scene {
     //this.#showMsg(["second message", "with two lines"], 100);
     //this.#showTalk(["third message"]);
 
+    //DEBUG
+    this.sound.mute = true;
+
     console.log("GameScene.create");
   }
 
@@ -163,7 +166,12 @@ class GameScene extends Scene {
     this.#mobs
       .filter((mob) => mob.type !== "hero")
       .forEach((mob) => {
-        if (this.#distance(mob.x, mob.y, this.#hero.x, this.#hero.y) === 1) {
+        if (this.#isDead(mob)) {
+          mob.sprite?.destroy();
+          this.#mobs.splice(this.#mobs.indexOf(mob), 1);
+        } else if (
+          this.#distance(mob.x, mob.y, this.#hero.x, this.#hero.y) === 1
+        ) {
           //attack
           prepareBump(mob, this.#hero.x - mob.x, this.#hero.y - mob.y);
           this.#hitMob(mob, this.#hero);
@@ -311,12 +319,7 @@ class GameScene extends Scene {
 
   #hitMob(attacker, defender) {
     defender.health -= attacker.atk;
-    defender.flash = 16;
-    //console.log(defender.health);
-    if (this.#isDead(defender)) {
-      defender.sprite?.destroy();
-      this.#mobs.splice(this.#mobs.indexOf(defender), 1);
-    }
+    defender.flash = 8;
   }
 
   #isDead(mob) {
@@ -357,6 +360,11 @@ class GameScene extends Scene {
 
   #drawMob(mob, type, sprite) {
     mob.sprite?.destroy();
+
+    if (this.#isDead(mob) && Math.sin(this.#click * 2) > 0) {
+      return;
+    }
+
     mob.sprite = this.add.image(
       mob.x * 8 + mob.offset_x,
       mob.y * 8 + mob.offset_y,

@@ -130,9 +130,9 @@
 - [x] INTERACTION : create a function that will reduce the energy from the mob depending on the attack
 - [x] CHARACTER : create a function that will determine if it's dead (HP <= 0)
 - [x] INTERACTION : create a function that delete a mob if killed
-- [ ] INTERACTION : create a function that will change the color of the attacked mob if attacked to white
-- [ ] SOUND : create "attack a mob" sound
-- [ ] SOUND : create "been hit" sound
+- [x] INTERACTION : create a function that will change the color of the attacked mob if attacked to white
+- [x] SOUND : create "attack a mob" sound
+- [x] SOUND : create "been hit" sound
 - [x] INTERACTION : create a function that show the reduce of life upper the mob
 
 ### Step 11 : Simple Path Finding
@@ -165,7 +165,7 @@
 - [x] INIT : don't override mob by floor
 - [x] UPDATE : mob can move only if alive
 - [x] UPDATE : once player has played and before AI turn, check mob death
-- [ ] DRAW : blink mob if dead, and before removing it
+- [x] DRAW : blink mob if dead, and before removing it
 - [x] DRAW : Draw player on top of all mobs
 
 ### Step 13 : HP Display
