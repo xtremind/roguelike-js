@@ -21,7 +21,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.(png|jpg|jpeg|gif|svg|mp3)$/,
+        test: /\.(png|jpg|jpeg|gif|svg|mp3|xml)$/,
         type: "asset/resource",
       },
     ],
@@ -31,10 +31,11 @@ module.exports = {
       images: path.resolve(__dirname, "./src/assets/img"),
       sounds: path.resolve(__dirname, "./src/assets/snd"),
       jsons: path.resolve(__dirname, "./src/assets/json"),
+      fonts: path.resolve(__dirname, "./src/assets/font"),
       music: path.resolve(__dirname, "./src/assets/msc"),
       scenes: path.resolve(__dirname, "./src/scenes"),
       utils: path.resolve(__dirname, "./src/utils"),
     },
-    extensions: ["*", ".js", ".jsx"],
+    extensions: ["*", ".js", ".jsx", ".xml"],
   },
 };

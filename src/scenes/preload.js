@@ -16,6 +16,9 @@ import openChest from "sounds/openChest.mp3";
 import openDoor from "sounds/openDoor.mp3";
 import walk from "sounds/walk.mp3";
 
+import arcadeConfig from "fonts/arcade.xml";
+import arcadeFont from "fonts/arcade.png";
+
 class PreloadScene extends Scene {
   constructor() {
     super({
@@ -99,6 +102,8 @@ class PreloadScene extends Scene {
     this.load.atlas("decorations", decorationsSprites, decorationsAtlas);
 
     this.load.tilemapTiledJSON("map", map);
+
+    this.load.bitmapFont("arcade", arcadeFont, arcadeConfig);
 
     this.load.audio("breakVase", breakVase);
     this.load.audio("hit", hit);
