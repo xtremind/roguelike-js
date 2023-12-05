@@ -54,6 +54,7 @@ class GameScene extends Scene {
 
   create() {
     //camera zoom
+    this.cameras.main.fadeIn(1000, 0, 0, 0);
     this.cameras.main.setZoom(2);
     this.cameras.main.centerOn(80, 60);
 
@@ -68,6 +69,15 @@ class GameScene extends Scene {
     //this.#showMsg(["hello world qqsdsd"], 100);
     //this.#showMsg(["second message", "with two lines"], 100);
     //this.#showTalk(["third message"]);
+
+    this.cameras.main.once(
+      Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE,
+      (cam, effect) => {
+        this.time.delayedCall(1000, () => {
+          this.scene.start("GameOverScene");
+        });
+      },
+    );
 
     //DEBUG
     this.sound.mute = true;
@@ -277,7 +287,10 @@ class GameScene extends Scene {
       this.#update = this.#update_interact;
       this.#hero.action = "NONE";
       if (this.#isDead(this.#hero)) {
-        this.scene.start("GameOverScene");
+        this.#hero = {};
+        this.#mobs = [];
+        this.cameras.main.fadeOut(1000, 0, 0, 0);
+        return;
         //reinitiate scene
       }
       this.#aiMobs();
@@ -307,7 +320,8 @@ class GameScene extends Scene {
       if (this.#isDead(this.#hero)) {
         this.#hero = {};
         this.#mobs = [];
-        this.scene.start("GameOverScene");
+        this.cameras.main.fadeOut(1000, 0, 0, 0);
+        return;
         //reinitiate scene
       }
     }
