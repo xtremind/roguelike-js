@@ -360,14 +360,30 @@ class GameScene extends Scene {
 
   #drawUi() {
     //this.#hero;
+    this.#ui.heart?.destroy();
     this.#ui.health?.destroy();
     this.#ui.separator?.destroy();
     this.#ui.maxHealth?.destroy();
 
+    let heartSprite =
+      "heart " +
+      (Math.floor(
+        this.#click / ((this.#hero.health * 8) / this.#hero.maxHealth),
+      ) %
+        8) +
+      ".ase";
+
+    this.#ui.heart = this.add.image(
+      this.cameras.main.worldView.x + this.cameras.main.width / 2 - 6,
+      5,
+      "ui",
+      heartSprite,
+    );
+
     this.#ui.health = this.add
       .bitmapText(
         this.cameras.main.worldView.x + this.cameras.main.width / 2 - 5,
-        5,
+        13,
         "arcade",
         this.#hero.health,
       )
@@ -378,7 +394,7 @@ class GameScene extends Scene {
     this.#ui.separator = this.add
       .bitmapText(
         this.cameras.main.worldView.x + this.cameras.main.width / 2 - 5,
-        10,
+        18,
         "arcade",
         "-",
       )
@@ -389,7 +405,7 @@ class GameScene extends Scene {
     this.#ui.maxHealth = this.add
       .bitmapText(
         this.cameras.main.worldView.x + this.cameras.main.width / 2 - 5,
-        15,
+        23,
         "arcade",
         this.#hero.maxHealth,
       )

@@ -178,8 +178,8 @@
 - [x] DRAW : update fadeout function by adding wait between each draw
 - [x] DRAW : create function that will display hero's current health
 - [x] DRAW : update function that will display hero's max health
-- [ ] DRAW : update function that will display a heart sprite
-- [ ] DRAW : heart sprite blink faster on lower health
+- [x] DRAW : update function that will display a heart sprite
+- [x] DRAW : heart sprite blink faster on lower
 
 ### Step 14 : AI
 
