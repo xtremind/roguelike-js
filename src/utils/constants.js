@@ -8,7 +8,7 @@ exports.Tiles = Object.freeze({
   PANEL: 7,
   CLOSED_CHEST: 8,
   OPENED_CHEST: 9,
-    SLIME: 10
+  SLIME: 10,
 });
 
 exports.Mobs = Object.freeze({
@@ -20,4 +20,9 @@ exports.Mobs = Object.freeze({
   SCORPION: "scorpion",
   GOLEM: "golem",
   DEMON: "demon",
+});
+
+exports.Status = Object.freeze({
+  WAIT: "wait",
+  ATTACK: "attack",
 });

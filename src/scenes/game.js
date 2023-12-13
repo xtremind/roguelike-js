@@ -2,7 +2,7 @@ import { Scene } from "phaser";
 
 import { drawWind } from "utils/graphics";
 import { prepareWalk, walk, prepareBump, bump } from "utils/movements";
-import { Tiles, Mobs } from "utils/constants";
+import { Tiles, Mobs, Status } from "utils/constants";
 
 class GameScene extends Scene {
   //datas
@@ -112,6 +112,7 @@ class GameScene extends Scene {
     mob.flash = 0;
     mob.type = type;
     mob.action = "NONE";
+    mob.status = Status.WAIT;
 
     switch (type) {
       case Mobs.HERO:
@@ -176,46 +177,74 @@ class GameScene extends Scene {
 
   #aiMobs() {
     this.#mobs
-      .filter((mob) => mob.type !== "hero")
+      .filter((mob) => mob.type !== Mobs.HERO)
       .forEach((mob) => {
         if (this.#isDead(mob)) {
           mob.sprite?.destroy();
           this.#mobs.splice(this.#mobs.indexOf(mob), 1);
-        } else if (
-          this.#distance(mob.x, mob.y, this.#hero.x, this.#hero.y) === 1
+        } else if (mob.status == Status.WAIT) {
+          this.#wait(mob);
+        } else if (mob.status == Status.ATTACK) {
+          this.#attack(mob);
+        }
+      });
+  }
+
+  #wait(mob) {
+    if (this.#isInLineOfSigth(mob.x, mob.y, this.#hero.x, this.#hero.y)) {
+      mob.status = Status.ATTACK;
+      mob.target = { x: this.#hero.x, y: this.#hero.y };
+      //!
+    }
+  }
+
+  #attack(mob) {
+    if (this.#isInLineOfSigth(mob.x, mob.y, this.#hero.x, this.#hero.y)) {
+      mob.target = { x: this.#hero.x, y: this.#hero.y };
+    }
+    if (mob.x == mob.target.x && mob.y == mob.target.y) {
+      mob.status = Status.WAIT;
+      mob.target = {};
+      // ?
+    } else {
+      console.log("target: " + mob.target.x + "" + mob.target.y);
+      let dx,
+        dy,
+        dist,
+        best_dir = -1,
+        best_dist = 999;
+      for (let dir = 0; dir < 4; dir++) {
+        dx = mob.x + this.#DIR_X[dir];
+        dy = mob.y + this.#DIR_Y[dir];
+        dist = this.#distance(dx, dy, mob.target.x, mob.target.y);
+
+        let nextPosTile = this.#map.getTileAt(dx, dy);
+        if (
+          dist < best_dist &&
+          !(!nextPosTile || nextPosTile.properties?.solid)
         ) {
-          //attack
+          best_dist = dist;
+          best_dir = dir;
+        }
+      }
+
+      if (best_dir != -1) {
+        if (
+          best_dist == 0 &&
+          this.#hero.x == mob.target.x &&
+          this.#hero.y == mob.target.y
+        ) {
           prepareBump(mob, this.#hero.x - mob.x, this.#hero.y - mob.y);
           this.#hitMob(mob, this.#hero);
           this.#hurtSound.play();
         } else {
-          //go to hero
-          let dx,
-            dy,
-            dist,
-            best_dir,
-            best_dist = 999;
-          for (let dir = 0; dir < 4; dir++) {
-            dx = mob.x + this.#DIR_X[dir];
-            dy = mob.y + this.#DIR_Y[dir];
-            dist = this.#distance(dx, dy, this.#hero.x, this.#hero.y);
-
-            let nextPosTile = this.#map.getTileAt(dx, dy);
-            if (
-              dist < best_dist &&
-              !(!nextPosTile || nextPosTile.properties?.solid)
-            ) {
-              best_dist = dist;
-              best_dir = dir;
-            }
-          }
           prepareWalk(mob, this.#DIR_X[best_dir], this.#DIR_Y[best_dir]);
         }
-      });
-
-    //move mob
-    this.#tick = 0;
-    this.#update = this.#update_mturn;
+        //move mob
+        this.#tick = 0;
+        this.#update = this.#update_mturn;
+      }
+    }
   }
 
   #moveHero(dx, dy) {
@@ -304,7 +333,7 @@ class GameScene extends Scene {
 
     //player move
     this.#mobs
-      .filter((mob) => mob.type !== "hero")
+      .filter((mob) => mob.type !== Mobs.HERO)
       .forEach((mob) => {
         if (mob.action == "WALK") {
           walk(mob, this.#tick);
@@ -346,6 +375,58 @@ class GameScene extends Scene {
     const dx = x1 - x2,
       dy = y1 - y2;
     return Math.sqrt(dx * dx + dy * dy);
+  }
+
+  #isInLineOfSigth(x1, y1, x2, y2) {
+    if (this.#distance(x1, y1, x2, y2) == 1) {
+      return true;
+    }
+
+    let frst = true;
+    let sx, sy, dx, dy;
+
+    if (x1 < x2) {
+      sx = 1;
+      dx = x2 - x1;
+    } else {
+      sx = -1;
+      dx = x1 - x2;
+    }
+
+    if (y1 < y2) {
+      sy = 1;
+      dy = y2 - y1;
+    } else {
+      sy = -1;
+      dy = y1 - y2;
+    }
+
+    let x = x1,
+      y = y1,
+      err = dx - dy,
+      e2;
+    let tile;
+
+    while (x != x2 || y != y2) {
+      tile = this.#map.getTileAt(x, y);
+
+      if (!frst && (!tile || tile.properties?.solid)) {
+        return false;
+      }
+
+      frst = false;
+      e2 = err + err;
+      if (e2 > -dy) {
+        err -= dy;
+        x += sx;
+      }
+      if (e2 < dx) {
+        err += dx;
+        y += sy;
+      }
+    }
+
+    return true;
   }
 
   #draw_game() {
@@ -416,7 +497,7 @@ class GameScene extends Scene {
 
   #drawMobs() {
     this.#mobs
-      .filter((mob) => mob.type !== "hero")
+      .filter((mob) => mob.type !== Mobs.HERO)
       .forEach((mob) => {
         this.#drawMob(
           mob,
