@@ -27,24 +27,20 @@ exports.drawWind = function (scene, wind) {
 
   Phaser.Display.Align.In.Center(text, r1);
   wind.sprite.add(text);
-
-  /*if(wind.interact){
-    //draw button spc
-    wind.sprite.add(scene.add.graphics().fillRoundedRect(0, 0, 13, 13, 3));
-    const g = scene.add.graphics().strokeRoundedRect(1, 1, 11, 11, 3)
-    g.lineStyle(1, 0xffffff, 1);
-    wind.sprite.add(g);
-    const intText = scene.add.text(0, 0, "spc", { align: 'center' });
-    intText.setFont('Courier');
-    intText.setFontSize(5);
-    intText.setOrigin(0.5);
-    intText.setColor('#ffffff')
-    Phaser.Display.Align.In.Center(intText, g);
-    wind.sprite.add(intText);
-
-    //Math.floor((scene.#click / 16)) % 4
-
-  }*/
-
   wind.sprite.setDepth(10);
 };
+
+
+exports.drawFloat = function (scene, float) {
+  float.sprite?.destroy();
+  float.sprite = scene.add
+      .bitmapText(
+        float.x,
+        float.y,
+        "arcade",
+        float.txt,
+      )
+      //.setOrigin(0.5)
+      .setScale(0.2)
+      //.setTintFill(float.color);
+}

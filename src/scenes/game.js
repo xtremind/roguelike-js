@@ -1,6 +1,6 @@
 import { Scene } from "phaser";
 
-import { drawWind } from "utils/graphics";
+import { drawWind, drawFloat } from "utils/graphics";
 import { prepareWalk, walk, prepareBump, bump } from "utils/movements";
 import { Tiles, Mobs, Status } from "utils/constants";
 
@@ -12,7 +12,8 @@ class GameScene extends Scene {
   #mobs = [];
   //#mob = {};
   #map = {};
-  #wind = [];
+  #winds = [];
+  #floats = [];
 
   #ui = {};
 
@@ -98,6 +99,12 @@ class GameScene extends Scene {
 
     this.#hero = this.#createMob(5, 7, Mobs.HERO);
     this.#createMob(5, 9, Mobs.SLIME);
+    this.#createMob(5, 13, Mobs.SLIME);
+    this.#createMob(7, 10, Mobs.SLIME);
+    this.#createMob(9, 6, Mobs.SLIME);
+    this.#createMob(2, 2, Mobs.SLIME);
+    this.#createMob(14, 5, Mobs.SLIME);
+    this.#createMob(18, 9, Mobs.SLIME);
   }
 
   #createMob(x, y, type) {
@@ -133,19 +140,30 @@ class GameScene extends Scene {
 
   update() {
     //console.log("GameScene.update");
+    this.#update_floats();
     this.#update();
     this.#draw();
-    this.#draw_wind();
     //update turn
     this.#click = (this.#click + 1) % 64;
   }
 
+  #update_floats() {
+    this.#floats.forEach(float => {
+      float.y+= (float.ty - float.y)/10;
+      float.t+=1
+      if(float.t > 70){
+        float.sprite?.destroy();
+        this.#floats.splice(this.#floats.indexOf(float), 1);
+      }
+    })
+  }
+
   #update_interact() {
     this.#button_buffer = this.#getButton();
-    if (this.#wind.length > 0) {
-      if (this.#wind[0].interact && this.#button_buffer == 4) {
-        this.#wind[0].duration = 0;
-        this.#wind[0].interact = false;
+    if (this.#winds.length > 0) {
+      if (this.#winds[0].interact && this.#button_buffer == 4) {
+        this.#winds[0].duration = 0;
+        this.#winds[0].interact = false;
       }
     } else {
       this.#execute(this.#button_buffer);
@@ -195,6 +213,7 @@ class GameScene extends Scene {
       mob.status = Status.ATTACK;
       mob.target = { x: this.#hero.x, y: this.#hero.y };
       //!
+      this.#addFloat("!", mob.x, mob.y, 0x000000)
     }
   }
 
@@ -206,8 +225,9 @@ class GameScene extends Scene {
       mob.status = Status.WAIT;
       mob.target = {};
       // ?
+      this.#addFloat("?", mob.x, mob.y, 0x000000)
     } else {
-      console.log("target: " + mob.target.x + "" + mob.target.y);
+      //console.log("target: " + mob.target.x + "" + mob.target.y);
       let dx,
         dy,
         dist,
@@ -434,6 +454,8 @@ class GameScene extends Scene {
     //clear scene
     this.#drawMobs();
     this.#drawUi();
+    this.#drawWinds();
+    this.#drawFloats();
     //draw floor => managed by phaser
   }
 
@@ -553,15 +575,21 @@ class GameScene extends Scene {
     talk.interact = true;
   }
 
+  #addFloat(txt, x, y, color){
+    let float = {txt: txt, x:x*8+1, y:y*8, tx:x*8+2, ty:y*8 - 10, color:color, t:0}
+    this.#floats.push(float);
+    return float;
+  }
+
   #addWind(txt) {
     let wind = { txt: txt };
-    this.#wind.push(wind);
+    this.#winds.push(wind);
     return wind;
   }
 
-  #draw_wind() {
-    if (this.#wind.length > 0) {
-      let wind = this.#wind[0];
+  #drawWinds() {
+    if (this.#winds.length > 0) {
+      let wind = this.#winds[0];
       if (!wind.sprite) {
         drawWind(this, wind);
       } else {
@@ -575,11 +603,17 @@ class GameScene extends Scene {
           drawWind(this, wind);
           if (wind.height <= 1) {
             wind.sprite?.destroy();
-            this.#wind.shift();
+            this.#winds.shift();
           }
         }
       }
     }
+  }
+
+  #drawFloats(){
+    this.#floats.forEach(float => {
+      drawFloat(this, float);
+    })
   }
 }
 

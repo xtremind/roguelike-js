@@ -185,10 +185,10 @@
 
 - [x] INTERACTION : create a function that will say if there's a clear path between 2 points (LINE DRAWING ALGORITHM)
 - [x] UPDATE : if mob has seen player, then next turn is move
-- [ ] UPDATE : if mob has seen player, float to show that it has view hero (!)
+- [x] UPDATE : if mob has seen player, float to show that it has view hero (!)
 - [x] UPDATE : if mob has seen player, add player position has new target
 - [x] UPDATE : if mob has arrived at target, then next turn is wait
-- [ ] UPDATE : if mob has arrived at target, add float to show that it didn't see any more view hero (?)
+- [x] UPDATE : if mob has arrived at target, add float to show that it didn't see any more view hero (?)
 
 ### Step 15 : Fog
 
