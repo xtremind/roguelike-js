@@ -1,6 +1,6 @@
 import { Scene } from "phaser";
 
-import { drawWind, drawFloat } from "utils/graphics";
+import { drawWind, drawFloat, drawFog } from "utils/graphics";
 import { prepareWalk, walk, prepareBump, bump } from "utils/movements";
 import { Tiles, Mobs, Status } from "utils/constants";
 
@@ -34,6 +34,10 @@ class GameScene extends Scene {
   #openChestSound;
   #openDoorSound;
   #walkSound;
+
+  //layers
+  #fog = [[]];
+  #fogLayer = {};
 
   constructor() {
     super({
@@ -94,10 +98,16 @@ class GameScene extends Scene {
     const tileset = this.#map.addTilesetImage("decorations");
     const platforms = this.#map.createLayer("level1", tileset, 0, 0);
 
+    this.#fog = Array(20).fill(0).map(x => Array(15).fill(false))
+    this.#fogLayer = this.add.layer();
+
     //initiate hero position
     this.#tick = 1;
 
     this.#hero = this.#createMob(5, 7, Mobs.HERO);
+
+    this.#fog[5][7] = true;
+
     this.#createMob(5, 9, Mobs.SLIME);
     this.#createMob(5, 13, Mobs.SLIME);
     this.#createMob(7, 10, Mobs.SLIME);
@@ -105,6 +115,9 @@ class GameScene extends Scene {
     this.#createMob(2, 2, Mobs.SLIME);
     this.#createMob(14, 5, Mobs.SLIME);
     this.#createMob(18, 9, Mobs.SLIME);
+
+    //
+    this.#unfog(this.#hero);
   }
 
   #createMob(x, y, type) {
@@ -126,11 +139,13 @@ class GameScene extends Scene {
         mob.atk = 1;
         mob.health = 5;
         mob.maxHealth = 5;
+        mob.distanceSight = 5;
         break;
       case Mobs.SLIME:
         mob.atk = 1;
         mob.health = 1;
         mob.maxHealth = 1;
+        mob.distanceSight = 3;
         break;
     }
 
@@ -194,6 +209,8 @@ class GameScene extends Scene {
   }
 
   #aiMobs() {
+    this.#unfog(this.#hero);
+
     this.#mobs
       .filter((mob) => mob.type !== Mobs.HERO)
       .forEach((mob) => {
@@ -209,7 +226,7 @@ class GameScene extends Scene {
   }
 
   #wait(mob) {
-    if (this.#isInLineOfSigth(mob.x, mob.y, this.#hero.x, this.#hero.y)) {
+    if (this.#distance(mob.x, mob.y, this.#hero.x, this.#hero.y) <= mob.distanceSight && this.#isInLineOfSigth(mob.x, mob.y, this.#hero.x, this.#hero.y)) {
       mob.status = Status.ATTACK;
       mob.target = { x: this.#hero.x, y: this.#hero.y };
       //!
@@ -218,7 +235,7 @@ class GameScene extends Scene {
   }
 
   #attack(mob) {
-    if (this.#isInLineOfSigth(mob.x, mob.y, this.#hero.x, this.#hero.y)) {
+    if (this.#distance(mob.x, mob.y, this.#hero.x, this.#hero.y) <= mob.distanceSight && this.#isInLineOfSigth(mob.x, mob.y, this.#hero.x, this.#hero.y)) {
       mob.target = { x: this.#hero.x, y: this.#hero.y };
     }
     if (mob.x == mob.target.x && mob.y == mob.target.y) {
@@ -378,6 +395,32 @@ class GameScene extends Scene {
     }
   }
 
+  #unfog(hero){
+    let tx, ty, tile;
+
+    for(let x = 0; x < this.#fog.length; x++){
+      for(let y = 0; y < this.#fog[0].length; y++){
+        //this.#map.getTileAt(x, y).visible = this.#fog[x][y];
+        if(this.#distance(hero.x, hero.y, x, y) <= hero.distanceSight &&
+          !this.#fog[x][y] &&
+          this.#isInLineOfSigth(hero.x, hero.y, x, y)
+        ){
+          this.#fog[x][y] = true;
+          for(let dir = 0; dir < 4; dir ++){
+            tx = x + this.#DIR_X[dir];
+            ty = y + this.#DIR_Y[dir];
+            tile = this.#map.getTileAt(tx, ty);
+            if (!!tile && !this.#fog[tx][ty] &&
+              tile.properties?.solid
+              ){
+                this.#fog[tx][ty] = true;
+            }
+          }
+        }
+      } 
+    }
+  }
+
   #getMob(x, y) {
     return this.#mobs.filter((m) => m.x === x && m.y === y)[0];
   }
@@ -456,6 +499,7 @@ class GameScene extends Scene {
     this.#drawUi();
     this.#drawWinds();
     this.#drawFloats();
+    drawFog(this.#map, this.#fog)
     //draw floor => managed by phaser
   }
 
@@ -563,6 +607,8 @@ class GameScene extends Scene {
       mob.sprite.setOrigin(0, 0);
       mob.sprite.scaleX = 1;
     }
+
+    mob.sprite.visible = this.#fog[mob.x][mob.y]
   }
 
   #showMsg(txt, duration) {

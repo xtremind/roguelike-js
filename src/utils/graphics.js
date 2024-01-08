@@ -44,3 +44,11 @@ exports.drawFloat = function (scene, float) {
       .setScale(0.2)
       //.setTintFill(float.color);
 }
+
+exports.drawFog = function (layer, fog){
+  for(let x = 0; x < fog.length; x++){
+    for(let y = 0; y < fog[0].length; y++){
+      layer.getTileAt(x, y).visible = fog[x][y];
+    } 
+  }
+}

@@ -192,12 +192,12 @@
 
 ### Step 15 : Fog
 
-- [ ] FLOOR : create another array that will store if tile has been seen
-- [ ] FLOOR : create a function that will allow to tell that tile has been seen
-- [ ] DRAW : display tile only if it has been seen
-- [ ] INTERACTION : extract from seen function so that we can use two coordinate
-- [ ] START : once floor and hero create, unfog tiles
-- [ ] UPDATE : once hero create has moved, unfog tiles
+- [x] FLOOR : create another array that will store if tile has been seen
+- [x] FLOOR : create a function that will allow to tell that tile has been seen
+- [x] DRAW : display tile only if it has been seen
+- [x] INTERACTION : extract from seen function so that we can use two coordinate
+- [x] START : once floor and hero create, unfog tiles
+- [x] UPDATE : once hero create has moved, unfog tiles
 
 ### Step 16 : Fog polish
 
