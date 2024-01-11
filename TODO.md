@@ -201,12 +201,12 @@
 
 ### Step 16 : Fog polish
 
-- [ ] TILES : define which tiles blocked the sight
-- [ ] INTERACTION : add a flag on lineofsight, to define if we need to check walkable or blocking view tiles
-- [ ] UPDATE : if a tile is unfogged, check also if the neighboored tiles are blocking view
-- [ ] CHARACTER : add a sight range
-- [ ] INTERACTION : mob detect hero once in mob sight range
-- [ ] UPDATE : unfog tile once in hero sight range
+- [x] TILES : define which tiles blocked the sight
+- [x] INTERACTION : add a flag on lineofsight, to define if we need to check walkable or blocking view tiles
+- [x] UPDATE : if a tile is unfogged, check also if the neighboored tiles are blocking view
+- [x] CHARACTER : add a sight range
+- [x] INTERACTION : mob detect hero once in mob sight range
+- [x] UPDATE : unfog tile once in hero sight range
 
 ### Step 17 : token tweaks
 

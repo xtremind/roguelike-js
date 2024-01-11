@@ -225,8 +225,13 @@ class GameScene extends Scene {
       });
   }
 
+  #canSee(mob, hero){
+    //console.log("dist : " + this.#distance(mob.x, mob.y, hero.x, hero.y))
+    return this.#distance(mob.x, mob.y, hero.x, hero.y) <= mob.distanceSight && this.#isInLineOfSigth(mob.x, mob.y, hero.x, hero.y);
+  }
+
   #wait(mob) {
-    if (this.#distance(mob.x, mob.y, this.#hero.x, this.#hero.y) <= mob.distanceSight && this.#isInLineOfSigth(mob.x, mob.y, this.#hero.x, this.#hero.y)) {
+    if (this.#canSee(mob, this.#hero)) {
       mob.status = Status.ATTACK;
       mob.target = { x: this.#hero.x, y: this.#hero.y };
       //!
@@ -235,7 +240,7 @@ class GameScene extends Scene {
   }
 
   #attack(mob) {
-    if (this.#distance(mob.x, mob.y, this.#hero.x, this.#hero.y) <= mob.distanceSight && this.#isInLineOfSigth(mob.x, mob.y, this.#hero.x, this.#hero.y)) {
+    if (this.#canSee(mob, this.#hero)) {
       mob.target = { x: this.#hero.x, y: this.#hero.y };
     }
     if (mob.x == mob.target.x && mob.y == mob.target.y) {
