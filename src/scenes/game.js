@@ -37,7 +37,6 @@ class GameScene extends Scene {
 
   //layers
   #fog = [[]];
-  #fogLayer = {};
 
   constructor() {
     super({
@@ -99,7 +98,6 @@ class GameScene extends Scene {
     const platforms = this.#map.createLayer("level1", tileset, 0, 0);
 
     this.#fog = Array(20).fill(0).map(x => Array(15).fill(false))
-    this.#fogLayer = this.add.layer();
 
     //initiate hero position
     this.#tick = 1;
