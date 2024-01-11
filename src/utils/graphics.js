@@ -45,10 +45,83 @@ exports.drawFloat = function (scene, float) {
       //.setTintFill(float.color);
 }
 
-exports.drawFog = function (layer, fog){
+exports.drawFog = function (scene, fog){
   for(let x = 0; x < fog.length; x++){
     for(let y = 0; y < fog[0].length; y++){
-      layer.getTileAt(x, y).visible = fog[x][y];
+      scene.getTileAt(x, y).visible = fog[x][y];
     } 
   }
+}
+
+exports.drawUi = function (scene, ui, hero, click) {
+  //this.#hero;
+  ui.heart?.destroy();
+  ui.health?.destroy();
+  ui.separator?.destroy();
+  ui.maxHealth?.destroy();
+
+
+  ui.heart = drawBeatingHeart(scene, hero.health, hero.maxHealth, click)
+  ui.health = drawCurrentHealth(scene, hero.health)
+  ui.separator = drawSeparator(scene);
+  ui.maxHealth = drawMaxHealth(scene, hero.maxHealth);
+  
+}
+
+
+const drawBeatingHeart = function(scene, currentHealth, maxHealth, click){
+
+  let heartSprite =
+    "heart " +
+    (Math.floor(
+      click / ((currentHealth * 8) / maxHealth),
+    ) %
+      8) +
+    ".ase";
+
+  return scene.add.image(
+    scene.cameras.main.worldView.x + scene.cameras.main.width / 2 - 6,
+    5,
+    "ui",
+    heartSprite,
+  );
+}
+
+const drawCurrentHealth = function(scene, currentHealth){
+  return scene.add
+    .bitmapText(
+      scene.cameras.main.worldView.x + scene.cameras.main.width / 2 - 5,
+      13,
+      "arcade",
+      currentHealth,
+    )
+    .setOrigin(0.5)
+    .setScale(0.2)
+    .setTintFill(0xff0000);
+}
+
+const drawSeparator = function(scene){
+  return scene.add
+    .bitmapText(
+      scene.cameras.main.worldView.x + scene.cameras.main.width / 2 - 5,
+      18,
+      "arcade",
+      "-",
+    )
+    .setOrigin(0.5)
+    .setScale(0.2)
+    .setTintFill(0xff0000);
+}
+
+const drawMaxHealth = function(scene, maxHealth){
+  return scene.add
+  .bitmapText(
+    scene.cameras.main.worldView.x + scene.cameras.main.width / 2 - 5,
+    23,
+    "arcade",
+    maxHealth,
+  )
+  .setOrigin(0.5)
+  .setScale(0.2)
+  .setTintFill(0xff0000);
 }

@@ -1,6 +1,6 @@
 import { Scene } from "phaser";
 
-import { drawWind, drawFloat, drawFog } from "utils/graphics";
+import { drawWind, drawFloat, drawFog, drawUi } from "utils/graphics";
 import { prepareWalk, walk, prepareBump, bump } from "utils/movements";
 import { Tiles, Mobs, Status } from "utils/constants";
 
@@ -501,7 +501,7 @@ class GameScene extends Scene {
     //console.log("GameScene.render");
     //clear scene
     this.#drawMobs();
-    this.#drawUi();
+    drawUi(this, this.#ui, this.#hero, this.#click);
     this.#drawWinds();
     this.#drawFloats();
     drawFog(this.#map, this.#fog)
@@ -509,62 +509,6 @@ class GameScene extends Scene {
   }
 
   #draw_game_over() {}
-
-  #drawUi() {
-    //this.#hero;
-    this.#ui.heart?.destroy();
-    this.#ui.health?.destroy();
-    this.#ui.separator?.destroy();
-    this.#ui.maxHealth?.destroy();
-
-    let heartSprite =
-      "heart " +
-      (Math.floor(
-        this.#click / ((this.#hero.health * 8) / this.#hero.maxHealth),
-      ) %
-        8) +
-      ".ase";
-
-    this.#ui.heart = this.add.image(
-      this.cameras.main.worldView.x + this.cameras.main.width / 2 - 6,
-      5,
-      "ui",
-      heartSprite,
-    );
-
-    this.#ui.health = this.add
-      .bitmapText(
-        this.cameras.main.worldView.x + this.cameras.main.width / 2 - 5,
-        13,
-        "arcade",
-        this.#hero.health,
-      )
-      .setOrigin(0.5)
-      .setScale(0.2)
-      .setTintFill(0xff0000);
-
-    this.#ui.separator = this.add
-      .bitmapText(
-        this.cameras.main.worldView.x + this.cameras.main.width / 2 - 5,
-        18,
-        "arcade",
-        "-",
-      )
-      .setOrigin(0.5)
-      .setScale(0.2)
-      .setTintFill(0xff0000);
-
-    this.#ui.maxHealth = this.add
-      .bitmapText(
-        this.cameras.main.worldView.x + this.cameras.main.width / 2 - 5,
-        23,
-        "arcade",
-        this.#hero.maxHealth,
-      )
-      .setOrigin(0.5)
-      .setScale(0.2)
-      .setTintFill(0xff0000);
-  }
 
   #drawMobs() {
     this.#mobs
