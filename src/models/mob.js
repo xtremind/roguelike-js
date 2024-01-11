@@ -29,4 +29,8 @@ export default class Mob {
             break;
         }
     }
+
+    isDead(){
+        return this.health <= 0;
+    }
 }

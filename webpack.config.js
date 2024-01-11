@@ -33,6 +33,7 @@ module.exports = {
       jsons: path.resolve(__dirname, "./src/assets/json"),
       fonts: path.resolve(__dirname, "./src/assets/font"),
       music: path.resolve(__dirname, "./src/assets/msc"),
+      models: path.resolve(__dirname, "./src/models"),
       scenes: path.resolve(__dirname, "./src/scenes"),
       utils: path.resolve(__dirname, "./src/utils"),
     },

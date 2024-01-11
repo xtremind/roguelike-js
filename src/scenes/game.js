@@ -186,7 +186,7 @@ class GameScene extends Scene {
     this.#mobs
       .filter((mob) => mob.type !== Mobs.HERO)
       .forEach((mob) => {
-        if (this.#isDead(mob)) {
+        if (mob.isDead()) {
           mob.sprite?.destroy();
           this.#mobs.splice(this.#mobs.indexOf(mob), 1);
         } else if (mob.status == Status.WAIT) {
@@ -331,8 +331,7 @@ class GameScene extends Scene {
     if (this.#tick === 1) {
       this.#update = this.#update_interact;
       this.#hero.action = "NONE";
-      if (this.#isDead(this.#hero)) {
-        this.#hero = {};
+      if (this.#hero.isDead()) {
         this.#mobs = [];
         this.cameras.main.fadeOut(1000, 0, 0, 0);
         return;
@@ -362,8 +361,7 @@ class GameScene extends Scene {
 
     if (this.#tick === 1) {
       this.#update = this.#update_interact;
-      if (this.#isDead(this.#hero)) {
-        this.#hero = {};
+      if (this.#hero.isDead()) {
         this.#mobs = [];
         this.cameras.main.fadeOut(1000, 0, 0, 0);
         return;
@@ -405,10 +403,6 @@ class GameScene extends Scene {
   #hitMob(attacker, defender) {
     defender.health -= attacker.atk;
     defender.flash = 8;
-  }
-
-  #isDead(mob) {
-    return mob.health <= 0;
   }
 
   #distance(x1, y1, x2, y2) {
@@ -502,7 +496,7 @@ class GameScene extends Scene {
   #drawMob(mob, type, sprite) {
     mob.sprite?.destroy();
 
-    if (this.#isDead(mob) && Math.sin(this.#click * 2) > 0) {
+    if (mob.isDead() && Math.sin(this.#click * 2) > 0) {
       return;
     }
 
