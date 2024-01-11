@@ -197,13 +197,13 @@ class GameScene extends Scene {
       });
   }
 
-  #canSee(mob, hero){
+  #canSee(mob, x, y){
     //console.log("dist : " + this.#distance(mob.x, mob.y, hero.x, hero.y))
-    return this.#distance(mob.x, mob.y, hero.x, hero.y) <= mob.distanceSight && this.#isInLineOfSigth(mob.x, mob.y, hero.x, hero.y);
+    return this.#distance(mob.x, mob.y,  x, y) <= mob.distanceSight && this.#isInLineOfSigth(mob.x, mob.y,  x, y);
   }
 
   #wait(mob) {
-    if (this.#canSee(mob, this.#hero)) {
+    if (this.#canSee(mob, this.#hero.x, this.#hero.y)) {
       mob.status = Status.ATTACK;
       mob.target = { x: this.#hero.x, y: this.#hero.y };
       //!
@@ -212,7 +212,7 @@ class GameScene extends Scene {
   }
 
   #attack(mob) {
-    if (this.#canSee(mob, this.#hero)) {
+    if (this.#canSee(mob, this.#hero.x, this.#hero.y)) {
       mob.target = { x: this.#hero.x, y: this.#hero.y };
     }
     if (mob.x == mob.target.x && mob.y == mob.target.y) {
@@ -222,11 +222,8 @@ class GameScene extends Scene {
       this.#addFloat("?", mob.x, mob.y, 0x000000)
     } else {
       //console.log("target: " + mob.target.x + "" + mob.target.y);
-      let dx,
-        dy,
-        dist,
-        best_dir = -1,
-        best_dist = 999;
+      let dx, dy, dist,
+        best_dir = -1, best_dist = 999;
       for (let dir = 0; dir < 4; dir++) {
         dx = mob.x + this.#DIR_X[dir];
         dy = mob.y + this.#DIR_Y[dir];
@@ -376,18 +373,13 @@ class GameScene extends Scene {
     for(let x = 0; x < this.#fog.length; x++){
       for(let y = 0; y < this.#fog[0].length; y++){
         //this.#map.getTileAt(x, y).visible = this.#fog[x][y];
-        if(this.#distance(hero.x, hero.y, x, y) <= hero.distanceSight &&
-          !this.#fog[x][y] &&
-          this.#isInLineOfSigth(hero.x, hero.y, x, y)
-        ){
+        if(this.#canSee(hero, x, y) && !this.#fog[x][y]){
           this.#fog[x][y] = true;
           for(let dir = 0; dir < 4; dir ++){
             tx = x + this.#DIR_X[dir];
             ty = y + this.#DIR_Y[dir];
             tile = this.#map.getTileAt(tx, ty);
-            if (!!tile && !this.#fog[tx][ty] &&
-              tile.properties?.solid
-              ){
+            if (!!tile && !this.#fog[tx][ty] && tile.properties?.solid){
                 this.#fog[tx][ty] = true;
             }
           }

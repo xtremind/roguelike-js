@@ -1,9 +1,7 @@
 exports.drawWind = function (scene, wind) {
   wind.sprite = scene.add.container(
-    scene.cameras.main.worldView.x +
-      scene.cameras.main.width / (2 * scene.cameras.main.zoom),
-    scene.cameras.main.worldView.y +
-      scene.cameras.main.height / (2 * scene.cameras.main.zoom),
+    scene.cameras.main.worldView.x + scene.cameras.main.width / (2 * scene.cameras.main.zoom),
+    scene.cameras.main.worldView.y + scene.cameras.main.height / (2 * scene.cameras.main.zoom),
   );
 
   const text = scene.add.text(0, 0, wind.txt.join("\n"), { align: "center" });
@@ -35,8 +33,7 @@ exports.drawFloat = function (scene, float) {
   float.sprite?.destroy();
   float.sprite = scene.add
       .bitmapText(
-        float.x,
-        float.y,
+        float.x, float.y,
         "arcade",
         float.txt,
       )
@@ -60,7 +57,6 @@ exports.drawUi = function (scene, ui, hero, click) {
   ui.separator?.destroy();
   ui.maxHealth?.destroy();
 
-
   ui.heart = drawBeatingHeart(scene, hero.health, hero.maxHealth, click)
   ui.health = drawCurrentHealth(scene, hero.health)
   ui.separator = drawSeparator(scene);
@@ -73,15 +69,11 @@ const drawBeatingHeart = function(scene, currentHealth, maxHealth, click){
 
   let heartSprite =
     "heart " +
-    (Math.floor(
-      click / ((currentHealth * 8) / maxHealth),
-    ) %
-      8) +
+    (Math.floor( click / ((currentHealth * 8) / maxHealth)) % 8) +
     ".ase";
 
   return scene.add.image(
-    scene.cameras.main.worldView.x + scene.cameras.main.width / 2 - 6,
-    5,
+    scene.cameras.main.worldView.x + scene.cameras.main.width / 2 - 6, 5,
     "ui",
     heartSprite,
   );
@@ -90,8 +82,7 @@ const drawBeatingHeart = function(scene, currentHealth, maxHealth, click){
 const drawCurrentHealth = function(scene, currentHealth){
   return scene.add
     .bitmapText(
-      scene.cameras.main.worldView.x + scene.cameras.main.width / 2 - 5,
-      13,
+      scene.cameras.main.worldView.x + scene.cameras.main.width / 2 - 5, 13,
       "arcade",
       currentHealth,
     )
@@ -103,8 +94,7 @@ const drawCurrentHealth = function(scene, currentHealth){
 const drawSeparator = function(scene){
   return scene.add
     .bitmapText(
-      scene.cameras.main.worldView.x + scene.cameras.main.width / 2 - 5,
-      18,
+      scene.cameras.main.worldView.x + scene.cameras.main.width / 2 - 5, 18,
       "arcade",
       "-",
     )
@@ -116,8 +106,7 @@ const drawSeparator = function(scene){
 const drawMaxHealth = function(scene, maxHealth){
   return scene.add
   .bitmapText(
-    scene.cameras.main.worldView.x + scene.cameras.main.width / 2 - 5,
-    23,
+    scene.cameras.main.worldView.x + scene.cameras.main.width / 2 - 5, 23,
     "arcade",
     maxHealth,
   )
