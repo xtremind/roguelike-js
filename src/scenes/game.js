@@ -3,6 +3,7 @@ import { Scene } from "phaser";
 import { drawWind, drawFloat, drawFog, drawUi } from "utils/graphics";
 import { prepareWalk, walk, prepareBump, bump } from "utils/movements";
 import { Tiles, Mobs, Status } from "utils/constants";
+import Mob from "models/mob"
 
 class GameScene extends Scene {
   //datas
@@ -119,34 +120,7 @@ class GameScene extends Scene {
   }
 
   #createMob(x, y, type) {
-    const mob = {};
-    mob.x = x;
-    mob.y = y;
-    mob.offset_x = 0;
-    mob.offset_y = 0;
-    mob.soffset_x = 0;
-    mob.soffset_y = 0;
-    mob.flip = false;
-    mob.flash = 0;
-    mob.type = type;
-    mob.action = "NONE";
-    mob.status = Status.WAIT;
-
-    switch (type) {
-      case Mobs.HERO:
-        mob.atk = 1;
-        mob.health = 5;
-        mob.maxHealth = 5;
-        mob.distanceSight = 5;
-        break;
-      case Mobs.SLIME:
-        mob.atk = 1;
-        mob.health = 1;
-        mob.maxHealth = 1;
-        mob.distanceSight = 3;
-        break;
-    }
-
+    const mob = new Mob(x, y, type);
     this.#mobs.push(mob);
     return mob;
   }
