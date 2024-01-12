@@ -1,3 +1,8 @@
+exports.Map = Object.freeze({
+  WIDTH: 20,
+  HEIGHT: 15,
+})
+
 exports.Tiles = Object.freeze({
   WALL: 1,
   FLOOR: 2,

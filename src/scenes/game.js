@@ -2,7 +2,7 @@ import { Scene } from "phaser";
 
 import { drawWind, drawFloat, drawFog, drawUi } from "utils/graphics";
 import { prepareWalk, walk, prepareBump, bump } from "utils/movements";
-import { Tiles, Mobs, Status } from "utils/constants";
+import { Map, Tiles, Mobs, Status } from "utils/constants";
 import Mob from "models/mob"
 
 class GameScene extends Scene {
@@ -98,7 +98,7 @@ class GameScene extends Scene {
     const tileset = this.#map.addTilesetImage("decorations");
     const platforms = this.#map.createLayer("level1", tileset, 0, 0);
 
-    this.#fog = Array(20).fill(0).map(x => Array(15).fill(false))
+    this.#fog = Array(Map.WIDTH).fill(0).map(x => Array(Map.HEIGHT).fill(false))
 
     //initiate hero position
     this.#tick = 1;
@@ -395,6 +395,28 @@ class GameScene extends Scene {
   #hitMob(attacker, defender) {
     defender.health -= attacker.atk;
     defender.flash = 8;
+  }
+
+  #computeDijkstraArray(x, y){
+    let result = Array(Map.WIDTH).fill(0).map(x => Array(Map.HEIGHT).fill(-1))
+    let candidates = [], dx, dy, tile, current;
+    candidates.push({x: x, y:y, step: 0});
+    do{
+      current = candidates.shift();
+      for(let dir = 0; dir < 4; dir++){
+        dx = current.x + this.#DIR_X[dir]
+        dy = current.y + this.#DIR_Y[dir];
+        tile = this.#map.getTileAt(dx, dy);
+        if(!tile && result[dx][dy] == -1){
+          result[dx][dy] = current.step+1;
+          if(!tile.properties?.solid){ // is walkable
+            candidates.push({x: dx, y:dy, step: current.step+1});
+          }
+        }
+      }
+    } while (candidates.length != 0);
+
+    return result;
   }
 
   #distance(x1, y1, x2, y2) {
