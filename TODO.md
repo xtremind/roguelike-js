@@ -210,17 +210,17 @@
 
 ### Step 17 : token tweaks
 
-- [ ] REVIEW : declare all variables of same type for a function in one line
-- [ ] REVIEW : review how are affected variables (+=, ...)
-- [ ] REVIEW : use ternary operation ( ... ? ... : ... )
+- [x] REVIEW : declare all variables of same type for a function in one line
+- [x] REVIEW : review how are affected variables (+=, ...)
+- [x] REVIEW : use ternary operation ( ... ? ... : ... )
 
 ### Step 18 : Pathfinding (Dijkstra)
 
-- [ ] UTILS : create a map with the distance of a case from the position
-- [ ] UTILS : create a function that return the computed array
-- [ ] UTILS : create a function that will take a position and a weight, save it in the map if not affected or lower and walkable, and call the map for the adjacent case with weight+1
-- [ ] UPDATE : update distance map once mob target is acquired or updated
-- [ ] UPDATE : move mob to the lower value from distance map previously created
+- [x] UTILS : create a map with the distance of a case from the position
+- [x] UTILS : create a function that return the computed array
+- [x] UTILS : create a function that will take a position and a weight, save it in the map if not affected or lower and walkable, and call the map for the adjacent case with weight+1
+- [x] UPDATE : update distance map once mob target is acquired or updated
+- [x] UPDATE : move mob to the lower value from distance map previously created
 
 ### Step 19 : Path Tweaking
 

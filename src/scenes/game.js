@@ -108,7 +108,7 @@ class GameScene extends Scene {
     this.#fog[5][7] = true;
 
     this.#createMob(5, 9, Mobs.SLIME);
-    this.#createMob(5, 13, Mobs.SLIME);
+    this.#createMob(8, 2, Mobs.SLIME);
     this.#createMob(7, 10, Mobs.SLIME);
     this.#createMob(9, 6, Mobs.SLIME);
     this.#createMob(2, 2, Mobs.SLIME);
@@ -222,18 +222,16 @@ class GameScene extends Scene {
       this.#addFloat("?", mob.x, mob.y, 0x000000)
     } else {
       //console.log("target: " + mob.target.x + "" + mob.target.y);
+      let distMap= this.#computeDijkstraArray(mob.target.x, mob.target.y)
       let dx, dy, dist,
         best_dir = -1, best_dist = 999;
       for (let dir = 0; dir < 4; dir++) {
         dx = mob.x + this.#DIR_X[dir];
         dy = mob.y + this.#DIR_Y[dir];
-        dist = this.#distance(dx, dy, mob.target.x, mob.target.y);
+        dist = distMap[dx][dy];
 
         let nextPosTile = this.#map.getTileAt(dx, dy);
-        if (
-          dist < best_dist &&
-          !(!nextPosTile || nextPosTile.properties?.solid)
-        ) {
+        if (dist < best_dist && !(!nextPosTile || nextPosTile.properties?.solid)) {
           best_dist = dist;
           best_dir = dir;
         }
@@ -401,13 +399,14 @@ class GameScene extends Scene {
     let result = Array(Map.WIDTH).fill(0).map(x => Array(Map.HEIGHT).fill(-1))
     let candidates = [], dx, dy, tile, current;
     candidates.push({x: x, y:y, step: 0});
+    result[x][y] = 0;
     do{
       current = candidates.shift();
       for(let dir = 0; dir < 4; dir++){
         dx = current.x + this.#DIR_X[dir]
         dy = current.y + this.#DIR_Y[dir];
         tile = this.#map.getTileAt(dx, dy);
-        if(!tile && result[dx][dy] == -1){
+        if(tile && result[dx][dy] == -1){
           result[dx][dy] = current.step+1;
           if(!tile.properties?.solid){ // is walkable
             candidates.push({x: dx, y:dy, step: current.step+1});
