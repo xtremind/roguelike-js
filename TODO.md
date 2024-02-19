@@ -224,7 +224,7 @@
 
 ### Step 19 : Path Tweaking
 
-- [ ] UPDATE : mob choose randomly a path if multiple possibilities
+- [x] UPDATE : mob choose randomly a path if multiple possibilities
 - [ ] UPDATE : mob don't move where there's already a mob
 
 ####

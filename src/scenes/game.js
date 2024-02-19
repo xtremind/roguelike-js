@@ -3,7 +3,7 @@ import { Scene } from "phaser";
 import { drawWind, drawFloat, drawFog, drawUi } from "utils/graphics";
 import { prepareWalk, walk, prepareBump, bump } from "utils/movements";
 import { Map, Tiles, Mobs, Status } from "utils/constants";
-import Mob from "models/mob"
+import Mob from "models/mob";
 
 class GameScene extends Scene {
   //datas
@@ -22,7 +22,6 @@ class GameScene extends Scene {
   #cursors;
   #DIR_X = [0, 0, -1, 1];
   #DIR_Y = [-1, 1, 0, 0];
-  #button_buffer = -1;
 
   //generic functions
   #update;
@@ -98,7 +97,9 @@ class GameScene extends Scene {
     const tileset = this.#map.addTilesetImage("decorations");
     const platforms = this.#map.createLayer("level1", tileset, 0, 0);
 
-    this.#fog = Array(Map.WIDTH).fill(0).map(x => Array(Map.HEIGHT).fill(false))
+    this.#fog = Array(Map.WIDTH)
+      .fill(0)
+      .map((x) => Array(Map.HEIGHT).fill(false));
 
     //initiate hero position
     this.#tick = 1;
@@ -107,7 +108,8 @@ class GameScene extends Scene {
 
     this.#fog[5][7] = true;
 
-    this.#createMob(5, 9, Mobs.SLIME);
+    this.#createMob(4, 6, Mobs.SLIME);
+    this.#createMob(5, 5, Mobs.SLIME);
     this.#createMob(8, 2, Mobs.SLIME);
     this.#createMob(7, 10, Mobs.SLIME);
     this.#createMob(9, 6, Mobs.SLIME);
@@ -135,27 +137,26 @@ class GameScene extends Scene {
   }
 
   #update_floats() {
-    this.#floats.forEach(float => {
-      float.y+= (float.ty - float.y)/10;
-      float.t+=1
-      if(float.t > 70){
+    this.#floats.forEach((float) => {
+      float.y += (float.ty - float.y) / 10;
+      float.t += 1;
+      if (float.t > 70) {
         float.sprite?.destroy();
         this.#floats.splice(this.#floats.indexOf(float), 1);
       }
-    })
+    });
   }
 
   #update_interact() {
-    this.#button_buffer = this.#getButton();
+    const button = this.#getButton();
     if (this.#winds.length > 0) {
-      if (this.#winds[0].interact && this.#button_buffer == 4) {
+      if (this.#winds[0].interact && button == 4) {
         this.#winds[0].duration = 0;
         this.#winds[0].interact = false;
       }
     } else {
-      this.#execute(this.#button_buffer);
+      this.#execute(button);
     }
-    this.#button_buffer = -1;
   }
 
   #update_game_over() {}
@@ -197,9 +198,12 @@ class GameScene extends Scene {
       });
   }
 
-  #canSee(mob, x, y){
+  #canSee(mob, x, y) {
     //console.log("dist : " + this.#distance(mob.x, mob.y, hero.x, hero.y))
-    return this.#distance(mob.x, mob.y,  x, y) <= mob.distanceSight && this.#isInLineOfSigth(mob.x, mob.y,  x, y);
+    return (
+      this.#distance(mob.x, mob.y, x, y) <= mob.distanceSight &&
+      this.#isInLineOfSigth(mob.x, mob.y, x, y)
+    );
   }
 
   #wait(mob) {
@@ -207,7 +211,7 @@ class GameScene extends Scene {
       mob.status = Status.ATTACK;
       mob.target = { x: this.#hero.x, y: this.#hero.y };
       //!
-      this.#addFloat("!", mob.x, mob.y, 0x000000)
+      this.#addFloat("!", mob.x, mob.y, 0x000000);
     }
   }
 
@@ -219,25 +223,34 @@ class GameScene extends Scene {
       mob.status = Status.WAIT;
       mob.target = {};
       // ?
-      this.#addFloat("?", mob.x, mob.y, 0x000000)
+      this.#addFloat("?", mob.x, mob.y, 0x000000);
     } else {
       //console.log("target: " + mob.target.x + "" + mob.target.y);
-      let distMap= this.#computeDijkstraArray(mob.target.x, mob.target.y)
-      let dx, dy, dist,
-        best_dir = -1, best_dist = 999;
+      let distMap = this.#computeDijkstraArray(mob.target.x, mob.target.y);
+      let dx,
+        dy,
+        dist,
+        best_dirs = [],
+        best_dist = 999;
       for (let dir = 0; dir < 4; dir++) {
         dx = mob.x + this.#DIR_X[dir];
         dy = mob.y + this.#DIR_Y[dir];
         dist = distMap[dx][dy];
 
         let nextPosTile = this.#map.getTileAt(dx, dy);
-        if (dist < best_dist && !(!nextPosTile || nextPosTile.properties?.solid)) {
-          best_dist = dist;
-          best_dir = dir;
+        if (!(!nextPosTile || nextPosTile.properties?.solid)) {
+          if (dist < best_dist) {
+            best_dist = dist;
+            best_dirs = [dir];
+          } else if (dist == best_dist) {
+            best_dirs.push(dir);
+          }
         }
       }
 
-      if (best_dir != -1) {
+      if (best_dirs.length > 0) {
+        const best_dir =
+          best_dirs[Math.floor(Math.random() * best_dirs.length)];
         if (
           best_dist == 0 &&
           this.#hero.x == mob.target.x &&
@@ -365,24 +378,24 @@ class GameScene extends Scene {
     }
   }
 
-  #unfog(hero){
+  #unfog(hero) {
     let tx, ty, tile;
 
-    for(let x = 0; x < this.#fog.length; x++){
-      for(let y = 0; y < this.#fog[0].length; y++){
+    for (let x = 0; x < this.#fog.length; x++) {
+      for (let y = 0; y < this.#fog[0].length; y++) {
         //this.#map.getTileAt(x, y).visible = this.#fog[x][y];
-        if(this.#canSee(hero, x, y) && !this.#fog[x][y]){
+        if (this.#canSee(hero, x, y) && !this.#fog[x][y]) {
           this.#fog[x][y] = true;
-          for(let dir = 0; dir < 4; dir ++){
+          for (let dir = 0; dir < 4; dir++) {
             tx = x + this.#DIR_X[dir];
             ty = y + this.#DIR_Y[dir];
             tile = this.#map.getTileAt(tx, ty);
-            if (!!tile && !this.#fog[tx][ty] && tile.properties?.solid){
-                this.#fog[tx][ty] = true;
+            if (!!tile && !this.#fog[tx][ty] && tile.properties?.solid) {
+              this.#fog[tx][ty] = true;
             }
           }
         }
-      } 
+      }
     }
   }
 
@@ -395,21 +408,28 @@ class GameScene extends Scene {
     defender.flash = 8;
   }
 
-  #computeDijkstraArray(x, y){
-    let result = Array(Map.WIDTH).fill(0).map(x => Array(Map.HEIGHT).fill(-1))
-    let candidates = [], dx, dy, tile, current;
-    candidates.push({x: x, y:y, step: 0});
+  #computeDijkstraArray(x, y) {
+    let result = Array(Map.WIDTH)
+      .fill(0)
+      .map((x) => Array(Map.HEIGHT).fill(-1));
+    let candidates = [],
+      dx,
+      dy,
+      tile,
+      current;
+    candidates.push({ x: x, y: y, step: 0 });
     result[x][y] = 0;
-    do{
+    do {
       current = candidates.shift();
-      for(let dir = 0; dir < 4; dir++){
-        dx = current.x + this.#DIR_X[dir]
+      for (let dir = 0; dir < 4; dir++) {
+        dx = current.x + this.#DIR_X[dir];
         dy = current.y + this.#DIR_Y[dir];
         tile = this.#map.getTileAt(dx, dy);
-        if(tile && result[dx][dy] == -1){
-          result[dx][dy] = current.step+1;
-          if(!tile.properties?.solid){ // is walkable
-            candidates.push({x: dx, y:dy, step: current.step+1});
+        if (tile && result[dx][dy] == -1) {
+          result[dx][dy] = current.step + 1;
+          if (!tile.properties?.solid) {
+            // is walkable
+            candidates.push({ x: dx, y: dy, step: current.step + 1 });
           }
         }
       }
@@ -483,7 +503,7 @@ class GameScene extends Scene {
     drawUi(this, this.#ui, this.#hero, this.#click);
     this.#drawWinds();
     this.#drawFloats();
-    drawFog(this.#map, this.#fog)
+    drawFog(this.#map, this.#fog);
     //draw floor => managed by phaser
   }
 
@@ -536,7 +556,7 @@ class GameScene extends Scene {
       mob.sprite.scaleX = 1;
     }
 
-    mob.sprite.visible = this.#fog[mob.x][mob.y]
+    mob.sprite.visible = this.#fog[mob.x][mob.y];
   }
 
   #showMsg(txt, duration) {
@@ -549,8 +569,16 @@ class GameScene extends Scene {
     talk.interact = true;
   }
 
-  #addFloat(txt, x, y, color){
-    let float = {txt: txt, x:x*8+1, y:y*8, tx:x*8+2, ty:y*8 - 10, color:color, t:0}
+  #addFloat(txt, x, y, color) {
+    let float = {
+      txt: txt,
+      x: x * 8 + 1,
+      y: y * 8,
+      tx: x * 8 + 2,
+      ty: y * 8 - 10,
+      color: color,
+      t: 0,
+    };
     this.#floats.push(float);
     return float;
   }
@@ -584,10 +612,10 @@ class GameScene extends Scene {
     }
   }
 
-  #drawFloats(){
-    this.#floats.forEach(float => {
+  #drawFloats() {
+    this.#floats.forEach((float) => {
       drawFloat(this, float);
-    })
+    });
   }
 }
 
