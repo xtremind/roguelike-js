@@ -238,6 +238,7 @@ class GameScene extends Scene {
         dist = distMap[dx][dy];
 
         let nextPosTile = this.#map.getTileAt(dx, dy);
+
         if (!(!nextPosTile || nextPosTile.properties?.solid)) {
           if (dist < best_dist) {
             best_dist = dist;
@@ -248,9 +249,20 @@ class GameScene extends Scene {
         }
       }
 
-      if (best_dirs.length > 0) {
+      let optimal_dirs = [];
+
+      for (const dir of best_dirs) {
+        dx = mob.x + this.#DIR_X[dir];
+        dy = mob.y + this.#DIR_Y[dir];
+        let other = this.#getMob(dx, dy);
+        if (!other || other?.type === Mobs.HERO) {
+          optimal_dirs.push(dir);
+        }
+      }
+
+      if (optimal_dirs.length > 0) {
         const best_dir =
-          best_dirs[Math.floor(Math.random() * best_dirs.length)];
+          optimal_dirs[Math.floor(Math.random() * optimal_dirs.length)];
         if (
           best_dist == 0 &&
           this.#hero.x == mob.target.x &&
