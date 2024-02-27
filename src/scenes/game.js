@@ -1,7 +1,6 @@
 import { Scene } from "phaser";
 
 import { drawWind, drawFloat, drawFog, drawUi } from "utils/graphics";
-import { prepareWalk, walk, prepareBump, bump } from "utils/movements";
 import { Map, Tiles, Mobs, Status, Action } from "utils/constants";
 import Mob from "models/mob";
 
@@ -268,11 +267,19 @@ class GameScene extends Scene {
           this.#hero.x == mob.target.x &&
           this.#hero.y == mob.target.y
         ) {
-          prepareBump(mob, this.#hero.x - mob.x, this.#hero.y - mob.y);
+          mob.prepare(
+            Action.INTERACT,
+            this.#hero.x - mob.x,
+            this.#hero.y - mob.y,
+          );
           this.#hitMob(mob, this.#hero);
           this.#hurtSound.play();
         } else {
-          prepareWalk(mob, this.#DIR_X[best_dir], this.#DIR_Y[best_dir]);
+          mob.prepare(
+            Action.WALK,
+            this.#DIR_X[best_dir],
+            this.#DIR_Y[best_dir],
+          );
         }
         //move mob
         this.#tick = 0;
@@ -297,21 +304,22 @@ class GameScene extends Scene {
     if (!nextPosTile || nextPosTile.properties?.solid) {
       if (nextPosTile?.properties?.interactive) {
         this.#interactWith(nextPosTile);
+        this.#hero.prepare(Action.INTERACT, dx, dy);
+      } else {
+        this.#hero.prepare(Action.BUMP, dx, dy);
       }
-      prepareBump(this.#hero, dx, dy);
       this.#tick = 0;
       this.#update = this.#update_pturn;
     } else if (mob) {
-      prepareBump(this.#hero, dx, dy);
+      this.#hero.prepare(Action.INTERACT, dx, dy);
       this.#hitMob(this.#hero, mob);
       this.#hitSound.play();
       this.#tick = 0;
       this.#update = this.#update_pturn;
     } else {
-      prepareWalk(this.#hero, dx, dy);
+      this.#hero.prepare(Action.WALK, dx, dy);
       this.#tick = 0;
       this.#update = this.#update_pturn;
-
       this.#walkSound.play();
     }
   }
@@ -342,14 +350,11 @@ class GameScene extends Scene {
     this.#tick = Math.min(this.#tick + 0.125, 1);
 
     //player move
-    if (this.#hero.action == Action.WALK) {
-      walk(this.#hero, this.#tick);
-    } else if (this.#hero.action == Action.BUMP) {
-      bump(this.#hero, this.#tick);
-    }
+    this.#hero.do(this.#tick);
 
     if (this.#tick === 1) {
       this.#update = this.#update_interact;
+      let hasInteracted = this.#hero.hasInteract();
       this.#hero.action = Action.NONE;
       if (this.#hero.isDead()) {
         this.#mobs = [];
@@ -357,7 +362,9 @@ class GameScene extends Scene {
         return;
         //reinitiate scene
       }
-      this.#aiMobs();
+      if (hasInteracted) {
+        this.#aiMobs();
+      }
     }
   }
 
@@ -368,12 +375,7 @@ class GameScene extends Scene {
     this.#mobs
       .filter((mob) => mob.type !== Mobs.HERO)
       .forEach((mob) => {
-        if (mob.action == Action.WALK) {
-          walk(mob, this.#tick);
-        } else if (mob.action == Action.BUMP) {
-          bump(mob, this.#tick);
-        }
-
+        mob.do(this.#tick);
         if (this.#tick === 1) {
           mob.action = Action.NONE;
         }

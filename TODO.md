@@ -229,7 +229,7 @@
 
 ####
 
-- [ ] UPDATE : mob don't move when player don't move (skip turn by bumping for example)
+- [x] UPDATE : mob don't move when player don't move (skip turn by bumping for example)
 - [ ] UPDATE : if mob don't move for a certain time => remove target && WAIT (optional)
 - [ ] UTILS : create a function walkable (not outside and not solid)
 - [ ] UTILS : add option to dijkstra map so that it stopped once origin is found (optional)
