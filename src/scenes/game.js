@@ -308,20 +308,16 @@ class GameScene extends Scene {
       } else {
         this.#hero.prepare(Action.BUMP, dx, dy);
       }
-      this.#tick = 0;
-      this.#update = this.#update_pturn;
     } else if (mob) {
       this.#hero.prepare(Action.INTERACT, dx, dy);
       this.#hitMob(this.#hero, mob);
-      this.#hitSound.play();
-      this.#tick = 0;
-      this.#update = this.#update_pturn;
     } else {
       this.#hero.prepare(Action.WALK, dx, dy);
-      this.#tick = 0;
-      this.#update = this.#update_pturn;
       this.#walkSound.play();
     }
+
+    this.#tick = 0;
+    this.#update = this.#update_pturn;
   }
 
   #interactWith(tile) {
