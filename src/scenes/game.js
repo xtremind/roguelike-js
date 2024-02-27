@@ -269,8 +269,8 @@ class GameScene extends Scene {
         ) {
           mob.prepare(
             Action.INTERACT,
-            this.#hero.x - mob.x,
-            this.#hero.y - mob.y,
+            this.#DIR_X[best_dir],
+            this.#DIR_Y[best_dir],
           );
           this.#hitMob(mob, this.#hero);
           this.#hurtSound.play();
