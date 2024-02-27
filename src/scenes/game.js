@@ -282,6 +282,7 @@ class GameScene extends Scene {
           );
         }
         //move mob
+        //this.#walkMobSound.play();
         this.#tick = 0;
         this.#update = this.#update_mturn;
       }
@@ -311,6 +312,7 @@ class GameScene extends Scene {
     } else if (mob) {
       this.#hero.prepare(Action.INTERACT, dx, dy);
       this.#hitMob(this.#hero, mob);
+      this.#hitSound.play();
     } else {
       this.#hero.prepare(Action.WALK, dx, dy);
       this.#walkSound.play();
