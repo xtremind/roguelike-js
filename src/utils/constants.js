@@ -1,7 +1,7 @@
 exports.Map = Object.freeze({
   WIDTH: 20,
   HEIGHT: 15,
-})
+});
 
 exports.Tiles = Object.freeze({
   WALL: 1,
@@ -30,4 +30,11 @@ exports.Mobs = Object.freeze({
 exports.Status = Object.freeze({
   WAIT: "wait",
   ATTACK: "attack",
+});
+
+exports.Action = Object.freeze({
+  BUMP: "BUMP",
+  WALK: "WALK",
+  INTERACT: "INTERACT",
+  NONE: "NONE",
 });

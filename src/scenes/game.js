@@ -2,7 +2,7 @@ import { Scene } from "phaser";
 
 import { drawWind, drawFloat, drawFog, drawUi } from "utils/graphics";
 import { prepareWalk, walk, prepareBump, bump } from "utils/movements";
-import { Map, Tiles, Mobs, Status } from "utils/constants";
+import { Map, Tiles, Mobs, Status, Action } from "utils/constants";
 import Mob from "models/mob";
 
 class GameScene extends Scene {
@@ -342,15 +342,15 @@ class GameScene extends Scene {
     this.#tick = Math.min(this.#tick + 0.125, 1);
 
     //player move
-    if (this.#hero.action == "WALK") {
+    if (this.#hero.action == Action.WALK) {
       walk(this.#hero, this.#tick);
-    } else if (this.#hero.action == "BUMP") {
+    } else if (this.#hero.action == Action.BUMP) {
       bump(this.#hero, this.#tick);
     }
 
     if (this.#tick === 1) {
       this.#update = this.#update_interact;
-      this.#hero.action = "NONE";
+      this.#hero.action = Action.NONE;
       if (this.#hero.isDead()) {
         this.#mobs = [];
         this.cameras.main.fadeOut(1000, 0, 0, 0);
@@ -368,14 +368,14 @@ class GameScene extends Scene {
     this.#mobs
       .filter((mob) => mob.type !== Mobs.HERO)
       .forEach((mob) => {
-        if (mob.action == "WALK") {
+        if (mob.action == Action.WALK) {
           walk(mob, this.#tick);
-        } else if (mob.action == "BUMP") {
+        } else if (mob.action == Action.BUMP) {
           bump(mob, this.#tick);
         }
 
         if (this.#tick === 1) {
-          mob.action = "NONE";
+          mob.action = Action.NONE;
         }
       });
 
