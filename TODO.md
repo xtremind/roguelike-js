@@ -236,8 +236,12 @@
 
 ### Step 20 : Inventory UI
 
+I will use potion system, rather than equipment. Color potion will be randomly generated with define effect when starting game. Size will depend on level
+POSSIBLE EFFECT : HEAL, CURE, BLIND, POISON, INCREASED MAX HEALTH, FREEZE, FIRE, EXPLODE, SLEEP (on monster, don't move until touched), ...
+only see effect once color is used
+
 - [ ] CACHE : create an array to list up to 6 inventory elements
-- [ ] CACHE : create an array of 2 elements to list equiped elements (weapon, armor)
+- [ ] CACHE : create an array of 2 elements to list equiped elements (weapon, armor) -> WON'T DO IT
 - [ ] UPDATE : create a function "game inventory"
 - [ ] UTILS : create a function that will change update function to "game inventory"
 - [ ] UTILS : display a box in full screen
@@ -260,8 +264,8 @@
 - [ ] UTILS : define a function that will return an empty slot in inventory
 - [ ] UTILS : define take item if existing empty slot, and put item in inventory
 - [ ] DRAW : change color text depending of item
-- [ ] DRAW : display 'weapon' if empty slot
-- [ ] DRAW : display 'armor' if empty slot
+- [ ] DRAW : display 'weapon' if empty slot -> WON'T DO IT
+- [ ] DRAW : display 'armor' if empty slot -> WON'T DO IT
 - [ ] UTILS : add element in equipment
 - [ ] DRAW : don't animate character when inventory is opened
 
@@ -284,7 +288,7 @@
 - [ ] DRAW : define use menu depending of food item : eat / throw / trash
 - [ ] DRAW : define use menu depending of throwable item : throw / trash
 
-### Step 22 : Equipment
+### Step 22 : Equipment -> WON'T DO IT
 
 - [ ] UPDATE : create a function that will manage 'use item'
 - [ ] USE ITEM : determine action from sub menu selection
@@ -309,7 +313,7 @@
 
 - [ ] INVENTORY : don't select equipment, only inventory
 
-### Step 23 : Eating
+### Step 23 : Eating -> WON'T DO IT
 
 - [ ] MOB : create a function that will eat something
 - [ ] EAT : add energy to health mob
@@ -632,7 +636,7 @@
 - [ ] LOOT : on one floor, only one weapon or armor can be loot
 - [ ] INTERACT : don't destroy chest / jar if inventory is full
 
-### Step 45 : Random Food
+### Step 45 : Random Food -> WON'T DO IT
 
 - [ ] DECORATE : first room should contain jar
 - [ ] INTERACTION : put debris once jar is broken
