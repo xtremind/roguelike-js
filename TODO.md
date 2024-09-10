@@ -240,23 +240,23 @@ I will use potion system, rather than equipment. Color potion will be randomly g
 POSSIBLE EFFECT : HEAL, CURE, BLIND, POISON, INCREASED MAX HEALTH, FREEZE, FIRE, EXPLODE, SLEEP (on monster, don't move until touched), ...
 only see effect once color is used
 
-- [ ] CACHE : create an array to list up to 6 inventory elements
-- [ ] CACHE : create an array of 2 elements to list equiped elements (weapon, armor) -> WON'T DO IT
-- [ ] UPDATE : create a function "game inventory"
-- [ ] UTILS : create a function that will change update function to "game inventory"
-- [ ] UTILS : display a box in full screen
+- [x] CACHE : create an array to list up to 6 inventory elements
+- [o] CACHE : create an array of 2 elements to list equiped elements (weapon, armor) -> WON'T DO IT
+- [x] UPDATE : create a function "game inventory"
+- [x] UTILS : create a function that will change update function to "game inventory"
+- [x] UTILS : display a box in full screen
 - [ ] UPDATE : if "button" is pushed, launch utils function
-- [ ] UPDATE "game inventory" : if button is pushed, change update to move player
-- [ ] UPDATE "game inventory" : if button is pushed, hide inventory window
-- [ ] UTILS : display element from equipment
-- [ ] UTILS : display element from inventory
-- [ ] UTILS : display dots if empty slot in inventory
-- [ ] UTILS : display separator between equipment and inventory
-- [ ] UTILS : save/edit cursor position
-- [ ] UTILS : display text a bit on the right
-- [ ] UTILS : draw cursor position left of the text
-- [ ] UPDATE : move the cursor between lines
-- [ ] UPDATE : add attention to cursor (move left & right with time)
+- [x] UPDATE "game inventory" : if button is pushed, change update to move player
+- [x] UPDATE "game inventory" : if button is pushed, hide inventory window
+- [ ] UTILS : display element from equipment -> WON'T DO IT
+- [x] UTILS : display element from inventory
+- [x] UTILS : display dots if empty slot in inventory
+- [ ] UTILS : display separator between equipment and inventory-> WON'T DO IT
+- [x] UTILS : save/edit cursor position
+- [x] UTILS : display text a bit on the right
+- [x] UTILS : draw cursor position left of the text
+- [x] UPDATE : move the cursor between lines
+- [x] UPDATE : add attention to cursor (move left & right with time)
 - [ ] DRAW : change color text depending of element
 - [ ] DRAW : display hero's stats on to of inventory
 - [ ] ITEM : define an class ITEM (name)

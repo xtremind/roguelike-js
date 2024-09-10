@@ -20,6 +20,11 @@ export default class Mob {
         this.health = 5;
         this.maxHealth = 5;
         this.distanceSight = 5;
+        this.inventory = {
+          elements: [],
+          position: 0,
+          tick : 0
+        };
         break;
       case Mobs.SLIME:
         this.atk = 1;

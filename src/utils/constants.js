@@ -38,3 +38,34 @@ exports.Action = Object.freeze({
   INTERACT: "INTERACT",
   NONE: "NONE",
 });
+
+exports.Effects = Object.freeze({
+  HEAL: "heal", 
+  CURE: "cure",
+  INCREASE__MAX_HEALTH: "maxhealth",
+  BLIND: "blind", 
+  POISON: "poison", 
+  FREEZE: "freeze", 
+  BURN: "burn", 
+  EXPLODE: "explode", 
+  SLEEP: "sleep"
+})
+
+exports.Powers = Object.freeze({
+  SMALL: "small",
+  MEDIUM: "medium",
+  LARGE: "large",
+  EXTRA_LARGE: "extralarge"
+})
+
+exports.Colors = Object.freeze({
+  WHITE: "white",
+  BLACK: "black",
+  RED: "red",
+  GREEN: "green",
+  BLUE: "blue",
+  YELLOW: "yellow",
+  ROSE: "rose",
+  ORANGE: "orange",
+  PURPLE: "purple"
+})

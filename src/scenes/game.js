@@ -1,6 +1,6 @@
 import { Scene } from "phaser";
 
-import { drawWind, drawFloat, drawFog, drawUi } from "utils/graphics";
+import { drawWind, drawFloat, drawFog, drawUi, drawInventory } from "utils/graphics";
 import { Map, Tiles, Mobs, Status, Action } from "utils/constants";
 import Mob from "models/mob";
 
@@ -21,6 +21,8 @@ class GameScene extends Scene {
   #cursors;
   #DIR_X = [0, 0, -1, 1];
   #DIR_Y = [-1, 1, 0, 0];
+  
+  #showInventory = false;
 
   //generic functions
   #update;
@@ -68,7 +70,7 @@ class GameScene extends Scene {
     //initiate interaction for player
     this.#cursors = this.input.keyboard.createCursorKeys();
 
-    this.#update = this.#update_interact;
+    this.#update = this.#update_interact_game;
     this.#draw = this.#draw_game;
 
     //this.#showMsg(["hello world qqsdsd"], 100);
@@ -146,7 +148,7 @@ class GameScene extends Scene {
     });
   }
 
-  #update_interact() {
+  #update_interact_game() {
     const button = this.#getButton();
     if (this.#winds.length > 0) {
       if (this.#winds[0].interact && button == 4) {
@@ -154,7 +156,17 @@ class GameScene extends Scene {
         this.#winds[0].interact = false;
       }
     } else {
-      this.#execute(button);
+      this.#executeInGame(button);
+    }
+  }
+
+  #update_interact_inventory() {
+    this.#tick = Math.min(this.#tick + 0.125, 1);
+    const button = this.#getButton();
+    //console.log("update_interact_inventory " + this.#tick)
+    if(this.#tick == 1){
+      this.#executeInInventory(button);
+      this.#tick = 0;
     }
   }
 
@@ -171,8 +183,29 @@ class GameScene extends Scene {
     return result;
   }
 
-  #execute(button) {
+  #executeInInventory(button) {
+    if (button == 4) {
+      console.log("!inventory")
+      this.#showInventory = !this.#showInventory;
+      const that = this;
+      setTimeout(function(){
+        that.#update = that.#update_interact_game;
+      }, 200);    
+    } else if ([0, 1].includes(button)) {      
+      this.#hero.inventory.position += this.#DIR_Y[button];
+      this.#hero.inventory.position = this.#hero.inventory.position < 0 ? this.#hero.inventory.position + 6 : this.#hero.inventory.position
+      this.#hero.inventory.position %= 6;
+    }
+  }
+  
+  #executeInGame(button) {
     if (button < 0) return;
+    if (button == 4) {
+      console.log("inventory");
+      this.#showInventory = !this.#showInventory;
+      this.#update = this.#update_interact_inventory;
+      this.#tick = 0;
+    }
     if (button >= 0 && button < 4) {
       let dx = this.#DIR_X[button];
       let dy = this.#DIR_Y[button];
@@ -351,7 +384,7 @@ class GameScene extends Scene {
     this.#hero.do(this.#tick);
 
     if (this.#tick === 1) {
-      this.#update = this.#update_interact;
+      this.#update = this.#update_interact_game;
       let hasInteracted = this.#hero.hasInteract();
       this.#hero.action = Action.NONE;
       if (this.#hero.isDead()) {
@@ -380,7 +413,7 @@ class GameScene extends Scene {
       });
 
     if (this.#tick === 1) {
-      this.#update = this.#update_interact;
+      this.#update = this.#update_interact_game;
       if (this.#hero.isDead()) {
         this.#mobs = [];
         this.cameras.main.fadeOut(1000, 0, 0, 0);
@@ -511,12 +544,17 @@ class GameScene extends Scene {
   #draw_game() {
     //console.log("GameScene.render");
     //clear scene
+    this.#hero.inventory.sprite?.destroy()
     this.#drawMobs();
     drawUi(this, this.#ui, this.#hero, this.#click);
     this.#drawWinds();
     this.#drawFloats();
     drawFog(this.#map, this.#fog);
     //draw floor => managed by phaser
+    if(this.#showInventory) {
+      //console.log(this.#showInventory)
+      drawInventory(this, this.#hero, 0)
+    }
   }
 
   #draw_game_over() {}

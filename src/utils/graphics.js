@@ -64,6 +64,46 @@ exports.drawUi = function (scene, ui, hero, click) {
   
 }
 
+exports.drawInventory = function (scene, hero){
+  //Draw 4 lines
+  hero.inventory.sprite?.destroy()
+  hero.inventory.sprite = scene.add.container(
+    scene.cameras.main.worldView.x + scene.cameras.main.width / (2 * scene.cameras.main.zoom),
+    scene.cameras.main.worldView.y + scene.cameras.main.height / (2 * scene.cameras.main.zoom),
+  );
+
+  let elementsToDisplay = [...hero.inventory.elements];
+  
+  while (6 - elementsToDisplay.length != 0) {
+    elementsToDisplay.push('...' )    
+  }
+
+  elementsToDisplay = elementsToDisplay.map((element, index) => (hero.inventory.position == index++ ? '> ' : '  ') + element + ' '.repeat(24-element.length))
+
+  const text = scene.add.text(0, 0, elementsToDisplay.join("\n"), { align: "center" });
+  text.setFont("Courier");
+  text.setFontSize(7);
+  text.setOrigin(0.5);
+
+  text.setDisplaySize(text.width, text.height);
+
+  hero.inventory.sprite.add(
+    scene.add.rectangle(0, 0, text.width + 4, text.height + 4, 0x000000),
+  );
+  hero.inventory.sprite.add(
+    scene.add.rectangle(0, 0, text.width + 3, text.height + 3, 0xffffff),
+  );
+  let r1 = scene.add.rectangle(0, 0, text.width + 1, text.height + 1, 0x000000);
+  hero.inventory.sprite.add(r1);
+
+  Phaser.Display.Align.In.Center(text, r1);
+  hero.inventory.sprite.add(text);
+  hero.inventory.sprite.setDepth(10);
+
+  //draw cadre
+  //draw fleche
+  //
+}
 
 const drawBeatingHeart = function(scene, currentHealth, maxHealth, click){
 
