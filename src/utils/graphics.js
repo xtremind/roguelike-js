@@ -1,3 +1,9 @@
+////
+exports.clear = function (scene) {
+
+}
+
+////////////////////////////// FEEDBACK //////////////////////////////
 exports.drawWind = function (scene, wind) {
   wind.sprite = scene.add.container(
     scene.cameras.main.worldView.x + scene.cameras.main.width / (2 * scene.cameras.main.zoom),
@@ -42,6 +48,8 @@ exports.drawFloat = function (scene, float) {
       //.setTintFill(float.color);
 }
 
+////////////////////////////// MAPS //////////////////////////////
+
 exports.drawFog = function (scene, fog){
   for(let x = 0; x < fog.length; x++){
     for(let y = 0; y < fog[0].length; y++){
@@ -50,19 +58,7 @@ exports.drawFog = function (scene, fog){
   }
 }
 
-exports.drawUi = function (scene, ui, hero, click) {
-  //this.#hero;
-  ui.heart?.destroy();
-  ui.health?.destroy();
-  ui.separator?.destroy();
-  ui.maxHealth?.destroy();
-
-  ui.heart = drawBeatingHeart(scene, hero.health, hero.maxHealth, click)
-  ui.health = drawCurrentHealth(scene, hero.health)
-  ui.separator = drawSeparator(scene);
-  ui.maxHealth = drawMaxHealth(scene, hero.maxHealth);
-  
-}
+////////////////////////////// INVENTORY //////////////////////////////
 
 exports.drawInventory = function (scene, hero){
   //Draw 4 lines
@@ -103,6 +99,56 @@ exports.drawInventory = function (scene, hero){
   //draw cadre
   //draw fleche
   //
+}
+
+let subinventory = {};
+
+exports.drawSubInventory = function (scene, position){
+  subinventory.sprite?.destroy()
+
+  subinventory.sprite = scene.add.container(
+    50 + scene.cameras.main.worldView.x + scene.cameras.main.width / (2 * scene.cameras.main.zoom),
+    20 + scene.cameras.main.worldView.y + scene.cameras.main.height / (2 * scene.cameras.main.zoom),
+  );
+
+  let elementsToDisplay = ["drink ", "launch", "drop  "]
+  elementsToDisplay = elementsToDisplay.map((element, index) => (position == index++ ? '> ' : '  ') + element)
+
+  const text = scene.add.text(0, 0, elementsToDisplay.join("\n"), { align: "center" });
+  text.setFont("Courier");
+  text.setFontSize(7);
+  text.setOrigin(0.5);
+  
+  text.setDisplaySize(text.width, text.height);
+
+  subinventory.sprite.add(
+    scene.add.rectangle(0, 0, text.width + 4, text.height + 4, 0x000000),
+  );
+  subinventory.sprite.add(
+    scene.add.rectangle(0, 0, text.width + 3, text.height + 3, 0xffffff),
+  );
+  let r1 = scene.add.rectangle(0, 0, text.width + 1, text.height + 1, 0x000000);
+  subinventory.sprite.add(r1);
+
+  Phaser.Display.Align.In.Center(text, r1);
+  subinventory.sprite.add(text);
+  subinventory.sprite.setDepth(10);
+}
+
+////////////////////////////// UI //////////////////////////////
+
+exports.drawUi = function (scene, ui, hero, click) {
+  //this.#hero;
+  ui.heart?.destroy();
+  ui.health?.destroy();
+  ui.separator?.destroy();
+  ui.maxHealth?.destroy();
+
+  ui.heart = drawBeatingHeart(scene, hero.health, hero.maxHealth, click)
+  ui.health = drawCurrentHealth(scene, hero.health)
+  ui.separator = drawSeparator(scene);
+  ui.maxHealth = drawMaxHealth(scene, hero.maxHealth);
+  
 }
 
 const drawBeatingHeart = function(scene, currentHealth, maxHealth, click){

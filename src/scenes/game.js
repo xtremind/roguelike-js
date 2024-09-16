@@ -1,6 +1,6 @@
 import { Scene } from "phaser";
 
-import { drawWind, drawFloat, drawFog, drawUi, drawInventory } from "utils/graphics";
+import { drawWind, drawFloat, drawFog, drawUi, drawInventory, drawSubInventory } from "utils/graphics";
 import { Map, Tiles, Mobs, Status, Action, Keys } from "utils/constants";
 import Mob from "models/mob";
 import Item from "models/item";
@@ -561,6 +561,7 @@ class GameScene extends Scene {
     if(this.#showInventory) {
       //console.log(this.#showInventory)
       drawInventory(this, this.#hero, 0)
+      drawSubInventory(this, 0)
     }
   }
 

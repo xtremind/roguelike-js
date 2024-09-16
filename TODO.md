@@ -271,10 +271,10 @@ only see effect once color is used
 
 ### Step 21 : Use Menu
 
-- [ ] UTILS : change int into Button
-- [ ] MENU : cycle when top/bottom when moving in menu
-- [ ] DRAW : draw mocked 'use menu' on over and right of 'inventory'
-- [ ] UPDATE : when pussing 'button A' in 'inventory', display 'use menu'
+- [x] UTILS : change int into Button
+- [x] MENU : cycle when top/bottom when moving in menu
+- [x] DRAW : draw mocked 'use menu' on over and right of 'inventory'
+- [ ] UPDATE : when pussing 'button CTRL' in 'inventory', display 'use menu'
 - [ ] UPDATE : when pussing 'button A' in 'inventory' on empty slot, don't display 'use menu'
 - [ ] UPDATE : when pussing 'button B' in 'use menu', display 'inventory'
 - [ ] UPDATE : when pussing 'button menu' in 'use menu', return to game
