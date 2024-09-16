@@ -69,3 +69,12 @@ exports.Colors = Object.freeze({
   ORANGE: "orange",
   PURPLE: "purple"
 })
+
+exports.Keys  = Object.freeze({
+  UP : 0,
+  DOWN : 1,
+  LEFT : 2,
+  RIGHT : 3,
+  ENTER : 4,
+  BACK : 5
+})

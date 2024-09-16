@@ -1,8 +1,11 @@
 import { Scene } from "phaser";
 
 import { drawWind, drawFloat, drawFog, drawUi, drawInventory } from "utils/graphics";
-import { Map, Tiles, Mobs, Status, Action } from "utils/constants";
+import { Map, Tiles, Mobs, Status, Action, Keys } from "utils/constants";
 import Mob from "models/mob";
+
+const INVENTORY_SIZE = 6;
+const INVENTORY_TOGGLE_DELAY = 300;
 
 class GameScene extends Scene {
   //datas
@@ -35,7 +38,7 @@ class GameScene extends Scene {
   #openChestSound;
   #openDoorSound;
   #walkSound;
-
+  
   //layers
   #fog = [[]];
 
@@ -67,7 +70,8 @@ class GameScene extends Scene {
 
     this.#loadLevel();
 
-    //initiate interaction for player
+    //initiate interaction for player 
+    //TODO : review action / back boutons
     this.#cursors = this.input.keyboard.createCursorKeys();
 
     this.#update = this.#update_interact_game;
@@ -176,7 +180,7 @@ class GameScene extends Scene {
     //[ "up", "down", "left", "right", "space", "shift" ]
     let result = -1;
     Object.keys(this.#cursors).forEach((dir, ind) => {
-      if (ind >= 0 && ind < 5 && this.#cursors[dir].isDown) {
+      if (ind >= Keys.UP && ind < Keys.BACK && this.#cursors[dir].isDown) {
         result = ind;
       }
     });
@@ -184,29 +188,29 @@ class GameScene extends Scene {
   }
 
   #executeInInventory(button) {
-    if (button == 4) {
+    if (button == Keys.ENTER) {
       console.log("!inventory")
-      this.#showInventory = !this.#showInventory;
-      const that = this;
-      setTimeout(function(){
-        that.#update = that.#update_interact_game;
-      }, 200);    
-    } else if ([0, 1].includes(button)) {      
+      this.#showInventory = false;
+      setTimeout(() => {
+        this.#update = this.#update_interact_game;
+      }, INVENTORY_TOGGLE_DELAY);
+    } else if ([Keys.UP, Keys.DOWN].includes(button)) {      
       this.#hero.inventory.position += this.#DIR_Y[button];
-      this.#hero.inventory.position = this.#hero.inventory.position < 0 ? this.#hero.inventory.position + 6 : this.#hero.inventory.position
-      this.#hero.inventory.position %= 6;
+      this.#hero.inventory.position = (this.#hero.inventory.position + INVENTORY_SIZE) % INVENTORY_SIZE;
+
     }
   }
   
   #executeInGame(button) {
-    if (button < 0) return;
-    if (button == 4) {
+    if (button < Keys.UP) return;
+    if (button == Keys.ENTER) {
       console.log("inventory");
-      this.#showInventory = !this.#showInventory;
-      this.#update = this.#update_interact_inventory;
-      this.#tick = 0;
+      this.#showInventory = true;
+      setTimeout(() => {
+        this.#update = this.#update_interact_inventory;
+      }, INVENTORY_TOGGLE_DELAY);
     }
-    if (button >= 0 && button < 4) {
+    if (button >= Keys.UP && button <= Keys.RIGHT) {
       let dx = this.#DIR_X[button];
       let dy = this.#DIR_Y[button];
       this.#moveHero(dx, dy);

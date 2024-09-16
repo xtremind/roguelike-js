@@ -37,51 +37,44 @@ class PreloadScene extends Scene {
       this.cameras.main.worldView.x + this.cameras.main.width / 2;
     const screenCenterY =
       this.cameras.main.worldView.y + this.cameras.main.height / 2;
+    const textStyle = { font: "30px Arial", fill: "#ffffff" };
+
+    // Loading label
     const loadingLabel = this.add
-      .text(screenCenterX, screenCenterY - 30, "Loading ...", {
-        font: "30px Arial",
-        fill: "#ffffff",
-      })
+      .text(screenCenterX, screenCenterY - 30, "Loading ...", textStyle)
       .setOrigin(0.5);
+    
+    // Progress percentage text
     const progressPercent = this.add
-      .text(screenCenterX, screenCenterY + 30, "", {
-        font: "30px Arial",
-        fill: "#ffffff",
-      })
+      .text(screenCenterX, screenCenterY + 30, "", textStyle)
       .setOrigin(0.5);
+      
+    // Progress file text
     const progressFile = this.add
-      .text(screenCenterX, screenCenterY + 90, "", {
-        font: "30px Arial",
-        fill: "#ffffff",
-      })
+      .text(screenCenterX, screenCenterY + 90, "", textStyle)
       .setOrigin(0.5);
 
+    // Progress box
     const progressBox = this.add.graphics();
     progressBox.clear();
     progressBox.fillStyle(0x222222, 0.8);
     progressBox.fillRect(screenCenterX - 300, screenCenterY, 600, 60);
 
+    // Progress bar
     const progressBar = this.add.graphics();
 
     // Register a load progress event to show a load bar
     this.load.on("progress", (value) => {
-      console.log(
-        "PreloadScene.preload - progress : " + parseInt(value * 100) + "%",
-      );
+      console.log(`PreloadScene.preload - progress : ${parseInt(value * 100)}%`);
       progressPercent.setText(parseInt(value * 100) + "%");
       progressBar.clear();
       progressBar.fillStyle(0xffffff, 1);
-      progressBox.fillRect(
-        screenCenterX - 290,
-        screenCenterY + 10,
-        580 * value,
-        40,
-      );
+      progressBox.fillRect(screenCenterX - 290, screenCenterY + 10, 580 * value, 40);
     });
 
     // Register a fileprogress event to show loading asset
     this.load.on("fileprogress", (file) => {
-      progressFile.setText("Loading asset: " + file.key);
+      progressFile.setText(`Loading asset: ${file.key}`);
     });
 
     // Register a complete event to launch the title screen when all files are loaded
