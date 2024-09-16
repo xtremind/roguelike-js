@@ -3,6 +3,7 @@ import { Scene } from "phaser";
 import { drawWind, drawFloat, drawFog, drawUi, drawInventory } from "utils/graphics";
 import { Map, Tiles, Mobs, Status, Action, Keys } from "utils/constants";
 import Mob from "models/mob";
+import Item from "models/item";
 
 const INVENTORY_SIZE = 6;
 const INVENTORY_TOGGLE_DELAY = 300;
@@ -71,9 +72,10 @@ class GameScene extends Scene {
     this.#loadLevel();
 
     //initiate interaction for player 
-    //TODO : review action / back boutons
+    
     this.#cursors = this.input.keyboard.createCursorKeys();
-
+    this.#cursors.space = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.CTRL); //replace space by crtl button
+    
     this.#update = this.#update_interact_game;
     this.#draw = this.#draw_game;
 
@@ -180,7 +182,7 @@ class GameScene extends Scene {
     //[ "up", "down", "left", "right", "space", "shift" ]
     let result = -1;
     Object.keys(this.#cursors).forEach((dir, ind) => {
-      if (ind >= Keys.UP && ind < Keys.BACK && this.#cursors[dir].isDown) {
+      if (ind >= Keys.UP && ind <= Keys.BACK && this.#cursors[dir].isDown) {
         result = ind;
       }
     });
@@ -188,7 +190,7 @@ class GameScene extends Scene {
   }
 
   #executeInInventory(button) {
-    if (button == Keys.ENTER) {
+    if (button == Keys.BACK) {
       console.log("!inventory")
       this.#showInventory = false;
       setTimeout(() => {
@@ -206,6 +208,7 @@ class GameScene extends Scene {
     if (button == Keys.ENTER) {
       console.log("inventory");
       this.#showInventory = true;
+      this.#tick = 0;
       setTimeout(() => {
         this.#update = this.#update_interact_inventory;
       }, INVENTORY_TOGGLE_DELAY);

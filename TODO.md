@@ -245,29 +245,29 @@ only see effect once color is used
 - [x] UPDATE : create a function "game inventory"
 - [x] UTILS : create a function that will change update function to "game inventory"
 - [x] UTILS : display a box in full screen
-- [ ] UPDATE : if "button" is pushed, launch utils function
+- [x] UPDATE : if "button" is pushed, launch utils function
 - [x] UPDATE "game inventory" : if button is pushed, change update to move player
 - [x] UPDATE "game inventory" : if button is pushed, hide inventory window
-- [ ] UTILS : display element from equipment -> WON'T DO IT
+- [o] UTILS : display element from equipment -> WON'T DO IT
 - [x] UTILS : display element from inventory
 - [x] UTILS : display dots if empty slot in inventory
-- [ ] UTILS : display separator between equipment and inventory-> WON'T DO IT
+- [o] UTILS : display separator between equipment and inventory-> WON'T DO IT
 - [x] UTILS : save/edit cursor position
 - [x] UTILS : display text a bit on the right
 - [x] UTILS : draw cursor position left of the text
 - [x] UPDATE : move the cursor between lines
 - [x] UPDATE : add attention to cursor (move left & right with time)
 - [ ] DRAW : change color text depending of element
-- [ ] DRAW : display hero's stats on to of inventory
-- [ ] ITEM : define an class ITEM (name)
-- [ ] ITEM : initiate a list of existing item
-- [ ] UTILS : define a function that will return an empty slot in inventory
-- [ ] UTILS : define take item if existing empty slot, and put item in inventory
+- [o] DRAW : display hero's stats on to of inventory
+- [x] ITEM : define an class ITEM (name)
+- [x] ITEM : initiate a list of existing item
+- [x] UTILS : define a function that will return an empty slot in inventory
+- [x] UTILS : define take item if existing empty slot, and put item in inventory
 - [ ] DRAW : change color text depending of item
-- [ ] DRAW : display 'weapon' if empty slot -> WON'T DO IT
-- [ ] DRAW : display 'armor' if empty slot -> WON'T DO IT
-- [ ] UTILS : add element in equipment
-- [ ] DRAW : don't animate character when inventory is opened
+- [o] DRAW : display 'weapon' if empty slot -> WON'T DO IT
+- [o] DRAW : display 'armor' if empty slot -> WON'T DO IT
+- [o] UTILS : add element in equipment
+- [x] DRAW : don't animate character when inventory is opened
 
 ### Step 21 : Use Menu
 

@@ -22,8 +22,7 @@ export default class Mob {
         this.distanceSight = 5;
         this.inventory = {
           elements: [],
-          position: 0,
-          tick : 0
+          position: 0
         };
         break;
       case Mobs.SLIME:
@@ -81,5 +80,19 @@ export default class Mob {
 
   hasInteract() {
     return this.action == Action.INTERACT || this.action == Action.WALK;
+  }
+
+  #getIndexNextEmptySpotInInventory(){
+    if(this.inventory.elements.length == 0)
+      return 0;
+    let i = 0;
+    while(typeof this.inventory.elements[i] != undefined && this.inventory.elements[i] != null){
+      i++;
+    }
+    return i;
+  }
+
+  putInInventory(item){
+    this.inventory.elements[this.#getIndexNextEmptySpotInInventory()] = item;
   }
 }
