@@ -27,6 +27,7 @@ class GameScene extends Scene {
   #DIR_Y = [-1, 1, 0, 0];
   
   #showInventory = false;
+  #showSubInventory = false;
 
   //generic functions
   #update;
@@ -192,14 +193,41 @@ class GameScene extends Scene {
   #executeInInventory(button) {
     if (button == Keys.BACK) {
       console.log("!inventory")
-      this.#showInventory = false;
-      setTimeout(() => {
-        this.#update = this.#update_interact_game;
-      }, INVENTORY_TOGGLE_DELAY);
-    } else if ([Keys.UP, Keys.DOWN].includes(button)) {      
-      this.#hero.inventory.position += this.#DIR_Y[button];
-      this.#hero.inventory.position = (this.#hero.inventory.position + INVENTORY_SIZE) % INVENTORY_SIZE;
-
+      if(this.#showSubInventory) {
+        // Back to inventory
+        this.#showSubInventory = false;
+      } else {
+        // Back to game
+        this.#showInventory = false;
+        setTimeout(() => {
+          this.#update = this.#update_interact_game;
+        }, INVENTORY_TOGGLE_DELAY);
+      }
+    } else if (button == Keys.ENTER) {
+      if(this.#showSubInventory) {
+        // Use Item
+        this.#showSubInventory = false;
+        this.#showInventory = false;
+        setTimeout(() => {
+          this.#update = this.#update_interact_game;
+        }, INVENTORY_TOGGLE_DELAY);
+      } else {
+        //Show Sub Inventory
+        console.log("subinventory");
+        this.#showSubInventory = true;
+        this.#hero.inventory.subInventory.position = 0;
+      }
+    } else if ([Keys.UP, Keys.DOWN].includes(button)) {
+      //Move cursor
+      if(this.#showSubInventory){
+        //in Sub Inventory
+        this.#hero.inventory.subInventory.position += this.#DIR_Y[button];
+        this.#hero.inventory.subInventory.position = (this.#hero.inventory.subInventory.position + 3) % 3;
+      } else {
+        //in Inventory
+        this.#hero.inventory.position += this.#DIR_Y[button];
+        this.#hero.inventory.position = (this.#hero.inventory.position + INVENTORY_SIZE) % INVENTORY_SIZE;
+      }
     }
   }
   
@@ -551,18 +579,13 @@ class GameScene extends Scene {
   #draw_game() {
     //console.log("GameScene.render");
     //clear scene
-    this.#hero.inventory.sprite?.destroy()
     this.#drawMobs();
     drawUi(this, this.#ui, this.#hero, this.#click);
     this.#drawWinds();
     this.#drawFloats();
     drawFog(this.#map, this.#fog);
-    //draw floor => managed by phaser
-    if(this.#showInventory) {
-      //console.log(this.#showInventory)
-      drawInventory(this, this.#hero, 0)
-      drawSubInventory(this, 0)
-    }
+    drawInventory(this, this.#hero, this.#showInventory)
+    drawSubInventory(this, this.#hero, this.#showSubInventory)
   }
 
   #draw_game_over() {}

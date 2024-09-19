@@ -274,19 +274,19 @@ only see effect once color is used
 - [x] UTILS : change int into Button
 - [x] MENU : cycle when top/bottom when moving in menu
 - [x] DRAW : draw mocked 'use menu' on over and right of 'inventory'
-- [ ] UPDATE : when pussing 'button CTRL' in 'inventory', display 'use menu'
-- [ ] UPDATE : when pussing 'button A' in 'inventory' on empty slot, don't display 'use menu'
-- [ ] UPDATE : when pussing 'button B' in 'use menu', display 'inventory'
-- [ ] UPDATE : when pussing 'button menu' in 'use menu', return to game
-- [ ] DRAW : draw selected line in 'use menu'
-- [ ] UPDATE : when pussing 'up/down' in 'use menu', update selected line
-- [ ] UPDATE : when pussing 'up/down' in 'use menu', cycle when top/bottom when moving
-- [ ] DRAW : compute position of use menu depending of inventory selected line
-- [ ] ITEM : define a type of item (weapon, armor, food, action/throwable)
-- [ ] DRAW : define use menu depending of weapon item : equip / trash
-- [ ] DRAW : define use menu depending of armor item : equip / trash
-- [ ] DRAW : define use menu depending of food item : eat / throw / trash
-- [ ] DRAW : define use menu depending of throwable item : throw / trash
+- [x] UPDATE : when pussing 'button CTRL' in 'inventory', display 'use menu'
+- [ ] UPDATE : when pussing 'button CTRL' in 'inventory' on empty slot, don't display 'use menu'
+- [x] UPDATE : when pussing 'button SHIFT' in 'use menu', display 'inventory'
+- [x] UPDATE : when pussing 'button menu' in 'use menu', return to game
+- [x] DRAW : draw selected line in 'use menu'
+- [x] UPDATE : when pussing 'up/down' in 'use menu', update selected line
+- [x] UPDATE : when pussing 'up/down' in 'use menu', cycle when top/bottom when moving
+- [o] DRAW : compute position of use menu depending of inventory selected line
+- [o] ITEM : define a type of item (weapon, armor, food, action/throwable)
+- [o] DRAW : define use menu depending of weapon item : equip / trash
+- [o] DRAW : define use menu depending of armor item : equip / trash
+- [o] DRAW : define use menu depending of food item : eat / throw / trash
+- [o] DRAW : define use menu depending of throwable item : throw / trash
 
 ### Step 22 : Equipment -> WON'T DO IT
 

@@ -60,21 +60,24 @@ exports.drawFog = function (scene, fog){
 
 ////////////////////////////// INVENTORY //////////////////////////////
 
-exports.drawInventory = function (scene, hero){
+exports.drawInventory = function (scene, hero, show){
+  let inventory = hero.inventory;
+  //clear
+  inventory.sprite?.destroy()
+  if(!show) return;
   //Draw 4 lines
-  hero.inventory.sprite?.destroy()
-  hero.inventory.sprite = scene.add.container(
+  inventory.sprite = scene.add.container(
     scene.cameras.main.worldView.x + scene.cameras.main.width / (2 * scene.cameras.main.zoom),
     scene.cameras.main.worldView.y + scene.cameras.main.height / (2 * scene.cameras.main.zoom),
   );
 
-  let elementsToDisplay = [...hero.inventory.elements];
+  let elementsToDisplay = [...inventory.elements];
   
   while (6 - elementsToDisplay.length != 0) {
     elementsToDisplay.push('...' )    
   }
 
-  elementsToDisplay = elementsToDisplay.map((element, index) => (hero.inventory.position == index++ ? '> ' : '  ') + element + ' '.repeat(24-element.length))
+  elementsToDisplay = elementsToDisplay.map((element, index) => (inventory.position == index++ ? '> ' : '  ') + element + ' '.repeat(24-element.length))
 
   const text = scene.add.text(0, 0, elementsToDisplay.join("\n"), { align: "center" });
   text.setFont("Courier");
@@ -83,18 +86,18 @@ exports.drawInventory = function (scene, hero){
 
   text.setDisplaySize(text.width, text.height);
 
-  hero.inventory.sprite.add(
+  inventory.sprite.add(
     scene.add.rectangle(0, 0, text.width + 4, text.height + 4, 0x000000),
   );
-  hero.inventory.sprite.add(
+  inventory.sprite.add(
     scene.add.rectangle(0, 0, text.width + 3, text.height + 3, 0xffffff),
   );
   let r1 = scene.add.rectangle(0, 0, text.width + 1, text.height + 1, 0x000000);
-  hero.inventory.sprite.add(r1);
+  inventory.sprite.add(r1);
 
   Phaser.Display.Align.In.Center(text, r1);
-  hero.inventory.sprite.add(text);
-  hero.inventory.sprite.setDepth(10);
+  inventory.sprite.add(text);
+  inventory.sprite.setDepth(10);
 
   //draw cadre
   //draw fleche
@@ -103,16 +106,20 @@ exports.drawInventory = function (scene, hero){
 
 let subinventory = {};
 
-exports.drawSubInventory = function (scene, position){
-  subinventory.sprite?.destroy()
+exports.drawSubInventory = function (scene, hero, show){
 
-  subinventory.sprite = scene.add.container(
+  let subInventory = hero.inventory.subInventory;
+  //clear
+  subInventory.sprite?.destroy()
+  if(!show) return;
+
+  subInventory.sprite = scene.add.container(
     50 + scene.cameras.main.worldView.x + scene.cameras.main.width / (2 * scene.cameras.main.zoom),
     20 + scene.cameras.main.worldView.y + scene.cameras.main.height / (2 * scene.cameras.main.zoom),
   );
 
   let elementsToDisplay = ["drink ", "launch", "drop  "]
-  elementsToDisplay = elementsToDisplay.map((element, index) => (position == index++ ? '> ' : '  ') + element)
+  elementsToDisplay = elementsToDisplay.map((element, index) => (subInventory.position == index++ ? '> ' : '  ') + element)
 
   const text = scene.add.text(0, 0, elementsToDisplay.join("\n"), { align: "center" });
   text.setFont("Courier");
@@ -121,18 +128,18 @@ exports.drawSubInventory = function (scene, position){
   
   text.setDisplaySize(text.width, text.height);
 
-  subinventory.sprite.add(
+  subInventory.sprite.add(
     scene.add.rectangle(0, 0, text.width + 4, text.height + 4, 0x000000),
   );
-  subinventory.sprite.add(
+  subInventory.sprite.add(
     scene.add.rectangle(0, 0, text.width + 3, text.height + 3, 0xffffff),
   );
   let r1 = scene.add.rectangle(0, 0, text.width + 1, text.height + 1, 0x000000);
-  subinventory.sprite.add(r1);
+  subInventory.sprite.add(r1);
 
   Phaser.Display.Align.In.Center(text, r1);
-  subinventory.sprite.add(text);
-  subinventory.sprite.setDepth(10);
+  subInventory.sprite.add(text);
+  subInventory.sprite.setDepth(10);
 }
 
 ////////////////////////////// UI //////////////////////////////

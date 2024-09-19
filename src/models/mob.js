@@ -22,7 +22,10 @@ export default class Mob {
         this.distanceSight = 5;
         this.inventory = {
           elements: [],
-          position: 0
+          position: 0,
+          subInventory: {
+            position: 0
+          }
         };
         break;
       case Mobs.SLIME:
