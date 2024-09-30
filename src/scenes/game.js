@@ -1,7 +1,7 @@
 import { Scene } from "phaser";
 
 import { drawWind, drawFloat, drawFog, drawUi, drawInventory, drawSubInventory } from "utils/graphics";
-import { Map, Tiles, Mobs, Status, Action, Keys } from "utils/constants";
+import { Map, Tiles, Mobs, Status, Action, Keys, Colors } from "utils/constants";
 import Mob from "models/mob";
 import Item from "models/item";
 
@@ -301,7 +301,7 @@ class GameScene extends Scene {
       mob.status = Status.ATTACK;
       mob.target = { x: this.#hero.x, y: this.#hero.y };
       //!
-      this.#addFloat("!", mob.x, mob.y, 0xFFFFFF);
+      this.#addFloat("!", mob.x, mob.y, Colors.WHITE);
     }
   }
 
@@ -313,7 +313,7 @@ class GameScene extends Scene {
       mob.status = Status.WAIT;
       mob.target = {};
       // ?
-      this.#addFloat("?", mob.x, mob.y, 0xFFFFFF);
+      this.#addFloat("?", mob.x, mob.y, Colors.WHITE);
     } else {
       //console.log("target: " + mob.target.x + "" + mob.target.y);
       let distMap = this.#computeDijkstraArray(mob.target.x, mob.target.y);
@@ -508,7 +508,7 @@ class GameScene extends Scene {
 
   #hitMob(attacker, defender) {
     defender.health -= attacker.atk;
-    this.#addFloat(attacker.atk, defender.x, defender.y, defender.isHero() ? 0xFF0000 : 0xFF7700)
+    this.#addFloat(attacker.atk, defender.x, defender.y, defender.isHero() ? Colors.RED : Colors.ORANGE)
     defender.flash = 8;
   }
 

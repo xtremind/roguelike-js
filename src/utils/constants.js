@@ -42,7 +42,7 @@ exports.Action = Object.freeze({
 exports.Effects = Object.freeze({
   HEAL: "heal", 
   CURE: "cure",
-  INCREASE__MAX_HEALTH: "maxhealth",
+  INCREASE_MAX_HEALTH: "maxhealth",
   BLIND: "blind", 
   POISON: "poison", 
   FREEZE: "freeze", 
@@ -52,22 +52,22 @@ exports.Effects = Object.freeze({
 })
 
 exports.Powers = Object.freeze({
-  SMALL: "small",
-  MEDIUM: "medium",
-  LARGE: "large",
-  EXTRA_LARGE: "extralarge"
+  SMALL: 1,
+  MEDIUM: 2,
+  LARGE: 4,
+  EXTRA_LARGE: 8
 })
 
 exports.Colors = Object.freeze({
-  WHITE: "white",
-  BLACK: "black",
-  RED: "red",
-  GREEN: "green",
-  BLUE: "blue",
-  YELLOW: "yellow",
-  ROSE: "rose",
-  ORANGE: "orange",
-  PURPLE: "purple"
+  WHITE: 0xFFFFFF,
+  BLACK: 0x000000,
+  RED: 0xFF0000,
+  GREEN: 0x00FF00,
+  BLUE: 0x0000FF,
+  YELLOW: 0xFFFF00,
+  ROSE: 0xFF69B4,
+  ORANGE: 0xFF7700,
+  PURPLE: 0xFF00FF
 })
 
 exports.Keys  = Object.freeze({
