@@ -37,6 +37,10 @@ export default class Mob {
     }
   }
 
+  isHero(){
+    return this.type == Mobs.HERO;
+  }
+
   isDead() {
     return this.health <= 0;
   }
@@ -97,5 +101,11 @@ export default class Mob {
 
   putInInventory(item){
     this.inventory.elements[this.#getIndexNextEmptySpotInInventory()] = item;
+  }
+
+  pullFromInventory(){
+    let item = this.inventory.elements.splice(this.inventory.position,1);
+    this.inventory.position = 0;
+    return item
   }
 }

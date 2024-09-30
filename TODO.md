@@ -275,7 +275,7 @@ only see effect once color is used
 - [x] MENU : cycle when top/bottom when moving in menu
 - [x] DRAW : draw mocked 'use menu' on over and right of 'inventory'
 - [x] UPDATE : when pussing 'button CTRL' in 'inventory', display 'use menu'
-- [ ] UPDATE : when pussing 'button CTRL' in 'inventory' on empty slot, don't display 'use menu'
+- [x] UPDATE : when pussing 'button CTRL' in 'inventory' on empty slot, don't display 'use menu'
 - [x] UPDATE : when pussing 'button SHIFT' in 'use menu', display 'inventory'
 - [x] UPDATE : when pussing 'button menu' in 'use menu', return to game
 - [x] DRAW : draw selected line in 'use menu'
@@ -290,30 +290,30 @@ only see effect once color is used
 
 ### Step 22 : Equipment -> WON'T DO IT
 
-- [ ] UPDATE : create a function that will manage 'use item'
-- [ ] USE ITEM : determine action from sub menu selection
-- [ ] USE ITEM : add switch depending of action
-- [ ] USE ITEM : once use, return into menu (or game -> not sure)
-- [ ] USE ITEM : create a function for trashing things
-- [ ] TRASH ITEM : remove item from inventory / equipment
-- [ ] USE ITEM : create a function for equip things
-- [ ] EQUIP ITEM : add/replace item into equipment, depending of type (weapon / armor)
-- [ ] EQUIP ITEM : remove item from inventory (other option, swap equipment and inventory item)
-- [ ] ITEM : adding stat1 that will impact user depending of item type
-- [ ] MOB : create a function that will update stats
-- [ ] EQUIP ITEM : once equiped, change hero stats
-- [ ] DRAW MENU : display dynamic value for hero attack
-- [ ] ATTACK MOB : compute with new attack value
-- [ ] FLOAT : display dynamic value from last attack
-- [ ] UPDATE STATS : change hero armor depending of equipment from stat1
-- [ ] ATTACK MOB : compute with max(0, new attack value - random(0, armor.max))
-- [ ] REFACTO : use String in place of char\*
+- [x] UPDATE : create a function that will manage 'use item'
+- [x] USE ITEM : determine action from sub menu selection
+- [x] USE ITEM : add switch depending of action
+- [x] USE ITEM : once use, return into menu (or game -> not sure)
+- [x] USE ITEM : create a function for trashing things
+- [x] TRASH ITEM : remove item from inventory / equipment
+- [o] USE ITEM : create a function for equip things
+- [o] EQUIP ITEM : add/replace item into equipment, depending of type (weapon / armor)
+- [o] EQUIP ITEM : remove item from inventory (other option, swap equipment and inventory item)
+- [o] ITEM : adding stat1 that will impact user depending of item type
+- [o] MOB : create a function that will update stats
+- [o] EQUIP ITEM : once equiped, change hero stats
+- [o] DRAW MENU : display dynamic value for hero attack
+- [o] ATTACK MOB : compute with new attack value
+- [x] FLOAT : display dynamic value from last attack
+- [o] UPDATE STATS : change hero armor depending of equipment from stat1
+- [o] ATTACK MOB : compute with max(0, new attack value - random(0, armor.max))
+- [o] REFACTO : use String in place of char\*
 
 ####
 
-- [ ] INVENTORY : don't select equipment, only inventory
+- [o] INVENTORY : don't select equipment, only inventory
 
-### Step 23 : Eating -> WON'T DO IT
+### Step 23 : Drinking
 
 - [ ] MOB : create a function that will eat something
 - [ ] EAT : add energy to health mob

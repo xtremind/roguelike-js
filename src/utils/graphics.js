@@ -45,7 +45,7 @@ exports.drawFloat = function (scene, float) {
       )
       //.setOrigin(0.5)
       .setScale(0.2)
-      //.setTintFill(float.color);
+      .setTintFill(float.color);
 }
 
 ////////////////////////////// MAPS //////////////////////////////
@@ -71,7 +71,7 @@ exports.drawInventory = function (scene, hero, show){
     scene.cameras.main.worldView.y + scene.cameras.main.height / (2 * scene.cameras.main.zoom),
   );
 
-  let elementsToDisplay = [...inventory.elements];
+  let elementsToDisplay = [...inventory.elements].map(e => e.name);
   
   while (6 - elementsToDisplay.length != 0) {
     elementsToDisplay.push('...' )    

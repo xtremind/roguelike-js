@@ -96,6 +96,10 @@ class GameScene extends Scene {
     //DEBUG
     this.sound.mute = true;
 
+    this.#hero.putInInventory(new Item("test"));
+    this.#hero.putInInventory(new Item("test 2"));
+    this.#hero.putInInventory(new Item("potion"));
+
     console.log("GameScene.create");
   }
 
@@ -206,12 +210,13 @@ class GameScene extends Scene {
     } else if (button == Keys.ENTER) {
       if(this.#showSubInventory) {
         // Use Item
-        this.#showSubInventory = false;
         this.#showInventory = false;
+        this.#showSubInventory = false;
+        this.#useItem();
         setTimeout(() => {
           this.#update = this.#update_interact_game;
         }, INVENTORY_TOGGLE_DELAY);
-      } else {
+      } else if (this.#hero.inventory.elements[this.#hero.inventory.position]){
         //Show Sub Inventory
         console.log("subinventory");
         this.#showSubInventory = true;
@@ -224,10 +229,28 @@ class GameScene extends Scene {
         this.#hero.inventory.subInventory.position += this.#DIR_Y[button];
         this.#hero.inventory.subInventory.position = (this.#hero.inventory.subInventory.position + 3) % 3;
       } else {
-        //in Inventory
+        //in Inventory, cursor move only on items
         this.#hero.inventory.position += this.#DIR_Y[button];
-        this.#hero.inventory.position = (this.#hero.inventory.position + INVENTORY_SIZE) % INVENTORY_SIZE;
+        this.#hero.inventory.position = (this.#hero.inventory.position + this.#hero.inventory.elements.length) % this.#hero.inventory.elements.length;
+        this.#hero.inventory.position = isNaN(this.#hero.inventory.position) ? 0 : this.#hero.inventory.position;
       }
+    }
+  }
+
+  #useItem(){
+    let item = this.#hero.pullFromInventory();
+    let action = this.#hero.inventory.subInventory.position
+    console.log(item);
+
+    switch (action) {
+      case 0: // drink
+        
+        break;
+      case 1: // launch
+        
+        break;
+      default: // drop
+        break;
     }
   }
   
@@ -278,7 +301,7 @@ class GameScene extends Scene {
       mob.status = Status.ATTACK;
       mob.target = { x: this.#hero.x, y: this.#hero.y };
       //!
-      this.#addFloat("!", mob.x, mob.y, 0x000000);
+      this.#addFloat("!", mob.x, mob.y, 0xFFFFFF);
     }
   }
 
@@ -290,7 +313,7 @@ class GameScene extends Scene {
       mob.status = Status.WAIT;
       mob.target = {};
       // ?
-      this.#addFloat("?", mob.x, mob.y, 0x000000);
+      this.#addFloat("?", mob.x, mob.y, 0xFFFFFF);
     } else {
       //console.log("target: " + mob.target.x + "" + mob.target.y);
       let distMap = this.#computeDijkstraArray(mob.target.x, mob.target.y);
@@ -485,6 +508,7 @@ class GameScene extends Scene {
 
   #hitMob(attacker, defender) {
     defender.health -= attacker.atk;
+    this.#addFloat(attacker.atk, defender.x, defender.y, defender.isHero() ? 0xFF0000 : 0xFF7700)
     defender.flash = 8;
   }
 
