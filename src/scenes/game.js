@@ -1,7 +1,7 @@
 import { Scene } from "phaser";
 
 import { drawWind, drawFloat, drawFog, drawUi, drawInventory, drawSubInventory } from "utils/graphics";
-import { Map, Tiles, Mobs, Status, Action, Keys, Colors } from "utils/constants";
+import { Map, Tiles, Mobs, Status, Action, Keys, Effects, Powers, Colors } from "utils/constants";
 import Mob from "models/mob";
 import Item from "models/item";
 
@@ -96,9 +96,9 @@ class GameScene extends Scene {
     //DEBUG
     this.sound.mute = true;
 
-    this.#hero.putInInventory(new Item("test"));
-    this.#hero.putInInventory(new Item("test 2"));
-    this.#hero.putInInventory(new Item("potion"));
+    this.#hero.putInInventory(new Item(Powers.SMALL, Colors.GREEN, Effects.HEAL));
+    this.#hero.putInInventory(new Item(Powers.MEDIUM, Colors.RED, Effects.POISON));
+    this.#hero.putInInventory(new Item(Powers.LARGE, Colors.WHITE, Effects.BURN));
 
     console.log("GameScene.create");
   }

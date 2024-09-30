@@ -52,22 +52,22 @@ exports.Effects = Object.freeze({
 })
 
 exports.Powers = Object.freeze({
-  SMALL: 1,
-  MEDIUM: 2,
-  LARGE: 4,
-  EXTRA_LARGE: 8
+  SMALL: {label: 'small', value: 1},
+  MEDIUM: {label: 'medium', value: 2},
+  LARGE: {label: 'large', value: 4},
+  EXTRA_LARGE: {label: 'extra', value: 8}
 })
 
 exports.Colors = Object.freeze({
-  WHITE: 0xFFFFFF,
-  BLACK: 0x000000,
-  RED: 0xFF0000,
-  GREEN: 0x00FF00,
-  BLUE: 0x0000FF,
-  YELLOW: 0xFFFF00,
-  ROSE: 0xFF69B4,
-  ORANGE: 0xFF7700,
-  PURPLE: 0xFF00FF
+  WHITE: {label: 'white', value:0xFFFFFF},
+  BLACK: {label: 'black', value:0x000000},
+  RED: {label: 'red', value:0xFF0000},
+  GREEN: {label: 'green', value:0x00FF00},
+  BLUE: {label: 'blue', value:0x0000FF},
+  YELLOW: {label: 'yellow', value:0xFFFF00},
+  ROSE: {label: 'rose', value:0xFF69B4},
+  ORANGE: {label: 'orange', value:0xFF7700},
+  PURPLE: {label: 'purple', value:0xFF00FF}
 })
 
 exports.Keys  = Object.freeze({

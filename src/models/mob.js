@@ -108,4 +108,8 @@ export default class Mob {
     this.inventory.position = 0;
     return item
   }
+
+  use(item){
+    
+  }
 }

@@ -45,7 +45,7 @@ exports.drawFloat = function (scene, float) {
       )
       //.setOrigin(0.5)
       .setScale(0.2)
-      .setTintFill(float.color);
+      .setTintFill(float.color.value);
 }
 
 ////////////////////////////// MAPS //////////////////////////////
@@ -71,13 +71,13 @@ exports.drawInventory = function (scene, hero, show){
     scene.cameras.main.worldView.y + scene.cameras.main.height / (2 * scene.cameras.main.zoom),
   );
 
-  let elementsToDisplay = [...inventory.elements].map(e => e.name);
+  let elementsToDisplay = [...inventory.elements].map(e => e.name());
   
   while (6 - elementsToDisplay.length != 0) {
     elementsToDisplay.push('...' )    
   }
 
-  elementsToDisplay = elementsToDisplay.map((element, index) => (inventory.position == index++ ? '> ' : '  ') + element + ' '.repeat(24-element.length))
+  elementsToDisplay = elementsToDisplay.map((element, index) => (inventory.position == index++ ? '> ' : '  ') + element + ' '.repeat(Math.max(0, 24-element.length)))
 
   const text = scene.add.text(0, 0, elementsToDisplay.join("\n"), { align: "center" });
   text.setFont("Courier");
@@ -103,8 +103,6 @@ exports.drawInventory = function (scene, hero, show){
   //draw fleche
   //
 }
-
-let subinventory = {};
 
 exports.drawSubInventory = function (scene, hero, show){
 
