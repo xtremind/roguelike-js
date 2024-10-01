@@ -14,10 +14,12 @@ class GameScene extends Scene {
   #tick = 1;
   #hero = {};
   #mobs = [];
+  #lootConfigurations = [];
   //#mob = {};
   #map = {};
   #winds = [];
   #floats = [];
+
 
   #ui = {};
 
@@ -96,11 +98,30 @@ class GameScene extends Scene {
     //DEBUG
     this.sound.mute = true;
 
-    this.#hero.putInInventory(new Item(Powers.SMALL, Colors.GREEN, Effects.HEAL));
-    this.#hero.putInInventory(new Item(Powers.MEDIUM, Colors.RED, Effects.POISON));
-    this.#hero.putInInventory(new Item(Powers.LARGE, Colors.WHITE, Effects.BURN));
+    this.#generateLootConfiguration();
+
+    this.#hero.putInInventory(new Item(Powers.SMALL, this.#lootConfigurations[0]));
+    this.#hero.putInInventory(new Item(Powers.MEDIUM, this.#lootConfigurations[0]));
+    this.#hero.putInInventory(new Item(Powers.LARGE, this.#lootConfigurations[2]));
 
     console.log("GameScene.create");
+  }
+
+  #generateLootConfiguration() {
+    let colors = Object.values(Colors);
+    let effects = Object.values(Effects);
+
+    let color, effect;
+
+    while (colors.length > 0) {
+      color = colors.splice(Math.floor((Math.random() * colors.length)), 1)[0];
+      effect = effects.splice(Math.floor((Math.random() * effects.length)), 1)[0];
+      this.#lootConfigurations.push({
+        color: color,
+        effect: effect,
+        discovered: false
+      });
+    }
   }
 
   #loadLevel() {
@@ -241,15 +262,20 @@ class GameScene extends Scene {
     let item = this.#hero.pullFromInventory();
     let action = this.#hero.inventory.subInventory.position
     console.log(item);
+    console.log(action);
+    item.configuration.discovered = true;
 
     switch (action) {
       case 0: // drink
-        
+        console.log('drink');
+        this.#hero.use(item);
         break;
       case 1: // launch
+        console.log('launch');
         
         break;
       default: // drop
+        console.log('drop');
         break;
     }
   }

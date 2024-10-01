@@ -1,4 +1,4 @@
-import { Mobs, Status, Action } from "utils/constants";
+import { Mobs, Status, Action, Effects, Powers, Colors } from "utils/constants";
 
 export default class Mob {
   constructor(x, y, type) {
@@ -11,6 +11,7 @@ export default class Mob {
     this.flip = false;
     this.flash = 0;
     this.type = type;
+    this.effect = {};
     this.action = "NONE";
     this.status = Status.WAIT;
 
@@ -104,12 +105,51 @@ export default class Mob {
   }
 
   pullFromInventory(){
-    let item = this.inventory.elements.splice(this.inventory.position,1);
+    let item = this.inventory.elements.splice(this.inventory.position,1)[0];
     this.inventory.position = 0;
     return item
   }
 
   use(item){
-    
+    switch (item.effect) {
+      case Effects.HEAL:
+        console.log(1);
+        this.health = Math.min(this.maxHealth, this.health + item.power.value);
+        break;
+      case Effects.CURE:
+        console.log(2);
+        break;
+      case Effects.INCREASE_MAX_HEALTH:
+        console.log(3);
+            
+        break;
+      case Effects.BLIND:
+              
+        console.log(4);
+        break;
+      case Effects.POISON:
+                
+        console.log(5);
+        break;
+      case Effects.FREEZE:
+                  
+        console.log(6);
+        break;
+      case Effects.BURN:
+                    
+        console.log(7);
+        break;
+      case Effects.EXPLODE:
+                     
+        console.log(8); 
+        break;
+      case Effects.SLEEP:
+        
+      console.log(9);
+        break;
+      default:
+        break;
+    }
+
   }
 }

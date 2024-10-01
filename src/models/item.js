@@ -1,11 +1,10 @@
 export default class Item {
-  constructor(power, color, effect) {
-    this.effect = effect;
+  constructor(power, configuration) {
     this.power = power;
-    this.color = color;
+    this.configuration = configuration;
   }
 
   name(){
-    return  this.power.label + ' ' + this.color.label + ' ' + 'potion'
+    return  this.power.label + ' ' + (this.configuration.discovered ? this.configuration.effect : this.configuration.color.label)  + ' ' + 'potion'
   }
 }
