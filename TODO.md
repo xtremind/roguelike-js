@@ -315,14 +315,14 @@ only see effect once color is used
 
 ### Step 23 : Drinking
 
-- [ ] MOB : create a function that will eat something
-- [ ] EAT : add energy to health mob
-- [ ] EAT : energy can't go higher then max health
-- [ ] EAT : flash mob
-- [ ] EAT : if delta energy > 0, add float in green (restore)
-- [ ] EAT : if delta energy < 0, add float in purple (poison)
-- [ ] UPDATE : add a function that once hero has eat, a turn is done
-- [ ] USE ITEM : delete eated food
+- [x] MOB : create a function that will drink something
+- [x] EAT : add energy to health mob
+- [x] EAT : energy can't go higher then max health
+- [x] EAT : flash mob
+- [x] EAT : if delta energy > 0, add float in green (restore)
+- [x] EAT : if delta energy < 0, add float in purple (poison)
+- [x] UPDATE : add a function that once hero has eat, a turn is done
+- [x] USE ITEM : delete eated food
 - [ ] UPDATE : create a throw update function
 - [ ] CACHE : save a direction throw
 - [ ] THROW UPDATE : if pressed button is direction, save it

@@ -117,20 +117,26 @@ export default class Mob {
   use(scene, item){
     console.log(item.configuration.effect)
     switch (item.configuration.effect) {
+      // GOOD EFFECT
       case Effects.HEAL:
         this.health = Math.min(this.maxHealth, this.health + item.power.value);
+        scene.addFloat(item.power.value, this.x, this.y, Colors.GREEN);
         break;
       case Effects.CURE:
         this.curse = null
+        scene.addFloat("!", this.x, this.y, Colors.GREEN);
         break;
       case Effects.INCREASE_MAX_HEALTH:
         this.maxHealth += item.power.value
+        scene.addFloat(item.power.value, this.x, this.y, Colors.BLUE);
         break;
+      // BAD EFFECT
       case Effects.BLIND:
         this.curse = {
           effect: Effects.BLIND,
           time: item.power.value
         }
+        scene.addFloat("!", this.x, this.y, Colors.BLACK);
         if(this.isHero()) scene.initiateFog();
         break;
       case Effects.POISON:
@@ -138,23 +144,27 @@ export default class Mob {
           effect: Effects.POISON,
           time: item.power.value
         }
+        scene.addFloat("!", this.x, this.y, Colors.PURPLE);
         break;
       case Effects.FREEZE:
         this.curse = {
           effect: Effects.FREEZE,
           time: item.power.value
         }
-        //don't move until 2 turns
+        scene.addFloat("!", this.x, this.y, Colors.BLUE);
         break;
       case Effects.BURN:
       case Effects.EXPLODE: //can destroy wall ?
         this.health = Math.max(0, this.health - item.power.value);
+        scene.addFloat(item.power.value, this.x, this.y, this.isHero() ? Colors.RED : Colors.ORANGE)
+        if(this.curse?.effect == Effects.FREEZE) this.curse == null; //fire unfreeze you
         break;
       case Effects.SLEEP:
         this.curse = {
           effect: Effects.SLEEP,
           time: item.power.value
         }
+        //scene.addFloat("!", this.x, this.y, Colors.BLUE);
         break;
       default:
         break;
@@ -162,9 +172,7 @@ export default class Mob {
   }
 
   apply(scene){
-    //return true if can move
-    if(this.curse == null)
-      return true;
+    if(this.curse == null) return true;
 
     let canMove = true;
     switch (this.curse.effect) {
@@ -174,7 +182,7 @@ export default class Mob {
       case Effects.POISON:
         //each turn until power turn, deal 1 hit 
         this.health -= 1;
-        scene.addFloat(1, this.x, this.y, this.isHero() ? Colors.RED : Colors.ORANGE)
+        scene.addFloat(1, this.x, this.y, Colors.PURPLE)
         this.flash = 8;
         this.curse.time -= 1
         break;

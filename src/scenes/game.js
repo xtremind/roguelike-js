@@ -241,9 +241,6 @@ class GameScene extends Scene {
         this.#showInventory = false;
         this.#showSubInventory = false;
         this.#useItem();
-        setTimeout(() => {
-          this.#update = this.#update_interact_game;
-        }, INVENTORY_TOGGLE_DELAY);
       } else if (this.#hero.inventory.elements[this.#hero.inventory.position]){
         //Show Sub Inventory
         console.log("subinventory");
@@ -285,6 +282,9 @@ class GameScene extends Scene {
         console.log('drop');
         break;
     }
+    //once use, a turn has passed
+    this.#tick = 0;
+    this.#update = this.#update_pturn;
   }
   
   #executeInGame(button) {
