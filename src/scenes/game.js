@@ -303,9 +303,12 @@ class GameScene extends Scene {
     this.#mobs
       .filter((mob) => mob.type !== Mobs.HERO)
       .forEach((mob) => {
+        let canMove = mob.apply();
         if (mob.isDead()) {
           mob.sprite?.destroy();
           this.#mobs.splice(this.#mobs.indexOf(mob), 1);
+        } else if(!canMove){
+          return;
         } else if (mob.status == Status.WAIT) {
           this.#wait(mob);
         } else if (mob.status == Status.ATTACK) {
@@ -407,6 +410,8 @@ class GameScene extends Scene {
   }
 
   #moveHero(dx, dy) {
+    let canMove = this.#hero.apply();
+
     if (dx > 0) {
       this.#hero.flip = false;
     } else if (dx < 0) {
@@ -419,7 +424,9 @@ class GameScene extends Scene {
     );
     const mob = this.#getMob(this.#hero.x + dx, this.#hero.y + dy);
 
-    if (!nextPosTile || nextPosTile.properties?.solid) {
+    if(!canMove){
+      this.#hero.prepare(Action.BUMP, dx, dy);
+    } else if (!nextPosTile || nextPosTile.properties?.solid) {
       if (nextPosTile?.properties?.interactive) {
         this.#interactWith(nextPosTile);
         this.#hero.prepare(Action.INTERACT, dx, dy);

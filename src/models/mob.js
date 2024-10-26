@@ -11,7 +11,7 @@ export default class Mob {
     this.flip = false;
     this.flash = 0;
     this.type = type;
-    this.effect = {};
+    this.curse = null;
     this.action = "NONE";
     this.status = Status.WAIT;
 
@@ -111,45 +111,81 @@ export default class Mob {
   }
 
   use(item){
-    switch (item.effect) {
+    console.log(item.configuration.effect)
+    switch (item.configuration.effect) {
       case Effects.HEAL:
-        console.log(1);
         this.health = Math.min(this.maxHealth, this.health + item.power.value);
         break;
       case Effects.CURE:
-        console.log(2);
+        this.curse = null
         break;
       case Effects.INCREASE_MAX_HEALTH:
-        console.log(3);
-            
+        this.maxHealth += item.power.value
         break;
       case Effects.BLIND:
-              
-        console.log(4);
+        this.curse = {
+          effect: Effects.BLIND
+
+        }
+        //reset discovered map
+        //sight = 1
+        //each power turn, sight + 1 until sight max    
         break;
       case Effects.POISON:
-                
-        console.log(5);
+        this.curse = {
+          effect: Effects.POISON,
+          time: item.power
+        }
+        //each turn until power turn, deal 1 hit 
         break;
       case Effects.FREEZE:
-                  
-        console.log(6);
+        this.curse = {
+          effect: Effects.FREEZE,
+          time: item.power
+        }
+        //don't move until 2 turns
         break;
       case Effects.BURN:
-                    
-        console.log(7);
-        break;
-      case Effects.EXPLODE:
-                     
-        console.log(8); 
+      case Effects.EXPLODE: //can destroy wall ?
+        this.health = Math.max(0, this.health - item.power.value);
         break;
       case Effects.SLEEP:
-        
-      console.log(9);
+        this.curse = {
+          effect: Effects.SLEEP,
+          time: item.power
+        }
+        //on mob, don't move until hit
+        //on hero, don't move until 2 turns
         break;
       default:
         break;
     }
+  }
 
+  apply(){
+    //return true if can move
+    if(this.curse == null)
+      return true;
+
+    switch (this.curse.effect) {
+      case Effects.BLIND:
+        //reset discovered map
+        //sight = 1
+        //each power turn, sight + 1 until sight max    
+        break;
+      case Effects.POISON:
+        //each turn until power turn, deal 1 hit 
+        break;
+      case Effects.FREEZE:
+        //don't move until 2 turns
+        return false;
+      case Effects.SLEEP:
+        //on mob, don't move until hit
+        //on hero, don't move until 2 turns
+        return false;
+      default:
+        break;
+    }
+    return true;
   }
 }
