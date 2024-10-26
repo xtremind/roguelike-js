@@ -158,6 +158,7 @@ exports.drawUi = function (scene, ui, hero, click) {
 
 const drawBeatingHeart = function(scene, currentHealth, maxHealth, click){
 
+  //NAN ?
   let heartSprite =
     "heart " +
     (Math.floor( click / ((currentHealth * 8) / maxHealth)) % 8) +

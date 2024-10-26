@@ -38,6 +38,10 @@ export default class Mob {
     }
   }
 
+  sight(){
+    return Math.max(0, this.distanceSight - (this.curse?.effect == Effects.BLIND ? Math.floor(this.curse.time) : 0));
+  }
+
   isHero(){
     return this.type == Mobs.HERO;
   }
@@ -110,7 +114,7 @@ export default class Mob {
     return item
   }
 
-  use(item){
+  use(scene, item){
     console.log(item.configuration.effect)
     switch (item.configuration.effect) {
       case Effects.HEAL:
@@ -124,24 +128,21 @@ export default class Mob {
         break;
       case Effects.BLIND:
         this.curse = {
-          effect: Effects.BLIND
-
+          effect: Effects.BLIND,
+          time: item.power.value
         }
-        //reset discovered map
-        //sight = 1
-        //each power turn, sight + 1 until sight max    
+        if(this.isHero()) scene.initiateFog();
         break;
       case Effects.POISON:
         this.curse = {
           effect: Effects.POISON,
-          time: item.power
+          time: item.power.value
         }
-        //each turn until power turn, deal 1 hit 
         break;
       case Effects.FREEZE:
         this.curse = {
           effect: Effects.FREEZE,
-          time: item.power
+          time: item.power.value
         }
         //don't move until 2 turns
         break;
@@ -152,40 +153,49 @@ export default class Mob {
       case Effects.SLEEP:
         this.curse = {
           effect: Effects.SLEEP,
-          time: item.power
+          time: item.power.value
         }
-        //on mob, don't move until hit
-        //on hero, don't move until 2 turns
         break;
       default:
         break;
     }
   }
 
-  apply(){
+  apply(scene){
     //return true if can move
     if(this.curse == null)
       return true;
 
+    let canMove = true;
     switch (this.curse.effect) {
       case Effects.BLIND:
-        //reset discovered map
-        //sight = 1
-        //each power turn, sight + 1 until sight max    
+        this.curse.time -= 1/4;
         break;
       case Effects.POISON:
         //each turn until power turn, deal 1 hit 
+        this.health -= 1;
+        scene.addFloat(1, this.x, this.y, this.isHero() ? Colors.RED : Colors.ORANGE)
+        this.flash = 8;
+        this.curse.time -= 1
         break;
       case Effects.FREEZE:
         //don't move until 2 turns
-        return false;
+        this.curse.time -= 1;
+        canMove = false;
+        break;
       case Effects.SLEEP:
         //on mob, don't move until hit
         //on hero, don't move until 2 turns
-        return false;
+        if(this.isHero()) this.curse.time -= 1;
+        canMove = false;
+        break;
       default:
         break;
     }
-    return true;
+    console.log(this.curse?.time)
+    //if curse.time == 0 => remove it
+    if(this.curse?.time <= 0) this.curse = null;
+
+    return canMove;
   }
 }

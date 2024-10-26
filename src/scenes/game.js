@@ -98,11 +98,12 @@ class GameScene extends Scene {
     //DEBUG
     this.sound.mute = true;
 
+    // should be done each time a game start, but not between level
     this.#generateLootConfiguration();
 
-    this.#hero.putInInventory(new Item(Powers.SMALL, this.#lootConfigurations[0]));
+    this.#hero.putInInventory(new Item(Powers.SMALL, this.#lootConfigurations[5]));
     this.#hero.putInInventory(new Item(Powers.MEDIUM, this.#lootConfigurations[0]));
-    this.#hero.putInInventory(new Item(Powers.LARGE, this.#lootConfigurations[2]));
+    this.#hero.putInInventory(new Item(Powers.LARGE, this.#lootConfigurations[5]));
 
     console.log("GameScene.create");
   }
@@ -114,8 +115,12 @@ class GameScene extends Scene {
     let color, effect;
 
     while (colors.length > 0) {
-      color = colors.splice(Math.floor((Math.random() * colors.length)), 1)[0];
-      effect = effects.splice(Math.floor((Math.random() * effects.length)), 1)[0];
+      //color = colors.splice(Math.floor((Math.random() * colors.length)), 1)[0];
+      //effect = effects.splice(Math.floor((Math.random() * effects.length)), 1)[0];
+      //
+      color = colors.splice(0, 1)[0];
+      effect = effects.splice(0, 1)[0];
+
       this.#lootConfigurations.push({
         color: color,
         effect: effect,
@@ -130,16 +135,11 @@ class GameScene extends Scene {
     const tileset = this.#map.addTilesetImage("decorations");
     const platforms = this.#map.createLayer("level1", tileset, 0, 0);
 
-    this.#fog = Array(Map.WIDTH)
-      .fill(0)
-      .map((x) => Array(Map.HEIGHT).fill(false));
-
     //initiate hero position
     this.#tick = 1;
 
     this.#hero = this.#createMob(5, 7, Mobs.HERO);
-
-    this.#fog[5][7] = true;
+    this.initiateFog();
 
     this.#createMob(4, 6, Mobs.SLIME);
     this.#createMob(5, 5, Mobs.SLIME);
@@ -151,6 +151,13 @@ class GameScene extends Scene {
     this.#createMob(18, 9, Mobs.SLIME);
 
     //
+  }
+
+  initiateFog(){
+    this.#fog = Array(Map.WIDTH)
+      .fill(0)
+      .map((x) => Array(Map.HEIGHT).fill(false));
+      
     this.#unfog(this.#hero);
   }
 
@@ -268,7 +275,7 @@ class GameScene extends Scene {
     switch (action) {
       case 0: // drink
         console.log('drink');
-        this.#hero.use(item);
+        this.#hero.use(this, item);
         break;
       case 1: // launch
         console.log('launch');
@@ -303,7 +310,7 @@ class GameScene extends Scene {
     this.#mobs
       .filter((mob) => mob.type !== Mobs.HERO)
       .forEach((mob) => {
-        let canMove = mob.apply();
+        let canMove = mob.apply(this);
         if (mob.isDead()) {
           mob.sprite?.destroy();
           this.#mobs.splice(this.#mobs.indexOf(mob), 1);
@@ -320,7 +327,7 @@ class GameScene extends Scene {
   #canSee(mob, x, y) {
     //console.log("dist : " + this.#distance(mob.x, mob.y, hero.x, hero.y))
     return (
-      this.#distance(mob.x, mob.y, x, y) <= mob.distanceSight &&
+      this.#distance(mob.x, mob.y, x, y) <= mob.sight() &&
       this.#isInLineOfSigth(mob.x, mob.y, x, y)
     );
   }
@@ -330,7 +337,7 @@ class GameScene extends Scene {
       mob.status = Status.ATTACK;
       mob.target = { x: this.#hero.x, y: this.#hero.y };
       //!
-      this.#addFloat("!", mob.x, mob.y, Colors.WHITE);
+      this.addFloat("!", mob.x, mob.y, Colors.WHITE);
     }
   }
 
@@ -342,7 +349,7 @@ class GameScene extends Scene {
       mob.status = Status.WAIT;
       mob.target = {};
       // ?
-      this.#addFloat("?", mob.x, mob.y, Colors.WHITE);
+      this.addFloat("?", mob.x, mob.y, Colors.WHITE);
     } else {
       //console.log("target: " + mob.target.x + "" + mob.target.y);
       let distMap = this.#computeDijkstraArray(mob.target.x, mob.target.y);
@@ -410,7 +417,7 @@ class GameScene extends Scene {
   }
 
   #moveHero(dx, dy) {
-    let canMove = this.#hero.apply();
+    let canMove = this.#hero.apply(this);
 
     if (dx > 0) {
       this.#hero.flip = false;
@@ -484,7 +491,7 @@ class GameScene extends Scene {
         return;
         //reinitiate scene
       }
-      if (hasInteracted) {
+      if (hasInteracted || this.#hero.curse) {
         this.#aiMobs();
       }
     }
@@ -541,7 +548,7 @@ class GameScene extends Scene {
 
   #hitMob(attacker, defender) {
     defender.health -= attacker.atk;
-    this.#addFloat(attacker.atk, defender.x, defender.y, defender.isHero() ? Colors.RED : Colors.ORANGE)
+    this.addFloat(attacker.atk, defender.x, defender.y, defender.isHero() ? Colors.RED : Colors.ORANGE)
     defender.flash = 8;
   }
 
@@ -707,7 +714,7 @@ class GameScene extends Scene {
     talk.interact = true;
   }
 
-  #addFloat(txt, x, y, color) {
+  addFloat(txt, x, y, color) {
     let float = {
       txt: txt,
       x: x * 8 + 1,
