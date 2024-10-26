@@ -187,18 +187,7 @@ class GameScene extends Scene {
     });
   }
 
-  #update_interact_game() {
-    const button = this.#getButton();
-    if (this.#winds.length > 0) {
-      if (this.#winds[0].interact && button == 4) {
-        this.#winds[0].duration = 0;
-        this.#winds[0].interact = false;
-      }
-    } else {
-      this.#executeInGame(button);
-    }
-  }
-
+  //INVENTORY
   #update_interact_inventory() {
     this.#tick = Math.min(this.#tick + 0.125, 1);
     const button = this.#getButton();
@@ -263,20 +252,22 @@ class GameScene extends Scene {
   }
 
   #useItem(){
-    let item = this.#hero.pullFromInventory();
     let action = this.#hero.inventory.subInventory.position
-    console.log(item);
     console.log(action);
-    item.configuration.discovered = true;
 
     switch (action) {
       case 0: // drink
         console.log('drink');
+        let item = this.#hero.pullFromInventory();
+        console.log(item);
+        item.configuration.discovered = true;
         this.#hero.use(this, item);
         break;
       case 1: // launch
         console.log('launch');
-        
+        //save item to later
+        //change update
+        //change draw
         break;
       default: // drop
         console.log('drop');
@@ -287,6 +278,46 @@ class GameScene extends Scene {
     this.#update = this.#update_pturn;
   }
   
+  //THROW
+  #update_throw_item(){
+    this.#tick = Math.min(this.#tick + 0.125, 1);
+    const button = this.#getButton();
+    //console.log("update_throw_item " + this.#tick)
+    if(this.#tick == 1){
+      this.#executeInThrow(button);
+      this.#tick = 0;
+    }
+  }
+
+  #executeInThrow(button){
+    //if direction, update display direction to throw 
+    //else if action, throw to
+      //if mob, mob.use(this, item)
+      /*
+        let item = this.#hero.pullFromInventory();
+        console.log(item);
+        item.configuration.discovered = true;
+        mob.use(this, item);
+       */
+      //else interact with wall ???
+    //else if back, 
+      //return object to inventory
+      //go back to menu
+  }
+
+  //GAME
+  #update_interact_game() {
+    const button = this.#getButton();
+    if (this.#winds.length > 0) {
+      if (this.#winds[0].interact && button == 4) {
+        this.#winds[0].duration = 0;
+        this.#winds[0].interact = false;
+      }
+    } else {
+      this.#executeInGame(button);
+    }
+  }
+
   #executeInGame(button) {
     if (button < Keys.UP) return;
     if (button == Keys.ENTER) {
