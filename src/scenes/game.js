@@ -1,6 +1,6 @@
 import { Scene } from "phaser";
 
-import { drawWind, drawFloat, drawFog, drawUi, drawInventory, drawSubInventory } from "utils/graphics";
+import { drawWind, drawFloat, drawFog, drawUi, drawInventory, drawSubInventory, drawThrow } from "utils/graphics";
 import { Map, Tiles, Mobs, Status, Action, Keys, Effects, Powers, Colors } from "utils/constants";
 import Mob from "models/mob";
 import Item from "models/item";
@@ -20,6 +20,7 @@ class GameScene extends Scene {
   #winds = [];
   #floats = [];
 
+  #direction = Keys.LEFT;
 
   #ui = {};
 
@@ -30,6 +31,7 @@ class GameScene extends Scene {
   
   #showInventory = false;
   #showSubInventory = false;
+  #showThrow = false;
 
   //generic functions
   #update;
@@ -64,6 +66,10 @@ class GameScene extends Scene {
     this.#openChestSound = this.sound.add("openChest", { loop: false });
     this.#openDoorSound = this.sound.add("openDoor", { loop: false });
     this.#walkSound = this.sound.add("walk", { loop: false });
+  }
+
+  click(){
+    return this.#click;
   }
 
   create() {
@@ -192,7 +198,7 @@ class GameScene extends Scene {
     this.#tick = Math.min(this.#tick + 0.125, 1);
     const button = this.#getButton();
     //console.log("update_interact_inventory " + this.#tick)
-    if(this.#tick == 1){
+    if(this.#tick === 1){
       this.#executeInInventory(button);
       this.#tick = 0;
     }
@@ -212,7 +218,7 @@ class GameScene extends Scene {
   }
 
   #executeInInventory(button) {
-    if (button == Keys.BACK) {
+    if (button === Keys.BACK) {
       console.log("!inventory")
       if(this.#showSubInventory) {
         // Back to inventory
@@ -224,7 +230,7 @@ class GameScene extends Scene {
           this.#update = this.#update_interact_game;
         }, INVENTORY_TOGGLE_DELAY);
       }
-    } else if (button == Keys.ENTER) {
+    } else if (button === Keys.ENTER) {
       if(this.#showSubInventory) {
         // Use Item
         this.#showInventory = false;
@@ -262,20 +268,22 @@ class GameScene extends Scene {
         console.log(item);
         item.configuration.discovered = true;
         this.#hero.use(this, item);
+        this.#tick = 0;
+        this.#update = this.#update_pturn;
         break;
       case 1: // launch
         console.log('launch');
-        //save item to later
-        //change update
-        //change draw
+        this.#update = this.#update_throw_item
+        this.#showThrow = true;
         break;
       default: // drop
         console.log('drop');
+        this.#hero.pullFromInventory();
+        this.#tick = 0;
+        this.#update = this.#update_pturn;
         break;
     }
     //once use, a turn has passed
-    this.#tick = 0;
-    this.#update = this.#update_pturn;
   }
   
   //THROW
@@ -283,33 +291,75 @@ class GameScene extends Scene {
     this.#tick = Math.min(this.#tick + 0.125, 1);
     const button = this.#getButton();
     //console.log("update_throw_item " + this.#tick)
-    if(this.#tick == 1){
+    if(this.#tick === 1){
       this.#executeInThrow(button);
       this.#tick = 0;
     }
   }
 
   #executeInThrow(button){
-    //if direction, update display direction to throw 
-    //else if action, throw to
-      //if mob, mob.use(this, item)
-      /*
-        let item = this.#hero.pullFromInventory();
-        console.log(item);
-        item.configuration.discovered = true;
-        mob.use(this, item);
-       */
-      //else interact with wall ???
-    //else if back, 
-      //return object to inventory
-      //go back to menu
+    //console.log('xecuteInThrow' )+ button;
+    if (button === Keys.ENTER){ //THROW
+      this.#showThrow = false;
+      let item = this.#hero.pullFromInventory();
+      console.log(item);
+      item.configuration.discovered = true;
+      // find first element in direction
+      let element = this.#findFirstPhysicalElementInDirection(this.#hero.x, this.#hero.y, this.#direction);
+      console.log(element);
+      if(this.#isMob(element)){
+        element.use(this, item);
+      } else if (item.configuration.effect === Effects.EXPLODE && this.#isTile(element)){
+        this.#map.putTileAt(Tiles.FLOOR, element.x, element.y);
+        element.destroy();
+        //this.#openDoorSound.play(); -> play explode sound
+      }
+
+      this.#hero.prepare(Action.INTERACT, this.#DIR_X[this.#direction], this.#DIR_Y[this.#direction])
+      this.#tick = 0;
+      this.#update = this.#update_pturn;
+    } else if (button === Keys.BACK) {
+      this.#showThrow = false;
+      this.#showInventory = true;
+      this.#tick = 0;
+      setTimeout(() => {
+        this.#update = this.#update_interact_inventory;
+      }, INVENTORY_TOGGLE_DELAY);
+  
+    } else if (button !== -1){
+      this.#direction = button;
+    } 
+  }
+
+  #isTile(element){
+    return element.constructor.name === 'Tile'
+  }
+
+  #isMob(element){
+    return element.constructor.name === 'Mob'
+  }
+
+  #findFirstPhysicalElementInDirection(x, y, direction){
+    let dx = x, dy = y;
+    while(true){
+      dx += this.#DIR_X[direction];
+      dy += this.#DIR_Y[direction];
+      let mob = this.getMob(dx, dy);
+      if(mob){
+        return mob;
+      }
+      let tile = this.#map.getTileAt(dx, dy);
+      if(!tile || tile.properties?.solid){
+        return tile;
+      }
+    }
   }
 
   //GAME
   #update_interact_game() {
     const button = this.#getButton();
     if (this.#winds.length > 0) {
-      if (this.#winds[0].interact && button == 4) {
+      if (this.#winds[0].interact && button === 4) {
         this.#winds[0].duration = 0;
         this.#winds[0].interact = false;
       }
@@ -320,7 +370,7 @@ class GameScene extends Scene {
 
   #executeInGame(button) {
     if (button < Keys.UP) return;
-    if (button == Keys.ENTER) {
+    if (button === Keys.ENTER) {
       console.log("inventory");
       this.#showInventory = true;
       this.#tick = 0;
@@ -347,9 +397,9 @@ class GameScene extends Scene {
           this.#mobs.splice(this.#mobs.indexOf(mob), 1);
         } else if(!canMove){
           return;
-        } else if (mob.status == Status.WAIT) {
+        } else if (mob.status === Status.WAIT) {
           this.#wait(mob);
-        } else if (mob.status == Status.ATTACK) {
+        } else if (mob.status === Status.ATTACK) {
           this.#attack(mob);
         }
       });
@@ -376,7 +426,7 @@ class GameScene extends Scene {
     if (this.#canSee(mob, this.#hero.x, this.#hero.y)) {
       mob.target = { x: this.#hero.x, y: this.#hero.y };
     }
-    if (mob.x == mob.target.x && mob.y == mob.target.y) {
+    if (mob.x === mob.target.x && mob.y === mob.target.y) {
       mob.status = Status.WAIT;
       mob.target = {};
       // ?
@@ -400,7 +450,7 @@ class GameScene extends Scene {
           if (dist < best_dist) {
             best_dist = dist;
             best_dirs = [dir];
-          } else if (dist == best_dist) {
+          } else if (dist === best_dist) {
             best_dirs.push(dir);
           }
         }
@@ -411,7 +461,7 @@ class GameScene extends Scene {
       for (const dir of best_dirs) {
         dx = mob.x + this.#DIR_X[dir];
         dy = mob.y + this.#DIR_Y[dir];
-        let other = this.#getMob(dx, dy);
+        let other = this.getMob(dx, dy);
         if (!other || other?.type === Mobs.HERO) {
           optimal_dirs.push(dir);
         }
@@ -421,9 +471,9 @@ class GameScene extends Scene {
         const best_dir =
           optimal_dirs[Math.floor(Math.random() * optimal_dirs.length)];
         if (
-          best_dist == 0 &&
-          this.#hero.x == mob.target.x &&
-          this.#hero.y == mob.target.y
+          best_dist === 0 &&
+          this.#hero.x === mob.target.x &&
+          this.#hero.y === mob.target.y
         ) {
           mob.prepare(
             Action.INTERACT,
@@ -460,7 +510,7 @@ class GameScene extends Scene {
       this.#hero.x + dx,
       this.#hero.y + dy,
     );
-    const mob = this.#getMob(this.#hero.x + dx, this.#hero.y + dy);
+    const mob = this.getMob(this.#hero.x + dx, this.#hero.y + dy);
 
     if(!canMove){
       this.#hero.prepare(Action.BUMP, dx, dy);
@@ -486,19 +536,19 @@ class GameScene extends Scene {
 
   #interactWith(tile) {
     //console.log(tile);
-    if (tile.index == Tiles.DOOR) {
+    if (tile.index === Tiles.DOOR) {
       this.#map.putTileAt(Tiles.FLOOR, tile.x, tile.y);
       tile.destroy();
       this.#openDoorSound.play();
-    } else if (tile.index == Tiles.VASE) {
+    } else if (tile.index === Tiles.VASE) {
       this.#map.putTileAt(Tiles.FLOOR, tile.x, tile.y);
       tile.destroy();
       this.#breakVaseSound.play();
       //loot
-    } else if (tile.index == Tiles.PANEL) {
+    } else if (tile.index === Tiles.PANEL) {
       //display message
       this.#showMsg(["hello world"], 100);
-    } else if (tile.index == Tiles.CLOSED_CHEST) {
+    } else if (tile.index === Tiles.CLOSED_CHEST) {
       this.#map.putTileAt(Tiles.OPENED_CHEST, tile.x, tile.y);
       tile.destroy();
       this.#openChestSound.play();
@@ -573,7 +623,7 @@ class GameScene extends Scene {
     }
   }
 
-  #getMob(x, y) {
+  getMob(x, y) {
     return this.#mobs.filter((m) => m.x === x && m.y === y)[0];
   }
 
@@ -600,7 +650,7 @@ class GameScene extends Scene {
         dx = current.x + this.#DIR_X[dir];
         dy = current.y + this.#DIR_Y[dir];
         tile = this.#map.getTileAt(dx, dy);
-        if (tile && result[dx][dy] == -1) {
+        if (tile && result[dx][dy] === -1) {
           result[dx][dy] = current.step + 1;
           if (!tile.properties?.solid) {
             // is walkable
@@ -608,7 +658,7 @@ class GameScene extends Scene {
           }
         }
       }
-    } while (candidates.length != 0);
+    } while (candidates.length !== 0);
 
     return result;
   }
@@ -620,7 +670,7 @@ class GameScene extends Scene {
   }
 
   #isInLineOfSigth(x1, y1, x2, y2) {
-    if (this.#distance(x1, y1, x2, y2) == 1) {
+    if (this.#distance(x1, y1, x2, y2) === 1) {
       return true;
     }
 
@@ -649,7 +699,7 @@ class GameScene extends Scene {
       e2;
     let tile;
 
-    while (x != x2 || y != y2) {
+    while (x !== x2 || y !== y2) {
       tile = this.#map.getTileAt(x, y);
 
       if (!frst && (!tile || tile.properties?.solid)) {
@@ -681,6 +731,7 @@ class GameScene extends Scene {
     drawFog(this.#map, this.#fog);
     drawInventory(this, this.#hero, this.#showInventory)
     drawSubInventory(this, this.#hero, this.#showSubInventory)
+    drawThrow(this, this.#hero, this.#map, this.#direction, this.#showThrow)
   }
 
   #draw_game_over() {}

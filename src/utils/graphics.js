@@ -1,3 +1,14 @@
+const Directions = Object.freeze({
+  x: [0, 0, -1, 1],
+  y: [-1, 1, 0, 0],
+});
+
+const Direction  = Object.freeze({
+  UP: 0,
+  DOWN: 1,
+  LEFT: 2,
+  RIGHT: 3
+})
 ////
 exports.clear = function (scene) {
 
@@ -38,33 +49,102 @@ exports.drawWind = function (scene, wind) {
 exports.drawFloat = function (scene, float) {
   float.sprite?.destroy();
   float.sprite = scene.add
-      .bitmapText(
-        float.x, float.y,
-        "arcade",
-        float.txt,
-      )
-      //.setOrigin(0.5)
-      .setScale(0.2)
-      .setTintFill(float.color.value);
+    .bitmapText(
+      float.x, float.y,
+      "arcade",
+      float.txt,
+    )
+    //.setOrigin(0.5)
+    .setScale(0.2)
+    .setTintFill(float.color.value);
 }
 
 ////////////////////////////// MAPS //////////////////////////////
 
-exports.drawFog = function (scene, fog){
-  for(let x = 0; x < fog.length; x++){
-    for(let y = 0; y < fog[0].length; y++){
+exports.drawFog = function (scene, fog) {
+  for (let x = 0; x < fog.length; x++) {
+    for (let y = 0; y < fog[0].length; y++) {
       scene.getTileAt(x, y).visible = fog[x][y];
-    } 
+    }
   }
+}
+
+////////////////////////////// THROW //////////////////////////////
+
+let throwSprite;
+
+exports.drawThrow = function (scene, hero, map, direction, show) {
+  throwSprite?.destroy()
+  if(!show) return;
+  let found = false;
+  let dx = hero.x, dy = hero.y;
+  while(!found){
+    dx += Directions.x[direction]
+    dy += Directions.y[direction]
+
+    if(!map.getTileAt(dx, dy) || !map.getTileAt(dx, dy).visible || map.getTileAt(dx, dy).properties?.solid || scene.getMob(dx, dy) != null) found = true;
+  }
+
+  //if right => x+8, if down => y+8
+  throwSprite = drawDottedLine(scene, hero.x, hero.y, dx, dy, direction);
+}
+
+
+function drawDottedLine(scene, px1, py1, px2, py2, direction)
+{ //X, Y, DIR, DIST
+  let line = scene.add.graphics();
+
+  const pattern = 1<<(scene.click()/3)% 4;
+  let bit = 0;
+  line.setDefaultStyles({
+    lineStyle: {
+      width: 1,
+      color: 0x000000,
+      alpha: 1
+    },
+    fillStyle: {
+      color: 0xffffff,
+      alpha: 1
+    }
+  });
+
+  let x1 = px1 * 8 + (direction === Direction.RIGHT ? 8 : direction === Direction.LEFT ? 0 : 3),
+      y1 = py1 * 8 + (direction === Direction.DOWN ? 8 : direction === Direction.UP ? 0 : 3),
+      x2 = px2 * 8 + (direction === Direction.LEFT ? 8 : direction === Direction.RIGHT ? 0 : 3),
+      y2 = py2 *  8 + (direction === Direction.UP ? 8 : direction === Direction.DOWN ? 0 : 3);
+
+  //draw a dotted line
+  while(x1 != x2 || y1 != y2){
+    if((pattern >> bit++)&1 ) line.fillPoint(x1, y1)
+    x1 += Directions.x[direction];
+    y1 += Directions.y[direction];
+    bit %= 4;
+  }
+
+  //draw a cross at end
+  drawCross(line, x1, y1, x2, y2)
+
+  return line;
+}
+
+drawCross = function(graphic, x1, y1, x2, y2){
+  graphic.fillPoint(x1-1, y1)
+  graphic.fillPoint(x1+1, y1)
+  graphic.fillPoint(x1-2, y1)
+  graphic.fillPoint(x1+2, y1)
+  graphic.fillPoint(x1, y1-1)
+  graphic.fillPoint(x1, y1+1)
+  graphic.fillPoint(x1, y1-2)
+  graphic.fillPoint(x1, y1+2)
 }
 
 ////////////////////////////// INVENTORY //////////////////////////////
 
-exports.drawInventory = function (scene, hero, show){
+exports.drawInventory = function (scene, hero, show) {
   let inventory = hero.inventory;
   //clear
   inventory.sprite?.destroy()
-  if(!show) return;
+  if (!show) return;
   //Draw 4 lines
   inventory.sprite = scene.add.container(
     scene.cameras.main.worldView.x + scene.cameras.main.width / (2 * scene.cameras.main.zoom),
@@ -72,12 +152,12 @@ exports.drawInventory = function (scene, hero, show){
   );
 
   let elementsToDisplay = [...inventory.elements].map(e => e.name());
-  
+
   while (6 - elementsToDisplay.length != 0) {
-    elementsToDisplay.push('...' )    
+    elementsToDisplay.push('...')
   }
 
-  elementsToDisplay = elementsToDisplay.map((element, index) => (inventory.position == index++ ? '> ' : '  ') + element + ' '.repeat(Math.max(0, 24-element.length)))
+  elementsToDisplay = elementsToDisplay.map((element, index) => (inventory.position == index++ ? '> ' : '  ') + element + ' '.repeat(Math.max(0, 24 - element.length)))
 
   const text = scene.add.text(0, 0, elementsToDisplay.join("\n"), { align: "center" });
   text.setFont("Courier");
@@ -104,12 +184,12 @@ exports.drawInventory = function (scene, hero, show){
   //
 }
 
-exports.drawSubInventory = function (scene, hero, show){
+exports.drawSubInventory = function (scene, hero, show) {
 
   let subInventory = hero.inventory.subInventory;
   //clear
   subInventory.sprite?.destroy()
-  if(!show) return;
+  if (!show) return;
 
   subInventory.sprite = scene.add.container(
     50 + scene.cameras.main.worldView.x + scene.cameras.main.width / (2 * scene.cameras.main.zoom),
@@ -123,7 +203,7 @@ exports.drawSubInventory = function (scene, hero, show){
   text.setFont("Courier");
   text.setFontSize(7);
   text.setOrigin(0.5);
-  
+
   text.setDisplaySize(text.width, text.height);
 
   subInventory.sprite.add(
@@ -153,15 +233,15 @@ exports.drawUi = function (scene, ui, hero, click) {
   ui.health = drawCurrentHealth(scene, hero.health)
   ui.separator = drawSeparator(scene);
   ui.maxHealth = drawMaxHealth(scene, hero.maxHealth);
-  
+
 }
 
-const drawBeatingHeart = function(scene, currentHealth, maxHealth, click){
+const drawBeatingHeart = function (scene, currentHealth, maxHealth, click) {
 
   //NAN ?
   let heartSprite =
     "heart " +
-    (Math.floor( click / ((currentHealth * 8) / maxHealth)) % 8) +
+    (Math.floor(click / ((currentHealth * 8) / maxHealth)) % 8) +
     ".ase";
 
   return scene.add.image(
@@ -171,7 +251,7 @@ const drawBeatingHeart = function(scene, currentHealth, maxHealth, click){
   );
 }
 
-const drawCurrentHealth = function(scene, currentHealth){
+const drawCurrentHealth = function (scene, currentHealth) {
   return scene.add
     .bitmapText(
       scene.cameras.main.worldView.x + scene.cameras.main.width / 2 - 5, 13,
@@ -183,7 +263,7 @@ const drawCurrentHealth = function(scene, currentHealth){
     .setTintFill(0xff0000);
 }
 
-const drawSeparator = function(scene){
+const drawSeparator = function (scene) {
   return scene.add
     .bitmapText(
       scene.cameras.main.worldView.x + scene.cameras.main.width / 2 - 5, 18,
@@ -195,14 +275,14 @@ const drawSeparator = function(scene){
     .setTintFill(0xff0000);
 }
 
-const drawMaxHealth = function(scene, maxHealth){
+const drawMaxHealth = function (scene, maxHealth) {
   return scene.add
-  .bitmapText(
-    scene.cameras.main.worldView.x + scene.cameras.main.width / 2 - 5, 23,
-    "arcade",
-    maxHealth,
-  )
-  .setOrigin(0.5)
-  .setScale(0.2)
-  .setTintFill(0xff0000);
+    .bitmapText(
+      scene.cameras.main.worldView.x + scene.cameras.main.width / 2 - 5, 23,
+      "arcade",
+      maxHealth,
+    )
+    .setOrigin(0.5)
+    .setScale(0.2)
+    .setTintFill(0xff0000);
 }

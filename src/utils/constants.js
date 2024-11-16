@@ -1,3 +1,8 @@
+exports.Directions = Object.freeze({
+  x: [0, 0, -1, 1],
+  y: [-1, 1, 0, 0],
+});
+
 exports.Map = Object.freeze({
   WIDTH: 20,
   HEIGHT: 15,

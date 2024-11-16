@@ -345,12 +345,12 @@ only see effect once color is used
 
 ### Step 25 : Throwing
 
-- [ ] UPDATE THROW : animate hero with bump toward the direction of the throw once throwing
-- [ ] UPDATE THROW : delete thrown item
-- [ ] UPDATE THROW : if thrown item if throwable and hit mob, hit mob with stat
-- [ ] UPDATE THROW : if thrown item if food and hit mob, mob eat item
-- [ ] UPDATE THROW : once throwing, a turn is done
-- [ ] UPDATE THROW : when preparing throw, if target is mob, made it blink
+- [x] UPDATE THROW : animate hero with bump toward the direction of the throw once throwing
+- [x] UPDATE THROW : delete thrown item
+- [x] UPDATE THROW : if thrown item if throwable and hit mob, hit mob with stat
+- [x] UPDATE THROW : if thrown item if food and hit mob, mob eat item
+- [x] UPDATE THROW : once throwing, a turn is done
+- [o] UPDATE THROW : when preparing throw, if target is mob, made it blink
 
 ### Step 26 : Gameplay Test
 
