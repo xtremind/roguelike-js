@@ -1,4 +1,6 @@
 import { Scene } from "phaser";
+import { v4 as uuidv4 } from 'uuid';
+import Prando from "prando";
 
 import { drawWind, drawFloat, drawFog, drawUi, drawInventory, drawSubInventory, drawThrow } from "utils/graphics";
 import { Map, Tiles, Mobs, Status, Action, Keys, Effects, Powers, Colors } from "utils/constants";
@@ -9,6 +11,7 @@ const INVENTORY_SIZE = 6;
 const INVENTORY_TOGGLE_DELAY = 300;
 
 class GameScene extends Scene {
+  #rng;
   //datas
   #click = 0;
   #tick = 1;
@@ -66,6 +69,14 @@ class GameScene extends Scene {
     this.#openChestSound = this.sound.add("openChest", { loop: false });
     this.#openDoorSound = this.sound.add("openDoor", { loop: false });
     this.#walkSound = this.sound.add("walk", { loop: false });
+
+
+    //prepare seed
+    const urlParams = new URLSearchParams(window.location.search);
+    const seed = urlParams.has('seed') ? urlParams.get('seed') : uuidv4();
+
+    console.log("current seed : " + seed);
+    this.#rng = new Prando(seed);
   }
 
   click(){

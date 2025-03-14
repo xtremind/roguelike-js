@@ -102,6 +102,7 @@ class PreloadScene extends Scene {
 
     this.load.bitmapFont("arcade", arcadeFont, arcadeConfig);
 
+    //load sounds
     this.load.audio("breakVase", breakVase);
     this.load.audio("hit", hit);
     this.load.audio("hurt", hurt);
