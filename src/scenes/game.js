@@ -118,9 +118,9 @@ class GameScene extends Scene {
     // should be done each time a game start, but not between level
     this.#generateLootConfiguration();
 
-    this.#hero.putInInventory(new Item(Powers.SMALL, this.#lootConfigurations[5]));
-    this.#hero.putInInventory(new Item(Powers.MEDIUM, this.#lootConfigurations[0]));
-    this.#hero.putInInventory(new Item(Powers.LARGE, this.#lootConfigurations[5]));
+    this.#hero.putInInventory(this, new Item(Powers.SMALL, this.#lootConfigurations[5]));
+    this.#hero.putInInventory(this, new Item(Powers.MEDIUM, this.#lootConfigurations[0]));
+    this.#hero.putInInventory(this, new Item(Powers.LARGE, this.#lootConfigurations[5]));
 
     console.log("GameScene.create");
   }
@@ -147,11 +147,13 @@ class GameScene extends Scene {
   }
 
   #isLucky(chance){
-    return this.#rng.nextInt(0, 100/chance) < 100/(chance*4);
+    return this.#rng.nextInt(0, 4) < chance;
   }
 
   #getLoot(chance){
-    return this.#isLucky(chance) ? this.#lootConfigurations[this.#rng.nextInt(0, this.#lootConfigurations.length)] : null;
+    return this.#isLucky(chance) ?
+        new Item(Powers.SMALL, this.#lootConfigurations[this.#rng.nextInt(0, this.#lootConfigurations.length)]) :
+        null;
   }
 
   #loadLevel() {
@@ -562,14 +564,15 @@ class GameScene extends Scene {
     } else if (tile.index === Tiles.VASE) {
       this.#map.putTileAt(Tiles.FLOOR, tile.x, tile.y);
       tile.destroy();
+      this.#hero.putInInventory(this, this.#getLoot(2));
       this.#breakVaseSound.play();
-      //loot
     } else if (tile.index === Tiles.PANEL) {
       //display message
       this.#showMsg(["hello world"], 100);
     } else if (tile.index === Tiles.CLOSED_CHEST) {
       this.#map.putTileAt(Tiles.OPENED_CHEST, tile.x, tile.y);
       tile.destroy();
+      this.#hero.putInInventory(this, this.#getLoot(4));
       this.#openChestSound.play();
       //loot
     }

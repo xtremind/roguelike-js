@@ -104,8 +104,11 @@ export default class Mob {
     return i;
   }
 
-  putInInventory(item){
-    this.inventory.elements[this.#getIndexNextEmptySpotInInventory()] = item;
+  putInInventory(scene, item){
+    if(item) {
+      scene.addFloat("!", this.x, this.y, Colors.WHITE);
+      this.inventory.elements[this.#getIndexNextEmptySpotInInventory()] = item;
+    }
   }
 
   pullFromInventory(){
