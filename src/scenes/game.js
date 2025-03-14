@@ -146,6 +146,14 @@ class GameScene extends Scene {
     }
   }
 
+  #isLucky(chance){
+    return this.#rng.nextInt(0, 100/chance) < 100/(chance*4);
+  }
+
+  #getLoot(chance){
+    return this.#isLucky(chance) ? this.#lootConfigurations[this.#rng.nextInt(0, this.#lootConfigurations.length)] : null;
+  }
+
   #loadLevel() {
     //initiate map
     this.#map = this.add.tilemap("map");

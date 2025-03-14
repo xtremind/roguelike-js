@@ -354,7 +354,7 @@ only see effect once color is used
 
 ### Step 26 : Gameplay Test
 
-- [ ] INTERACT : create a function tha will give an random item, 1 out of 6 chances
+- [x] INTERACT : create a function tha will give an random item, 1 out of 6 chances
 - [ ] INTERACT CHEST : call get item
 - [ ] INTERACT VASE : call get item
 - [ ] UPDATE HERO : don't do a turn when bumping a wall
