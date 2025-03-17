@@ -6,12 +6,13 @@ import { drawWind, drawFloat, drawFog, drawUi, drawInventory, drawSubInventory, 
 import { Map, Tiles, Mobs, Status, Action, Keys, Effects, Powers, Colors } from "utils/constants";
 import Mob from "models/mob";
 import Item from "models/item";
+import createMap from "utils/floors";
 
 const INVENTORY_SIZE = 6;
 const INVENTORY_TOGGLE_DELAY = 300;
 
 class GameScene extends Scene {
-  #rng;
+  rng;
   //datas
   #click = 0;
   #tick = 1;
@@ -76,7 +77,7 @@ class GameScene extends Scene {
     const seed = urlParams.has('seed') ? urlParams.get('seed') : uuidv4();
 
     console.log("current seed : " + seed);
-    this.#rng = new Prando(seed);
+    this.rng = new Prando(seed);
   }
 
   click(){
@@ -89,7 +90,7 @@ class GameScene extends Scene {
     this.cameras.main.setZoom(2);
     this.cameras.main.centerOn(85, 60);
 
-    this.#loadLevel();
+    this.#loadLevel(1);
 
     //initiate interaction for player 
     
@@ -147,27 +148,32 @@ class GameScene extends Scene {
   }
 
   #isLucky(chance){
-    return this.#rng.nextInt(0, 4) < chance;
+    return this.rng.nextInt(0, 4) < chance;
   }
 
   #getLoot(chance){
     return this.#isLucky(chance) ?
-        new Item(Powers.SMALL, this.#lootConfigurations[this.#rng.nextInt(0, this.#lootConfigurations.length)]) :
+        new Item(Powers.SMALL, this.#lootConfigurations[this.rng.nextInt(0, this.#lootConfigurations.length)]) :
         null;
   }
 
-  #loadLevel() {
+  #loadLevel(level) {
     //initiate map
     this.#map = this.add.tilemap("map");
     const tileset = this.#map.addTilesetImage("decorations");
-    const platforms = this.#map.createLayer("level1", tileset, 0, 0);
+    //const platforms = this.#map.createLayer("level1", tileset, 0, 0);
+    const platforms = this.#map.createLayer("level", tileset, 0, 0);
 
     //initiate hero position
     this.#tick = 1;
 
-    this.#hero = this.#createMob(5, 7, Mobs.HERO);
+    this.#hero = this.#createMob(5, 7, Mobs.HERO); // only on 1st floor
     this.initiateFog();
+    createMap(this, this.#map, level);
+    //createMob
+    //
 
+    /*
     this.#createMob(4, 6, Mobs.SLIME);
     this.#createMob(5, 5, Mobs.SLIME);
     this.#createMob(8, 2, Mobs.SLIME);
@@ -176,7 +182,7 @@ class GameScene extends Scene {
     this.#createMob(2, 2, Mobs.SLIME);
     this.#createMob(14, 5, Mobs.SLIME);
     this.#createMob(18, 9, Mobs.SLIME);
-
+    */
     //
   }
 
@@ -750,7 +756,7 @@ class GameScene extends Scene {
     drawUi(this, this.#ui, this.#hero, this.#click);
     this.#drawWinds();
     this.#drawFloats();
-    drawFog(this.#map, this.#fog);
+    //drawFog(this.#map, this.#fog);
     drawInventory(this, this.#hero, this.#showInventory)
     drawSubInventory(this, this.#hero, this.#showSubInventory)
     drawThrow(this, this.#hero, this.#map, this.#direction, this.#showThrow)

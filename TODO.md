@@ -361,30 +361,30 @@ only see effect once color is used
 
 ### Step 27 : Random Room
 
-- [ ] FLOOR : create a function to generate a new floor
-- [ ] GENERATE FLOOR : initiate floor with wall everywhere
-- [ ] GENERATE FLOOR : create a function to generate rooms
-- [ ] GENERATE ROOMS : create a function to generate one room with maximum width / height as a parameter
-- [ ] GENERATE ROOM : define width of room (random better 3 and maximum width)
-- [ ] GENERATE ROOM : define height of room (random better 3 and maximum height)
-- [ ] GENERATE ROOM : define a first coordinate
-- [ ] GENERATE ROOMS : define a function to place a room
-- [ ] PLACE ROOM : define a list of candidate where to place a room
-- [ ] PLACE ROOM : check if a room fit, for all position in floor , and add the position in candidate
-- [ ] PLACE ROOM : if no candidate, return false
-- [ ] PLACE ROOM : define a function to put a room on floor
-- [ ] PUT ROOM : change floor to empty where room fit
-- [ ] PLACE ROOM : if candidates, put room in one of them, and return true
-- [ ] PLACE ROOM : define a function to verify if a room fit in a position
-- [ ] ROOM FIT : return true
-- [ ] PLACE ROOM : define a function to get a random candidate
-- [ ] RANDOM CANDIDATE : return a candidate from a list of candidates
-- [ ] ROOM FIT : verify if empty space exist on floor, on room passed as parameter
-- [ ] ROOM FIT : verify if empty space exist on floor, on 1 case around room passed as parameter
-- [ ] GENERATE ROOMS : generate room until 5 are put
-- [ ] GENERATE ROOMS : accept up until 5 failures
-- [ ] GENERATE ROOMS : if a room is put, reduce max height or max width depending on size of the room
-- [ ] GENERATE ROOM : define width / height so it doesn't exceed a certain area
+- [x] FLOOR : create a function to generate a new floor
+- [x] GENERATE FLOOR : initiate floor with wall everywhere
+- [x] GENERATE FLOOR : create a function to generate rooms
+- [x] GENERATE ROOMS : create a function to generate one room with maximum width / height as a parameter
+- [x] GENERATE ROOM : define width of room (random better 3 and maximum width)
+- [x] GENERATE ROOM : define height of room (random better 3 and maximum height)
+- [x] GENERATE ROOM : define a first coordinate
+- [x] GENERATE ROOMS : define a function to place a room
+- [x] PLACE ROOM : define a list of candidate where to place a room
+- [x] PLACE ROOM : check if a room fit, for all position in floor , and add the position in candidate
+- [x] PLACE ROOM : if no candidate, return false
+- [x] PLACE ROOM : define a function to put a room on floor
+- [x] PUT ROOM : change floor to empty where room fit
+- [x] PLACE ROOM : if candidates, put room in one of them, and return true
+- [x] PLACE ROOM : define a function to verify if a room fit in a position
+- [x] ROOM FIT : return true
+- [x] PLACE ROOM : define a function to get a random candidate
+- [x] RANDOM CANDIDATE : return a candidate from a list of candidates
+- [x] ROOM FIT : verify if empty space exist on floor, on room passed as parameter
+- [x] ROOM FIT : verify if empty space exist on floor, on 1 case around room passed as parameter
+- [x] GENERATE ROOMS : generate room until 5 are put
+- [x] GENERATE ROOMS : accept up until 5 failures
+- [x] GENERATE ROOMS : if a room is put, reduce max height or max width depending on size of the room
+- [x] GENERATE ROOM : define width / height so it doesn't exceed a certain area
 
 ### Step 28 : Tile Signature
 
