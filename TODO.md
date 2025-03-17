@@ -388,10 +388,10 @@ only see effect once color is used
 
 ### Step 28 : Tile Signature
 
-- [ ] FLOOR : create a function get signature for a position
-- [ ] GET SIGNATURE : look at all positons around the one in parameter
-- [ ] GET SIGNATURE : define a binary as a signature
-- [ ] GET SIGNATURE : if position is walkable, add 0 else 1 in signature then shift left (ex : 1 => 10, ...)
+- [x] FLOOR : create a function get signature for a position
+- [x] GET SIGNATURE : look at all positons around the one in parameter
+- [x] GET SIGNATURE : define a binary as a signature
+- [x] GET SIGNATURE : if position is walkable, add 0 else 1 in signature then shift left (ex : 1 => 10, ...)
 
 ### Step 29 : Signature Mask
 

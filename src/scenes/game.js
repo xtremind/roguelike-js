@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import Prando from "prando";
 
 import { drawWind, drawFloat, drawFog, drawUi, drawInventory, drawSubInventory, drawThrow } from "utils/graphics";
-import { Map, Tiles, Mobs, Status, Action, Keys, Effects, Powers, Colors } from "utils/constants";
+import { Directions, Map, Tiles, Mobs, Status, Action, Keys, Effects, Powers, Colors } from "utils/constants";
 import Mob from "models/mob";
 import Item from "models/item";
 import createMap from "utils/floors";
@@ -30,9 +30,7 @@ class GameScene extends Scene {
 
   //direction helpers
   #cursors;
-  #DIR_X = [0, 0, -1, 1];
-  #DIR_Y = [-1, 1, 0, 0];
-  
+
   #showInventory = false;
   #showSubInventory = false;
   #showThrow = false;
@@ -273,11 +271,11 @@ class GameScene extends Scene {
       //Move cursor
       if(this.#showSubInventory){
         //in Sub Inventory
-        this.#hero.inventory.subInventory.position += this.#DIR_Y[button];
+        this.#hero.inventory.subInventory.position += Directions.y[button];
         this.#hero.inventory.subInventory.position = (this.#hero.inventory.subInventory.position + 3) % 3;
       } else {
         //in Inventory, cursor move only on items
-        this.#hero.inventory.position += this.#DIR_Y[button];
+        this.#hero.inventory.position += Directions.y[button];
         this.#hero.inventory.position = (this.#hero.inventory.position + this.#hero.inventory.elements.length) % this.#hero.inventory.elements.length;
         this.#hero.inventory.position = isNaN(this.#hero.inventory.position) ? 0 : this.#hero.inventory.position;
       }
@@ -312,7 +310,7 @@ class GameScene extends Scene {
     }
     //once use, a turn has passed
   }
-  
+
   //THROW
   #update_throw_item(){
     this.#tick = Math.min(this.#tick + 0.125, 1);
@@ -342,7 +340,7 @@ class GameScene extends Scene {
         //this.#openDoorSound.play(); -> play explode sound
       }
 
-      this.#hero.prepare(Action.INTERACT, this.#DIR_X[this.#direction], this.#DIR_Y[this.#direction])
+      this.#hero.prepare(Action.INTERACT, Directions.x[this.#direction], Directions.y[this.#direction])
       this.#tick = 0;
       this.#update = this.#update_pturn;
     } else if (button === Keys.BACK) {
@@ -352,10 +350,10 @@ class GameScene extends Scene {
       setTimeout(() => {
         this.#update = this.#update_interact_inventory;
       }, INVENTORY_TOGGLE_DELAY);
-  
+
     } else if (button !== -1){
       this.#direction = button;
-    } 
+    }
   }
 
   #isTile(element){
@@ -369,8 +367,8 @@ class GameScene extends Scene {
   #findFirstPhysicalElementInDirection(x, y, direction){
     let dx = x, dy = y;
     while(true){
-      dx += this.#DIR_X[direction];
-      dy += this.#DIR_Y[direction];
+      dx += Directions.x[direction];
+      dy += Directions.y[direction];
       let mob = this.getMob(dx, dy);
       if(mob){
         return mob;
@@ -406,8 +404,8 @@ class GameScene extends Scene {
       }, INVENTORY_TOGGLE_DELAY);
     }
     if (button >= Keys.UP && button <= Keys.RIGHT) {
-      let dx = this.#DIR_X[button];
-      let dy = this.#DIR_Y[button];
+      let dx = Directions.x[button];
+      let dy = Directions.y[button];
       this.#moveHero(dx, dy);
     }
   }
@@ -467,8 +465,8 @@ class GameScene extends Scene {
         best_dirs = [],
         best_dist = 999;
       for (let dir = 0; dir < 4; dir++) {
-        dx = mob.x + this.#DIR_X[dir];
-        dy = mob.y + this.#DIR_Y[dir];
+        dx = mob.x + Directions.x[dir];
+        dy = mob.y + Directions.y[dir];
         dist = distMap[dx][dy];
 
         let nextPosTile = this.#map.getTileAt(dx, dy);
@@ -486,8 +484,8 @@ class GameScene extends Scene {
       let optimal_dirs = [];
 
       for (const dir of best_dirs) {
-        dx = mob.x + this.#DIR_X[dir];
-        dy = mob.y + this.#DIR_Y[dir];
+        dx = mob.x + Directions.x[dir];
+        dy = mob.y + Directions.y[dir];
         let other = this.getMob(dx, dy);
         if (!other || other?.type === Mobs.HERO) {
           optimal_dirs.push(dir);
@@ -504,16 +502,16 @@ class GameScene extends Scene {
         ) {
           mob.prepare(
             Action.INTERACT,
-            this.#DIR_X[best_dir],
-            this.#DIR_Y[best_dir],
+            Directions.x[best_dir],
+            Directions.y[best_dir],
           );
           this.#hitMob(mob, this.#hero);
           this.#hurtSound.play();
         } else {
           mob.prepare(
             Action.WALK,
-            this.#DIR_X[best_dir],
-            this.#DIR_Y[best_dir],
+            Directions.x[best_dir],
+            Directions.y[best_dir],
           );
         }
         //move mob
@@ -639,8 +637,8 @@ class GameScene extends Scene {
         if (this.#canSee(hero, x, y) && !this.#fog[x][y]) {
           this.#fog[x][y] = true;
           for (let dir = 0; dir < 4; dir++) {
-            tx = x + this.#DIR_X[dir];
-            ty = y + this.#DIR_Y[dir];
+            tx = x + Directions.x[dir];
+            ty = y + Directions.y[dir];
             tile = this.#map.getTileAt(tx, ty);
             if (!!tile && !this.#fog[tx][ty] && tile.properties?.solid) {
               this.#fog[tx][ty] = true;
@@ -675,8 +673,8 @@ class GameScene extends Scene {
     do {
       current = candidates.shift();
       for (let dir = 0; dir < 4; dir++) {
-        dx = current.x + this.#DIR_X[dir];
-        dy = current.y + this.#DIR_Y[dir];
+        dx = current.x + Directions.x[dir];
+        dy = current.y + Directions.y[dir];
         tile = this.#map.getTileAt(dx, dy);
         if (tile && result[dx][dy] === -1) {
           result[dx][dy] = current.step + 1;

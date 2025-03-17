@@ -1,21 +1,22 @@
 import Room from "models/room";
-import {Tiles} from "utils/constants";
+import {Directions, Tiles} from "utils/constants";
 
-let rng;
+let rng, map;
 let rooms = [];
 
-function createMap(scene, map, level) {
+function createMap(scene, mp, level) {
     rng = scene.rng
+    map = mp;
 
-    createRooms(map);
+    createRooms();
 }
 
-function createRooms(map){
+function createRooms(){
     let maxRooms = 5, errors = 5, maxHeight = 5, maxWidth = 5;
     let room;
 
     do {
-        room = placeRoom(map, generateRoom(maxHeight, maxWidth));
+        room = placeRoom(generateRoom(maxHeight, maxWidth));
         if(room){
             console.log('room placed', room)
             rooms.push(room);
@@ -34,7 +35,7 @@ function generateRoom(maxHeight, maxWidth){
     return new Room(0, 0, height, width);
 }
 
-function placeRoom(map, room){
+function placeRoom(room){
     let candidates = []
 
     for(let x = 0; x < map.width - room.width; x++){
@@ -48,14 +49,14 @@ function placeRoom(map, room){
         let candidate = candidates[rng.nextInt(0, candidates.length-1)];
         room.x = candidate.x
         room.y = candidate.y
-        createRoom(map, room);
+        createRoom(room);
         return room;
     }
 
     return false;
 }
 
-function doesRoomFit(map, room){
+function doesRoomFit(room){
     const fromX = room.x === 0 ? 0 : room.x - 1,
         toX = room.x + room.width === map.width ? map.width : room.x + room.width + 1,
         fromY = room.y === 0 ? 0 : room.y - 1,
@@ -73,15 +74,29 @@ function doesRoomFit(map, room){
     return true;
 }
 
-function createRoom(map, room){
+function createRoom(room){
     const fromX = room.x, toX = room.x + room.width, fromY = room.y, toY = room.y + room.height;
     for(let i = fromX; i < toX; i++){
         for(let j = fromY; j < toY; j++){
+            map.getTileAt(i,j).destroy();
             map.putTileAt(Tiles.FLOOR, i, j);
         }
     }
 }
 
+function signature(x, y){
+    let result = 0;
+    let dx, dy, tile;
+
+    for(let i = 0; i++; i < 8){
+        dx = x + Directions.x[i] ;
+        dy = y + Directions.y[i] ;
+        tile = map.getTileAt(x, y)
+        result |= (!tile || tile.properties?.solid ? 1 : 0 )<<(7-i);
+    }
+
+    return result
+}
 
 function middle(a, b, c) {
     let x = a - b;

@@ -1,6 +1,7 @@
+//[ "up", "down", "left", "right", "top-left", "top-right", "bottom-right", "bottom-left"]
 exports.Directions = Object.freeze({
-  x: [0, 0, -1, 1],
-  y: [-1, 1, 0, 0],
+  x: [0, 0, -1, 1, -1, 1, 1, -1],
+  y: [-1, 1, 0, 0, -1, -1, 1, 1],
 });
 
 exports.Map = Object.freeze({
