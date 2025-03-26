@@ -428,21 +428,21 @@ only see effect once color is used
 
 ### Step 31 : Merging Areas
 
-- [ ] FLOOR : create a function place flags
-- [ ] PLACE FLAG : create number current flag
-- [ ] PLACE FLAG : for all tiles, if walkable and current position is 0, pu in position value current flag
-- [ ] PLACE FLAG : increment flag
-- [ ] PLACE FLAG : create function to compute flag from a position if not
-- [ ] GROW FLAG : use the same logic as dijshra, but where all positions from the same room have the same step value
-- [ ] FLOOR : create a function carve door
-- [ ] CARVE DOORS : for all the tiles, if position is not walkable, get signature from tile
-- [ ] CARVE DOORS : if signature allow to walk through, put door in place
-- [ ] CARVE DOORS : UPDATE - if signature allow to walk through, verify the flag of the 2 side of the wall
-- [ ] CARVE DOORS : if flags are different, put door in place
-- [ ] CARVE DOORS : UPDATE - if flags are different, add position to a candidate list
-- [ ] CARVE DOORS : if at least one candidate, put randomly a floor tile
-- [ ] CARVE DOORS : grow flag from candidate
-- [ ] CARVE DOORS : repeat until all rooms are connected (same flags)
+- [x] FLOOR : create a function place flags
+- [x] PLACE FLAG : create number current flag
+- [x] PLACE FLAG : for all tiles, if walkable and current position is 0, pu in position value current flag
+- [x] PLACE FLAG : increment flag
+- [x] PLACE FLAG : create function to compute flag from a position if not
+- [x] GROW FLAG : use the same logic as dijshra, but where all positions from the same room have the same step value
+- [x] FLOOR : create a function carve door
+- [x] CARVE DOORS : for all the tiles, if position is not walkable, get signature from tile
+- [x] CARVE DOORS : if signature allow to walk through, put door in place
+- [x] CARVE DOORS : UPDATE - if signature allow to walk through, verify the flag of the 2 side of the wall
+- [x] CARVE DOORS : if flags are different, put door in place
+- [x] CARVE DOORS : UPDATE - if flags are different, add position to a candidate list
+- [x] CARVE DOORS : if at least one candidate, put randomly a floor tile
+- [x] CARVE DOORS : grow flag from candidate
+- [x] CARVE DOORS : repeat until all rooms are connected (same flags)
 
 | BINARY    | MAP                          |
 | --------- | ---------------------------- |

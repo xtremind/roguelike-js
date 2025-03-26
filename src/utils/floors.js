@@ -3,6 +3,7 @@ import {Directions, Tiles} from "utils/constants";
 
 let rng, map;
 let rooms = [];
+let flags = [[]];
 
 function createMap(scene, mp, level) {
     rng = scene.rng
@@ -10,6 +11,7 @@ function createMap(scene, mp, level) {
 
     createRooms();
     createCorridors();
+    createPaths()
 }
 
 function createRooms(){
@@ -161,6 +163,95 @@ function createCorridor(candidate){
 
     } while (direction !== 8 )
 
+}
+//*******************************************************************//
+function createPaths(){
+    let candidate, candidates, tile, currentFlag = 1;
+    initiateFlags();
+
+    do {
+        candidates = [];
+        for (let x = 0; x < map.width; x++) {
+            for (let y = 0; y < map.height; y++) {
+                tile = map.getTileAt(x, y)
+                if((tile?.index !== Tiles.WALL) && flags[x][y] === -1){
+                    growFlags(x, y, currentFlag++)
+                }
+                candidate = getCandidateForPath(x,y)
+                if(candidate)
+                    candidates.push(candidate)
+            }
+        }
+
+        if (candidates.length !== 0) {
+            candidate = candidates[rng.nextInt(0, candidates.length - 1)];
+            replaceBy(candidate.x, candidate.y, Tiles.FLOOR)
+            growFlags(candidate.x, candidate.y, candidate.flag)
+        }
+
+    } while (candidates.length !== 0)
+}
+
+function getCandidateForPath(x, y){
+    let tile = map.getTileAt(x, y)
+    if(tile.properties?.solid){
+        let flg1, flg2
+        let sign = signature(x, y);
+        if(compareBinary(sign, 0b11000000, 0b00001111)) {
+            flg1 = flags[x-1][y]
+            flg2 = flags[x+1][y]
+        } else if (compareBinary(sign, 0b00110000, 0b00001111)) {
+            flg1 = flags[x][y-1]
+            flg2 = flags[x][y+1]
+        }
+
+        if(flg1 !== flg2){
+            return {x, y, flag : flg1}
+        }
+    }
+    return null;
+}
+
+function initiateFlags(){
+    for (let x = 0; x < map.width; x++) {
+        flags.push([])
+        for (let y = 0; y < map.height; y++) {
+            flags[x].push(-1)
+        }
+    }
+}
+
+function growFlags(x, y, weight){
+    flags[x][y] = weight
+    let tile;
+
+    for( let d = 0; d < 4 ; d++){
+        let dx = x + Directions.x[d], dy = y + Directions.y[d]
+        tile = map.getTileAt(dx, dy)
+        if((tile && tile.index !== Tiles.WALL) && flags[dx][dy] !== weight){
+            growFlags(dx, dy, weight)
+        }
+    }
+}
+//*******************************************************************//
+function computeDistanceMap(x, y){
+    initiateFlags()
+    let candidates = [{x, y, flag: 0}], candidate , tile, dx, dy;
+    flags[x][y] = 0;
+
+    do{
+        candidate = candidates.pop();
+        for(let i = 0; i < 4; i++){
+            dx = candidate.x + Directions.x[i]
+            dy = candidate.y + Directions.y[i]
+            tile = map.getTileAt(dx, dy)
+            if(tile && flags[dx][dy]===-1){
+                flags[dx][dy] = candidate.flag + 1
+                if(!tile.properties?.solid)
+                    candidates.push({x:dx, y:dy, flag: candidate.flag + 1})
+            }
+        }
+    } while (candidates.length !== 0)
 }
 
 //*******************************************************************//
