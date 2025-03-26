@@ -9,6 +9,7 @@ function createMap(scene, mp, level) {
     map = mp;
 
     createRooms();
+    createCorridors();
 }
 
 function createRooms(){
@@ -40,7 +41,7 @@ function placeRoom(room){
 
     for(let x = 0; x < map.width - room.width; x++){
         for(let y = 0; y < map.height - room.height; y++){
-            if(doesRoomFit(map, {x: x, y:y, height: room.height, width: room.width}))
+            if(doesRoomFit({x: x, y:y, height: room.height, width: room.width}))
                 candidates.push({x, y});
         }
     }
@@ -78,21 +79,109 @@ function createRoom(room){
     const fromX = room.x, toX = room.x + room.width, fromY = room.y, toY = room.y + room.height;
     for(let i = fromX; i < toX; i++){
         for(let j = fromY; j < toY; j++){
-            map.getTileAt(i,j).destroy();
-            map.putTileAt(Tiles.FLOOR, i, j);
+            replaceBy(i,j, Tiles.FLOOR);
         }
     }
+}
+
+//*******************************************************************//
+function createCorridors(){
+    let candidate, candidates;
+
+    do {
+        candidates = [];
+        for (let x = 0; x < map.width; x++) {
+            for (let y = 0; y < map.height; y++) {
+                candidate = getCandidateForCorridor(x, y);
+                if (candidate) {
+                    candidates.push(candidate);
+                }
+            }
+        }
+
+        if (candidates.length !== 0) {
+            candidate = candidates[rng.nextInt(0, candidates.length - 1)];
+            createCorridor(candidate);
+        }
+    } while (candidates.length !== 0)
+
+}
+
+function getCandidateForCorridor(x, y){
+    if(isCarvable(x, y) && !isNearRoom(x, y)){
+        return {x, y}
+    }
+    return null;
+}
+
+function isCarvable(x, y){
+    let tile = map.getTileAt(x, y);
+    if(!tile || tile.index !== Tiles.WALL) return false;
+    let sign = signature(x, y)
+    const carvables = [
+        {signature: 0b11111111, mask: 0b00000000},
+        {signature: 0b01111111, mask: 0b00001100},
+        {signature: 0b10111111, mask: 0b00000011},
+        {signature: 0b11011111, mask: 0b00001001},
+        {signature: 0b11101111, mask: 0b00000110}
+    ];
+    return carvables.some((el) => compareBinary(sign, el.signature, el.mask));
+}
+
+function isNearRoom(x, y){
+    for(let i = 0; i < 8; i++){
+        let dx = x + Directions.x[i], dy = y + Directions.y[i], tile = map.getTileAt(dx, dy)
+        if(tile && tile.index === Tiles.FLOOR) return true;
+    }
+    return false;
+}
+
+function createCorridor(candidate){
+    let direction = rng.nextInt(0, 3), step = 0;
+
+    do{
+        replaceBy(candidate.x,candidate.y, Tiles.FLOOR);
+        if(!isCarvable(candidate.x + Directions.x[direction], candidate.y + Directions.y[direction]) || (rng.nextInt(0,1) ===1 && step >= 2)){
+            direction = 8;
+            step = 0;
+
+            for (let i = 0; i < 4; i++){
+                if(isCarvable(candidate.x + Directions.x[i], candidate.y + Directions.y[i])){
+                    if(direction === 8 || rng.nextInt(0,1) === 1) {
+                        direction = i;
+                        break;
+                    }
+                }
+            }
+        }
+
+        candidate.x += Directions.x[direction]
+        candidate.y += Directions.y[direction]
+        step++
+
+    } while (direction !== 8 )
+
+}
+
+//*******************************************************************//
+function replaceBy(x, y, tile){
+    map.getTileAt(x, y).destroy();
+    map.putTileAt(tile, x, y);
+}
+
+function compareBinary(b1, b2, mask){
+    return (b1 | mask) === (b2 | mask)
 }
 
 function signature(x, y){
     let result = 0;
     let dx, dy, tile;
 
-    for(let i = 0; i++; i < 8){
+    for(let i = 0; i < 8; i++){
         dx = x + Directions.x[i] ;
         dy = y + Directions.y[i] ;
-        tile = map.getTileAt(x, y)
-        result |= (!tile || tile.properties?.solid ? 1 : 0 )<<(7-i);
+        tile = map.getTileAt(dx, dy)
+        result |= (!tile || tile.index === Tiles.WALL ? 1 : 0 )<<(7-i);
     }
 
     return result
@@ -108,5 +197,5 @@ function middle(a, b, c) {
     else return a;
 }
 
-
+//*******************************************************************//
 export default createMap;

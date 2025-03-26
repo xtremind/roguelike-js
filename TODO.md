@@ -395,13 +395,13 @@ only see effect once color is used
 
 ### Step 29 : Signature Mask
 
-- [ ] FLOOR : create a function to create the maze between rooms
-- [ ] MAZE : for all tiles, check if tile is wall and signature is 0B11111111 (surrounded by wall)
-- [ ] TILE : create a new tile PATH, with same pattern as wall but in another color
-- [ ] MAZE : if check is true, set current tile as PATH
-- [ ] FLOOR : create a function to verify if 2 binary are equals, with a possible mask (see bellow)
-- [ ] FLOOR : create a function to verify if a tile can be carve (inbound and one binary comparison match)
-- [ ] MAZE : use binary comparison to check signature
+- [x] FLOOR : create a function to create the maze between rooms
+- [x] MAZE : for all tiles, check if tile is wall and signature is 0B11111111 (surrounded by wall)
+- [x] TILE : create a new tile PATH, with same pattern as wall but in another color
+- [x] MAZE : if check is true, set current tile as PATH
+- [x] FLOOR : create a function to verify if 2 binary are equals, with a possible mask (see bellow)
+- [x] FLOOR : create a function to verify if a tile can be carve (inbound and one binary comparison match)
+- [x] MAZE : use binary comparison to check signature
 
 | BINARY    | MAP                          |
 | --------- | ---------------------------- |
@@ -413,18 +413,18 @@ only see effect once color is used
 
 ### Step 30 : Maze Worm
 
-- [ ] MAZE : create a list of candidates with a tiles with only wall around
-- [ ] FLOOR : create a new function do create path
-- [ ] MAZE : if at list there's one candidate, get a random one
-- [ ] MAZE : pass the candidate to the function PATH
-- [ ] PATH : define a direction as DOWN first
-- [ ] PATH : while current position is carvable, set position as floor
-- [ ] PATH : compute next position from direction
-- [ ] PATH : define a direction randomly
-- [ ] PATH : while carving, if next position is not carvable, find next carvable from surrounding
-- [ ] MAZE : repeat until no more candidate
-- [ ] PATH : 50% chance to change direction while carving
-- [ ] PATH : try changing direction at least 2 step after a change
+- [x] MAZE : create a list of candidates with a tiles with only wall around
+- [x] FLOOR : create a new function do create path
+- [x] MAZE : if at list there's one candidate, get a random one
+- [x] MAZE : pass the candidate to the function PATH
+- [x] PATH : define a direction as DOWN first
+- [x] PATH : while current position is carvable, set position as floor
+- [x] PATH : compute next position from direction
+- [x] PATH : define a direction randomly
+- [x] PATH : while carving, if next position is not carvable, find next carvable from surrounding
+- [x] MAZE : repeat until no more candidate
+- [x] PATH : 50% chance to change direction while carving
+- [x] PATH : try changing direction at least 2 step after a change
 
 ### Step 31 : Merging Areas
 
