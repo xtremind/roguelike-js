@@ -12,6 +12,7 @@ function createMap(scene, mp, level) {
     createRooms();
     createCorridors();
     createPaths()
+    createShortcuts();
 }
 
 function createRooms(){
@@ -213,6 +214,7 @@ function getCandidateForPath(x, y){
 }
 
 function initiateFlags(){
+    flags = []
     for (let x = 0; x < map.width; x++) {
         flags.push([])
         for (let y = 0; y < map.height; y++) {
@@ -234,13 +236,58 @@ function growFlags(x, y, weight){
     }
 }
 //*******************************************************************//
+function createShortcuts(){
+
+    let candidate, candidates, tile;
+
+    do {
+        candidates = [];
+        for (let x = 0; x < map.width; x++) {
+            for (let y = 0; y < map.height; y++) {
+                candidate = getCandidateForShortcut(x, y);
+                if(candidate)
+                    candidates.push(candidate);
+            }
+        }
+
+        if (candidates.length !== 0) {
+            candidate = candidates[rng.nextInt(0, candidates.length - 1)];
+            replaceBy(candidate.x, candidate.y, Tiles.FLOOR)
+        }
+    } while (candidates.length !== 0)
+}
+
+function getCandidateForShortcut(x, y){
+    let found = false;
+    let tile = map.getTileAt(x, y)
+    if(tile.properties?.solid){
+        let x1, y1, x2, y2;
+        let sign = signature(x, y);
+        if(compareBinary(sign, 0b00110000, 0b00001111)){
+            x1 = x; y1 = y-1; x2 = x; y2 = y+1;
+            found = true;
+        } else if (compareBinary(sign, 0b11000000, 0b00001111)){
+            x1 = x-1; y1 = y; x2 = x+1; y2 = y;
+            found = true;
+        }
+        if(found){
+            computeDistanceMap(x1, y1);
+            if(flags[x2][y2] >= 20 ){
+                return {x, y};
+            }
+        }
+    }
+
+    return null
+}
+
 function computeDistanceMap(x, y){
     initiateFlags()
     let candidates = [{x, y, flag: 0}], candidate , tile, dx, dy;
     flags[x][y] = 0;
 
     do{
-        candidate = candidates.pop();
+        candidate = candidates.shift();
         for(let i = 0; i < 4; i++){
             dx = candidate.x + Directions.x[i]
             dy = candidate.y + Directions.y[i]
@@ -251,6 +298,7 @@ function computeDistanceMap(x, y){
                     candidates.push({x:dx, y:dy, flag: candidate.flag + 1})
             }
         }
+
     } while (candidates.length !== 0)
 }
 

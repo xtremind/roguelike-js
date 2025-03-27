@@ -451,16 +451,16 @@ only see effect once color is used
 
 ### Step 32 : Shortcuts
 
-- [ ] FLOOR : create a function carve shortcut, similar to carve door
-- [ ] CARVE SHORTCUT : for all the tiles, if position is not walkable
-- [ ] CARVE SHORTCUT : use dijshra to compute distance between two tiles separate by a wall
-- [ ] CARVE SHORTCUT : if distance > 20?, add position into candidate
-- [ ] CARVE SHORTCUT : if at least one candidate, put randomly a floor tile
-- [ ] CARVE SHORTCUT : repeat until no more shortcut candidate
-- [ ] CARVE SHORTCUT : repeat until at least 3 shortcuts
+- [x] FLOOR : create a function carve shortcut, similar to carve door
+- [x] CARVE SHORTCUT : for all the tiles, if position is not walkable
+- [x] CARVE SHORTCUT : use Dijshra to compute distance between two tiles separate by a wall
+- [x] CARVE SHORTCUT : if distance > 20?, add position into candidate
+- [x] CARVE SHORTCUT : if at least one candidate, put randomly a floor tile
+- [x] CARVE SHORTCUT : repeat until no more shortcut candidate
+- [x] CARVE SHORTCUT : repeat until at least 3 shortcuts
 - [ ] FLOOR : create a function to fill dead-end
 - [ ] FILL DEAD-END : for all the tiles, if position is walkable
-- [ ] FILL DEAD-END : if signature is deadend, fild it with wall
+- [ ] FILL DEAD-END : if signature is dead-end, fill it with wall
 - [ ] FILL DEAD-END : if fill dead end, do another loop
 
 | BINARY    | MAP                          |
