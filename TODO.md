@@ -458,10 +458,10 @@ only see effect once color is used
 - [x] CARVE SHORTCUT : if at least one candidate, put randomly a floor tile
 - [x] CARVE SHORTCUT : repeat until no more shortcut candidate
 - [x] CARVE SHORTCUT : repeat until at least 3 shortcuts
-- [ ] FLOOR : create a function to fill dead-end
-- [ ] FILL DEAD-END : for all the tiles, if position is walkable
-- [ ] FILL DEAD-END : if signature is dead-end, fill it with wall
-- [ ] FILL DEAD-END : if fill dead end, do another loop
+- [x] FLOOR : create a function to fill dead-end
+- [x] FILL DEAD-END : for all the tiles, if position is walkable
+- [x] FILL DEAD-END : if signature is dead-end, fill it with wall
+- [x] FILL DEAD-END : if fill dead end, do another loop
 
 | BINARY    | MAP                          |
 | --------- | ---------------------------- |

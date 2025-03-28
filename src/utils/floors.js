@@ -13,6 +13,7 @@ function createMap(scene, mp, level) {
     createCorridors();
     createPaths()
     createShortcuts();
+    deleteDeadEnds();
 }
 
 function createRooms(){
@@ -300,6 +301,43 @@ function computeDistanceMap(x, y){
         }
 
     } while (candidates.length !== 0)
+}
+
+//*******************************************************************//
+function deleteDeadEnds(){
+    let candidate, found ;
+
+    do {
+        found = false;
+        for (let x = 0; x < map.width; x++) {
+            for (let y = 0; y < map.height; y++) {
+                candidate = getCandidateForDeadEnd(x, y);
+                if (candidate) {
+                    found = true;
+                    replaceBy(candidate.x, candidate.y, Tiles.WALL)
+                }
+            }
+        }
+    } while (found)
+}
+
+function getCandidateForDeadEnd(x, y){
+    let tile = map.getTileAt(x, y)
+    if(tile.index === Tiles.FLOOR){
+        let sign = signature(x, y);
+
+        const deadEnds = [
+            {signature: 0b01111111, mask: 0b00001111},
+            {signature: 0b10111111, mask: 0b00001111},
+            {signature: 0b11011111, mask: 0b00001111},
+            {signature: 0b11101111, mask: 0b00001111}
+        ];
+        if (deadEnds.some((el) => compareBinary(sign, el.signature, el.mask))){
+            return {x, y}
+        }
+
+    }
+    return null
 }
 
 //*******************************************************************//
