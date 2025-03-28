@@ -13,6 +13,7 @@ function createMap(scene, mp, level) {
     createCorridors();
     createPaths()
     createShortcuts();
+    createEntryPoints();
     deleteDeadEnds();
 }
 
@@ -132,7 +133,7 @@ function isCarvable(x, y){
     return carvables.some((el) => compareBinary(sign, el.signature, el.mask));
 }
 
-function isNearRoom(x, y){
+function isNearFloor(x, y){
     for(let i = 0; i < 8; i++){
         let dx = x + Directions.x[i], dy = y + Directions.y[i], tile = map.getTileAt(dx, dy)
         if(tile && tile.index === Tiles.FLOOR) return true;
@@ -187,11 +188,21 @@ function createPaths(){
 
         if (candidates.length !== 0) {
             candidate = candidates[rng.nextInt(0, candidates.length - 1)];
-            replaceBy(candidate.x, candidate.y, Tiles.FLOOR)
+            replaceBy(candidate.x, candidate.y, isNearRoom(candidate.x, candidate.y) ? Tiles.DOOR : Tiles.FLOOR)
             growFlags(candidate.x, candidate.y, candidate.flag)
         }
 
     } while (candidates.length !== 0)
+}
+
+function isNearRoom(x, y){
+    return rooms.some((room) => {
+        for (let i = 0; i < 4; i++) {
+            let dx = x + Directions.x[i], dy = y + Directions.y[i]
+            if (dx >= room.x && dx < room.x + room.width && dy >= room.y && dy < room.y + room.height)
+                return true;
+        }
+    })
 }
 
 function getCandidateForPath(x, y){
@@ -239,7 +250,7 @@ function growFlags(x, y, weight){
 //*******************************************************************//
 function createShortcuts(){
 
-    let candidate, candidates, tile;
+    let candidate, candidates;
 
     do {
         candidates = [];
@@ -253,7 +264,7 @@ function createShortcuts(){
 
         if (candidates.length !== 0) {
             candidate = candidates[rng.nextInt(0, candidates.length - 1)];
-            replaceBy(candidate.x, candidate.y, Tiles.FLOOR)
+            replaceBy(candidate.x, candidate.y, Tiles.DOOR)
         }
     } while (candidates.length !== 0)
 }
@@ -338,6 +349,37 @@ function getCandidateForDeadEnd(x, y){
 
     }
     return null
+}
+//*******************************************************************//
+function createEntryPoints(){
+    let candidate ;
+
+    do {
+        candidate = {x: rng.nextInt(0, map.height - 1), y: rng.nextInt(0, map.width - 1)}
+    } while(map.getTileAt(candidate.x, candidate.y)?.index !== Tiles.FLOOR)
+
+    candidate = getFurtherFrom(candidate.x, candidate.y);
+    replaceBy(candidate.x, candidate.y, Tiles.UP_STAIR)
+
+    candidate = getFurtherFrom(candidate.x, candidate.y);
+    replaceBy(candidate.x, candidate.y, Tiles.DOWN_STAIR)
+
+}
+
+
+function getFurtherFrom(x, y) {
+    computeDistanceMap(x, y);
+    let maxDistance = 0, tmp, further;
+    for (let x = 0; x < map.width; x++) {
+        for (let y = 0; y < map.height; y++) {
+            tmp = map.getTileAt(x, y);
+            if (tmp.index === Tiles.FLOOR && flags[x][y] > maxDistance) {
+                maxDistance = flags[x][y]
+                further = tmp
+            }
+        }
+    }
+    return further;
 }
 
 //*******************************************************************//

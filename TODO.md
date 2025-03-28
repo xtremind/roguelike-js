@@ -472,18 +472,18 @@ only see effect once color is used
 
 ### Step 33 : Stairs
 
-- [ ] FLOOR : create a function to create entry points (start and end)
-- [ ] CREATE ENTRY POINT : randomly pick a position that is walkable
-- [ ] CREATE ENTRY POINT : put downstair at that position
-- [ ] CREATE ENTRY POINT : compute distance map from that position
-- [ ] CREATE ENTRY POINT : UPDATE - put downstair on farthest walkable position
-- [ ] CREATE ENTRY POINT : compute distance map from starting position
-- [ ] CREATE ENTRY POINT : put upstair on farthest walkable position which is a wall
-- [ ] CREATE ENTRY POINT : put downstair in corner of room ???
-- [ ] FLOOR : store where the initial rooms are created
-- [ ] CREATE DOORS : if doors create near a room, place a door
-- [ ] CREATE SHORTCUT : if shortcut created near a room, place a door
-- [ ] OPTIMIZATION : don't put a door near another
+- [x] FLOOR : create a function to create entry points (start and end)
+- [x] CREATE ENTRY POINT : randomly pick a position that is walkable
+- [x] CREATE ENTRY POINT : put downstair at that position
+- [x] CREATE ENTRY POINT : compute distance map from that position
+- [x] CREATE ENTRY POINT : UPDATE - put downstair on farthest walkable position
+- [x] CREATE ENTRY POINT : compute distance map from starting position
+- [x] CREATE ENTRY POINT : put upstair on farthest walkable position which is a wall
+- [o] CREATE ENTRY POINT : put downstair in corner of room ???
+- [x] FLOOR : store where the initial rooms are created
+- [x] CREATE DOORS : if doors create near a room, place a door
+- [x] CREATE SHORTCUT : if shortcut created near a room, place a door
+- [o] OPTIMIZATION : don't put a door near another
 
 ### Step 34 : Floors
 
