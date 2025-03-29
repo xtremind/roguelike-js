@@ -16,11 +16,12 @@ class GameScene extends Scene {
   //datas
   #click = 0;
   #tick = 1;
+  #level = 0;
   #hero = {};
   #mobs = [];
   #lootConfigurations = [];
   //#mob = {};
-  #map = {};
+  #map = null;
   #winds = [];
   #floats = [];
 
@@ -88,7 +89,7 @@ class GameScene extends Scene {
     this.cameras.main.setZoom(2);
     this.cameras.main.centerOn(85, 60);
 
-    this.#loadLevel(1);
+    this.#loadLevel(this.#level);
 
     //initiate interaction for player 
     
@@ -157,17 +158,39 @@ class GameScene extends Scene {
 
   #loadLevel(level) {
     //initiate map
+    this.#map?.destroy()
     this.#map = this.add.tilemap("map");
     const tileset = this.#map.addTilesetImage("decorations");
     //const platforms = this.#map.createLayer("level1", tileset, 0, 0);
+
     const platforms = this.#map.createLayer("level", tileset, 0, 0);
 
     //initiate hero position
     this.#tick = 1;
 
-    this.#hero = this.#createMob(5, 7, Mobs.HERO); // only on 1st floor
-    this.initiateFog();
     createMap(this, this.#map, level);
+    this.#initiateMob(this.#level);
+  }
+
+  #initiateMob(level) {
+    let position;
+
+    for (let x = 0; x < this.#map.width; x++) {
+      for (let y = 0; y < this.#map.height; y++) {
+        if (this.#map.getTileAt(x, y).index === Tiles.DOWN_STAIR) {
+          position = {x, y};
+          break;
+        }
+      }
+      if(position) break;
+    }
+    //create Hero only at level 0
+    if(level === 0) {
+      this.#hero = this.#createMob(position.x, position.y, Mobs.HERO); // only on 1st floor
+    } else {
+      this.#hero.moveTo(position.x, position.y);
+    }//else put hero on downStair
+
     //createMob
     //
 
@@ -182,6 +205,8 @@ class GameScene extends Scene {
     this.#createMob(18, 9, Mobs.SLIME);
     */
     //
+
+    this.initiateFog();
   }
 
   initiateFog(){
@@ -383,7 +408,12 @@ class GameScene extends Scene {
   //GAME
   #update_interact_game() {
     const button = this.#getButton();
-    if (this.#winds.length > 0) {
+    const tile = this.#map.getTileAt(this.#hero.x, this.#hero.y);
+    //if at end => generate next level
+    if(tile?.index === Tiles.UP_STAIR){
+      this.#loadLevel(this.#level++);
+      // TODO : effects
+    } else if (this.#winds.length > 0) {
       if (this.#winds[0].interact && button === 4) {
         this.#winds[0].duration = 0;
         this.#winds[0].interact = false;

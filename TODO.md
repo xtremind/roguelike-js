@@ -483,18 +483,18 @@ only see effect once color is used
 - [x] FLOOR : store where the initial rooms are created
 - [x] CREATE DOORS : if doors create near a room, place a door
 - [x] CREATE SHORTCUT : if shortcut created near a room, place a door
-- [o] OPTIMIZATION : don't put a door near another
+- [x] OPTIMIZATION : don't put a door near another
 
 ### Step 34 : Floors
 
-- [ ] OPTIMIZATION : no door on exit
-- [ ] OPTIMIZATION : use MID to found size of room in place of max
-- [ ] OPTIMIZATION : put endpoint before deleting dead-end. attention : start and end are walkable
-- [ ] OPTIMIZATION : no exit near start
-- [ ] FLOOR : add a int parameter to constructor, which represent the level
-- [ ] CACHE : add an integer which will contain the current level
-- [ ] UPDATE : create a function which will trigger the next level
-- [ ] UPDATE : if hero on upstair, go to next level
+- [x] OPTIMIZATION : no door on exit
+- [x] OPTIMIZATION : use MID to found size of room in place of max
+- [x] OPTIMIZATION : put endpoint before deleting dead-end. attention : start and end are walkable
+- [x] OPTIMIZATION : no exit near start
+- [x] FLOOR : add a int parameter to constructor, which represent the level
+- [x] CACHE : add an integer which will contain the current level
+- [x] UPDATE : create a function which will trigger the next level
+- [x] UPDATE : if hero on upstair, go to next level
 - [ ] FLOOR : add a message with level in it
 
 ### Step 35 : Sheperding

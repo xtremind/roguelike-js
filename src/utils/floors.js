@@ -133,14 +133,6 @@ function isCarvable(x, y){
     return carvables.some((el) => compareBinary(sign, el.signature, el.mask));
 }
 
-function isNearFloor(x, y){
-    for(let i = 0; i < 8; i++){
-        let dx = x + Directions.x[i], dy = y + Directions.y[i], tile = map.getTileAt(dx, dy)
-        if(tile && tile.index === Tiles.FLOOR) return true;
-    }
-    return false;
-}
-
 function createCorridor(candidate){
     let direction = rng.nextInt(0, 3), step = 0;
 
@@ -264,7 +256,7 @@ function createShortcuts(){
 
         if (candidates.length !== 0) {
             candidate = candidates[rng.nextInt(0, candidates.length - 1)];
-            replaceBy(candidate.x, candidate.y, Tiles.DOOR)
+            replaceBy(candidate.x, candidate.y, isNear(candidate.x, candidate.y, Tiles.DOOR) ? Tiles.FLOOR : Tiles.DOOR)
         }
     } while (candidates.length !== 0)
 }
@@ -306,7 +298,7 @@ function computeDistanceMap(x, y){
             tile = map.getTileAt(dx, dy)
             if(tile && flags[dx][dy]===-1){
                 flags[dx][dy] = candidate.flag + 1
-                if(!tile.properties?.solid)
+                if(!tile.properties?.solid || tile.index === Tiles.DOOR)
                     candidates.push({x:dx, y:dy, flag: candidate.flag + 1})
             }
         }
@@ -386,6 +378,7 @@ function getFurtherFrom(x, y) {
 function replaceBy(x, y, tile){
     map.getTileAt(x, y).destroy();
     map.putTileAt(tile, x, y);
+    map.getTileAt(x, y).properties = map.getTileset("decorations").getTileProperties(tile)
 }
 
 function compareBinary(b1, b2, mask){
@@ -414,6 +407,15 @@ function middle(a, b, c) {
     if (x * y > 0) return b;
     else if (x * z > 0) return c;
     else return a;
+}
+
+
+function isNear(x, y, tile){
+    for(let i = 0; i < 8; i++){
+        let dx = x + Directions.x[i], dy = y + Directions.y[i], tile = map.getTileAt(dx, dy)
+        if(tile && tile.index === tile) return true;
+    }
+    return false;
 }
 
 //*******************************************************************//

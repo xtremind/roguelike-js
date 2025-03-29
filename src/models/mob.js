@@ -38,6 +38,11 @@ export default class Mob {
     }
   }
 
+  moveTo(x, y){
+    this.x = x;
+    this.y = y;
+  }
+
   sight(){
     return Math.max(0, this.distanceSight - (this.curse?.effect == Effects.BLIND ? Math.floor(this.curse.time) : 0));
   }
