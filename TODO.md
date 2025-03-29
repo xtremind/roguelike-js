@@ -495,15 +495,15 @@ only see effect once color is used
 - [x] CACHE : add an integer which will contain the current level
 - [x] UPDATE : create a function which will trigger the next level
 - [x] UPDATE : if hero on upstair, go to next level
-- [ ] FLOOR : add a message with level in it
+- [x] FLOOR : add a message with level in it
 
 ### Step 35 : Sheperding
 
-- [ ] IMPROVE FLOOR : export max rooms number and max doors number
-- [ ] IS CARVABLE DOOR : check signature to verify presence of wall
-- [ ] IS CARVABLE DOOR : no door on stairs, only on floor
+- [o] IMPROVE FLOOR : export max rooms number and max doors number
+- [o] IS CARVABLE DOOR : check signature to verify presence of wall
+- [o] IS CARVABLE DOOR : no door on stairs, only on floor
 - [ ] MAZE WORM : get candidate where 2 walls breaked can allow an isolated room to be accessible
-- [ ] START / END : verify that the endpoint are put in a position that can be carved, or is walkable with further distance
+- [o] START / END : verify that the endpoint are put in a position that can be carved, or is walkable with further distance
 
 | BINARY    | MAP                          |
 | --------- | ---------------------------- |

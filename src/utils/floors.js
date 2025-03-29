@@ -15,6 +15,7 @@ function createMap(scene, mp, level) {
     createShortcuts();
     createEntryPoints();
     deleteDeadEnds();
+    generateInteractiveElements();
 }
 
 function createRooms(){
@@ -372,6 +373,13 @@ function getFurtherFrom(x, y) {
         }
     }
     return further;
+}
+
+//*******************************************************************//
+function generateInteractiveElements(){
+    //doors
+    //jar
+    //chest
 }
 
 //*******************************************************************//

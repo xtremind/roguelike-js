@@ -89,7 +89,7 @@ class GameScene extends Scene {
     this.cameras.main.setZoom(2);
     this.cameras.main.centerOn(85, 60);
 
-    this.#loadLevel(this.#level);
+    this.#loadLevel();
 
     //initiate interaction for player 
     
@@ -156,7 +156,7 @@ class GameScene extends Scene {
         null;
   }
 
-  #loadLevel(level) {
+  #loadLevel() {
     //initiate map
     this.#map?.destroy()
     this.#map = this.add.tilemap("map");
@@ -168,11 +168,16 @@ class GameScene extends Scene {
     //initiate hero position
     this.#tick = 1;
 
-    createMap(this, this.#map, level);
-    this.#initiateMob(this.#level);
+    createMap(this, this.#map, this.#level);
+    this.#initiateMob();
+    this.#generateWelcomeMessage()
   }
 
-  #initiateMob(level) {
+  #generateWelcomeMessage(){
+    this.#showMsg(["Floor " + this.#level], 100);
+  }
+
+  #initiateMob() {
     let position;
 
     for (let x = 0; x < this.#map.width; x++) {
@@ -185,7 +190,7 @@ class GameScene extends Scene {
       if(position) break;
     }
     //create Hero only at level 0
-    if(level === 0) {
+    if(this.#level === 0) {
       this.#hero = this.#createMob(position.x, position.y, Mobs.HERO); // only on 1st floor
     } else {
       this.#hero.moveTo(position.x, position.y);
@@ -411,7 +416,8 @@ class GameScene extends Scene {
     const tile = this.#map.getTileAt(this.#hero.x, this.#hero.y);
     //if at end => generate next level
     if(tile?.index === Tiles.UP_STAIR){
-      this.#loadLevel(this.#level++);
+      this.#level++
+      this.#loadLevel();
       // TODO : effects
     } else if (this.#winds.length > 0) {
       if (this.#winds[0].interact && button === 4) {
